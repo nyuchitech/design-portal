@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
-import { Skeleton } from "@/components/ui/skeleton"
+
 import { Copy, Check } from "lucide-react"
 import { ErrorBoundary } from "@/components/error-boundary"
 
@@ -230,24 +230,6 @@ function AvatarShowcase() {
   )
 }
 
-function SkeletonShowcase() {
-  return (
-    <div className="flex w-full max-w-[260px] flex-col gap-3">
-      <div className="flex items-center gap-3">
-        <Skeleton className="size-10 rounded-full" />
-        <div className="flex flex-1 flex-col gap-2">
-          <Skeleton className="h-3.5 w-3/4" />
-          <Skeleton className="h-3 w-1/2" />
-        </div>
-      </div>
-      <Skeleton className="h-24 w-full rounded-xl" />
-      <div className="flex gap-2">
-        <Skeleton className="h-8 flex-1 rounded-lg" />
-        <Skeleton className="h-8 w-20 rounded-lg" />
-      </div>
-    </div>
-  )
-}
 
 export function ComponentShowcase() {
   return (
@@ -308,12 +290,7 @@ export function ComponentShowcase() {
           >
             <AvatarShowcase />
           </PreviewCard>
-          <PreviewCard
-            name="skeleton"
-            description="Loading placeholders that match your content layout."
-          >
-            <SkeletonShowcase />
-          </PreviewCard>
+
         </div>
       </div>
     </section>
