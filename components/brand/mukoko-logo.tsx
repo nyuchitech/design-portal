@@ -20,7 +20,7 @@ export function MukokoLogo({
   return (
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <svg
-        className="shrink-0"
+        className="shrink-0 text-[#4B0082] dark:text-[#B388FF]"
         width={size}
         height={size}
         viewBox="0 0 375 375"
