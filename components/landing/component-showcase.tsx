@@ -25,6 +25,7 @@ import { Separator } from "@/components/ui/separator"
 import { Label } from "@/components/ui/label"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Copy, Check } from "lucide-react"
+import { ErrorBoundary } from "@/components/error-boundary"
 
 function PreviewCard({
   name,
@@ -41,7 +42,15 @@ function PreviewCard({
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-foreground/12">
       <div className="flex min-h-[200px] items-center justify-center p-8">
-        {children}
+        <ErrorBoundary
+          fallback={
+            <p className="text-xs text-muted-foreground">
+              Preview unavailable
+            </p>
+          }
+        >
+          {children}
+        </ErrorBoundary>
       </div>
       <div className="flex flex-col gap-2 border-t border-border px-5 py-4">
         <div className="flex items-center justify-between">
