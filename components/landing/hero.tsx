@@ -24,10 +24,10 @@ function CopyCommand() {
         setCopied(true)
         setTimeout(() => setCopied(false), 2000)
       }}
-      className="group flex w-full max-w-2xl items-center gap-3 rounded-2xl border border-border bg-card px-5 py-3.5 text-left transition-all hover:border-foreground/15"
+      className="group flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card px-3 py-3 text-left transition-all hover:border-foreground/15 sm:gap-3 sm:px-5 sm:py-3.5"
     >
-      <span className="font-mono text-sm text-muted-foreground">$</span>
-      <code className="flex-1 truncate font-mono text-sm text-muted-foreground">
+      <span className="hidden font-mono text-sm text-muted-foreground sm:inline">$</span>
+      <code className="flex-1 truncate font-mono text-xs text-muted-foreground sm:text-sm">
         {command}
       </code>
       <span className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors group-hover:text-foreground">
@@ -39,7 +39,7 @@ function CopyCommand() {
 
 export function Hero() {
   return (
-    <section className="relative flex flex-col items-center gap-10 px-6 pt-32 pb-20 text-center md:pt-44 md:pb-32">
+    <section className="relative flex flex-col items-center gap-8 px-4 pt-28 pb-16 text-center sm:gap-10 sm:px-6 md:pt-44 md:pb-32">
       {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:64px_64px]" />
 
@@ -68,8 +68,8 @@ export function Hero() {
         </div>
       </div>
 
-      <div className="flex max-w-3xl flex-col items-center gap-6">
-        <h1 className="text-balance text-4xl font-bold tracking-tight text-foreground md:text-6xl lg:text-7xl">
+      <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
+        <h1 className="text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
           The building blocks
           <br />
           of mukoko
@@ -81,16 +81,16 @@ export function Hero() {
         </p>
       </div>
 
-      <div className="flex w-full flex-col items-center gap-5">
+      <div className="flex w-full flex-col items-center gap-4 sm:gap-5">
         <CopyCommand />
-        <div className="flex items-center gap-3">
-          <Button size="lg" className="gap-2 rounded-xl" asChild>
+        <div className="flex w-full flex-col items-center gap-2 sm:w-auto sm:flex-row sm:gap-3">
+          <Button size="lg" className="w-full gap-2 rounded-xl sm:w-auto" asChild>
             <a href="#components">
               Browse components
               <ArrowRight className="size-4" />
             </a>
           </Button>
-          <Button variant="outline" size="lg" className="rounded-xl" asChild>
+          <Button variant="outline" size="lg" className="w-full rounded-xl sm:w-auto" asChild>
             <a
               href="https://assets.nyuchi.com"
               target="_blank"
@@ -103,7 +103,7 @@ export function Hero() {
       </div>
 
       {/* Stats */}
-      <div className="flex flex-wrap items-center justify-center gap-8 pt-4">
+      <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
           { label: "Components", value: "59" },
           { label: "WCAG AAA", value: "7:1+" },

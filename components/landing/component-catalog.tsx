@@ -133,22 +133,22 @@ export function ComponentCatalog() {
   })
 
   return (
-    <section id="catalog" className="px-6 py-20 md:py-28">
+    <section id="catalog" className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-10 text-center">
+        <div className="mb-8 text-center sm:mb-10">
           <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
             Full Catalog
           </p>
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             All {components.length} components
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
             Click any component to copy its install command.
           </p>
         </div>
 
-        <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="relative w-full max-w-xs">
+        <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:gap-4 md:flex-row md:items-center md:justify-between">
+          <div className="relative w-full md:max-w-xs">
             <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Filter components..."
@@ -183,7 +183,7 @@ export function ComponentCatalog() {
           </div>
         </div>
 
-        <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filtered.map((c) => (
             <CatalogItem key={c.name} name={c.name} category={c.category} />
           ))}

@@ -10,7 +10,7 @@ const minerals = [
 
 export function Footer() {
   return (
-    <footer className="px-6 pb-12 pt-8">
+    <footer className="px-4 pb-10 pt-8 sm:px-6 sm:pb-12">
       <div className="mx-auto max-w-5xl">
         <Separator className="mb-8" />
 
@@ -34,7 +34,7 @@ export function Footer() {
           </div>
 
           {/* Links */}
-          <div className="flex gap-12">
+          <div className="flex gap-8 sm:gap-12">
             <div className="flex flex-col gap-2">
               <span className="text-xs font-medium text-foreground">Ecosystem</span>
               <a

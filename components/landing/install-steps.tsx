@@ -29,9 +29,9 @@ const steps = [
 
 export function InstallSteps() {
   return (
-    <section className="px-6 py-20 md:py-28">
+    <section className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-5xl">
-        <div className="mb-14 text-center">
+        <div className="mb-10 text-center sm:mb-14">
           <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
             How it works
           </p>
@@ -40,7 +40,7 @@ export function InstallSteps() {
           </h2>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 md:grid-cols-3">
           {steps.map((step, i) => (
             <div
               key={step.title}

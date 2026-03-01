@@ -41,7 +41,7 @@ function PreviewCard({
 
   return (
     <div className="group flex flex-col overflow-hidden rounded-2xl border border-border bg-card transition-all hover:border-foreground/12">
-      <div className="flex min-h-[200px] items-center justify-center p-8">
+      <div className="flex min-h-[180px] items-center justify-center p-4 sm:min-h-[200px] sm:p-8">
         <ErrorBoundary
           fallback={
             <p className="text-xs text-muted-foreground">
@@ -52,7 +52,7 @@ function PreviewCard({
           {children}
         </ErrorBoundary>
       </div>
-      <div className="flex flex-col gap-2 border-t border-border px-5 py-4">
+      <div className="flex flex-col gap-2 border-t border-border px-4 py-3 sm:px-5 sm:py-4">
         <div className="flex items-center justify-between">
           <h3 className="font-mono text-sm font-medium text-foreground">{name}</h3>
           <button
@@ -251,21 +251,21 @@ function SkeletonShowcase() {
 
 export function ComponentShowcase() {
   return (
-    <section id="components" className="px-6 py-20 md:py-28">
+    <section id="components" className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-14 text-center">
+        <div className="mb-10 text-center sm:mb-14">
           <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
             Live Preview
           </p>
-          <h2 className="text-balance text-3xl font-bold tracking-tight text-foreground md:text-4xl">
+          <h2 className="text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
             See them in action
           </h2>
-          <p className="mt-4 text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
             Interactive previews of components from the registry. Click the copy icon to grab the install command.
           </p>
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3">
           <PreviewCard
             name="button"
             description="Versatile button component with multiple variants and sizes."
