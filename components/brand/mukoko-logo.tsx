@@ -32,13 +32,8 @@ export function MukokoLogo({
       </svg>
 
       {showWordmark && (
-        <span className="flex items-baseline gap-1.5">
-          <span className="text-sm font-semibold tracking-tight text-foreground">
-            mukoko
-          </span>
-          {suffix && (
-            <span className="text-xs text-muted-foreground">{suffix}</span>
-          )}
+        <span className="text-sm font-black tracking-tight text-foreground">
+          mukoko{suffix ? ` ${suffix}` : ""}
         </span>
       )}
     </span>
