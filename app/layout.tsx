@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Noto_Sans, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
-const fontSans = Plus_Jakarta_Sans({ subsets: ["latin"], variable: "--font-sans" });
+const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" });
 const fontMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
 
 export const metadata: Metadata = {
