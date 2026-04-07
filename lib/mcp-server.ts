@@ -30,6 +30,7 @@ import {
   getSovereignty,
   getRemovedTechnologies,
 } from "@/lib/db"
+import { getUsageStats, trackMcpTool } from "@/lib/metrics"
 
 // ─── Server Factory ────────────────────────────────────────────────────────
 
@@ -275,6 +276,7 @@ export function createMukokoMcpServer(): McpServer {
         ),
     },
     async ({ type, category }) => {
+      const start = Date.now()
       try {
         const components = await getAllComponents()
 
@@ -295,10 +297,12 @@ export function createMukokoMcpServer(): McpServer {
           installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${c.name}`,
         }))
 
+        trackMcpTool({ toolName: "list_components", durationMs: Date.now() - start })
         return {
           content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
         }
       } catch (err) {
+        trackMcpTool({ toolName: "list_components", durationMs: Date.now() - start, isError: true })
         return toolError("Failed to list components", err)
       }
     }
@@ -315,12 +319,19 @@ export function createMukokoMcpServer(): McpServer {
         .describe("Include documentation, use cases, and examples"),
     },
     async ({ name, include_docs }) => {
+      const start = Date.now()
       try {
         const component = include_docs ? await getComponentWithDocs(name) : await getComponent(name)
 
         if (!component) {
           const all = await getAllComponents()
           const available = all.map((c) => c.name).join(", ")
+          trackMcpTool({
+            toolName: "get_component",
+            durationMs: Date.now() - start,
+            componentName: name,
+            isError: true,
+          })
           return {
             content: [
               {
@@ -355,10 +366,21 @@ export function createMukokoMcpServer(): McpServer {
           result.docs = component.docs
         }
 
+        trackMcpTool({
+          toolName: "get_component",
+          durationMs: Date.now() - start,
+          componentName: name,
+        })
         return {
           content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
         }
       } catch (err) {
+        trackMcpTool({
+          toolName: "get_component",
+          durationMs: Date.now() - start,
+          componentName: name,
+          isError: true,
+        })
         return toolError(`Failed to get component "${name}"`, err)
       }
     }
@@ -778,13 +800,52 @@ export { ${pascalName}, ${camelVariants}Variants }
     "Get the status and row counts for the design portal database.",
     {},
     async () => {
+      const start = Date.now()
       try {
         const info = await getDatabaseInfo()
+        trackMcpTool({ toolName: "get_database_status", durationMs: Date.now() - start })
         return {
           content: [{ type: "text" as const, text: JSON.stringify(info, null, 2) }],
         }
       } catch (err) {
+        trackMcpTool({
+          toolName: "get_database_status",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
         return toolError("Failed to get database status", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_usage_stats",
+    "Get public API and MCP usage statistics for the Nyuchi Design Portal. Returns aggregate call counts, error rates, popular components, and daily trends. Data is open by design — CC BY 4.0.",
+    {
+      days: z
+        .number()
+        .int()
+        .min(1)
+        .max(90)
+        .optional()
+        .describe("Lookback period in days (1–90, default 30)"),
+    },
+    async ({ days = 30 }) => {
+      const start = Date.now()
+      try {
+        const stats = await getUsageStats(days)
+        trackMcpTool({ toolName: "get_usage_stats", durationMs: Date.now() - start })
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(stats, null, 2),
+            },
+          ],
+        }
+      } catch (err) {
+        trackMcpTool({ toolName: "get_usage_stats", durationMs: Date.now() - start, isError: true })
+        return toolError("Failed to get usage stats", err)
       }
     }
   )

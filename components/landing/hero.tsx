@@ -1,9 +1,8 @@
-"use client"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Check, Copy, ArrowRight } from "lucide-react"
+import { ArrowRight } from "lucide-react"
+import { CopyCommand } from "@/components/landing/copy-command"
+import { getRegistryCounts } from "@/lib/db"
 
 const minerals = [
   { name: "cobalt", color: "bg-[var(--color-cobalt)]" },
@@ -14,50 +13,28 @@ const minerals = [
 ]
 
 const products = [
-  // Ecosystem
   { label: "bundu", href: "https://bundu.family" },
-  // Infrastructure & enterprise
   { label: "nyuchi", href: "https://nyuchi.com" },
   { label: "bushtrade", href: "https://bushtrade.co.zw" },
-  // Consumer apps
   { label: "mukoko", href: "https://www.mukoko.com" },
   { label: "weather", href: "https://weather.mukoko.com" },
   { label: "news", href: "https://news.mukoko.com" },
   { label: "lingo", href: "https://lingo.mukoko.com" },
   { label: "nhimbe", href: "https://nhimbe.com" },
-  // AI
   { label: "shamwari", href: "https://shamwari.ai" },
 ]
 
-function CopyCommand() {
-  const [copied, setCopied] = useState(false)
-  const command = "npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button"
+export async function Hero() {
+  const counts = await getRegistryCounts().catch(() => ({
+    total: 0,
+    ui: 0,
+    blocks: 0,
+    hooks: 0,
+    lib: 0,
+  }))
 
-  return (
-    <button
-      onClick={() => {
-        navigator.clipboard.writeText(command)
-        setCopied(true)
-        setTimeout(() => setCopied(false), 2000)
-      }}
-      className="group flex w-full max-w-2xl items-center gap-2 rounded-2xl border border-border bg-card px-3 py-3 text-left transition-all hover:border-foreground/15 sm:gap-3 sm:px-5 sm:py-3.5"
-    >
-      <span className="hidden font-mono text-sm text-muted-foreground sm:inline">$</span>
-      <code className="flex-1 truncate font-mono text-xs text-muted-foreground sm:text-sm">
-        {command}
-      </code>
-      <span className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors group-hover:text-foreground">
-        {copied ? (
-          <Check className="size-4 text-[var(--color-malachite)]" />
-        ) : (
-          <Copy className="size-4" />
-        )}
-      </span>
-    </button>
-  )
-}
+  const totalLabel = counts.total > 0 ? `${counts.total}` : "production-ready"
 
-export function Hero() {
   return (
     <section className="relative flex flex-col items-center gap-8 px-4 pt-12 pb-16 text-center sm:gap-10 sm:px-6 md:pt-20 md:pb-32">
       {/* Subtle grid */}
@@ -95,9 +72,9 @@ export function Hero() {
           for the bundu ecosystem
         </h1>
         <p className="max-w-xl text-base leading-relaxed text-pretty text-muted-foreground md:text-lg">
-          294 production-ready components, blocks, and charts rooted in the Five African Minerals
-          palette. One design system powering mukoko, nyuchi, and every app in the bundu family.
-          Install with the shadcn CLI — no packages, no lock-in.
+          {totalLabel} components, blocks, and charts rooted in the Five African Minerals palette.
+          One design system powering mukoko, nyuchi, and every app in the bundu family. Install with
+          the shadcn CLI — no packages, no lock-in.
         </p>
       </div>
 
@@ -116,10 +93,10 @@ export function Hero() {
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats — live from DB */}
       <div className="flex flex-wrap items-center justify-center gap-6 pt-4 sm:gap-8">
         {[
-          { label: "Registry Items", value: "294" },
+          { label: "Registry Items", value: counts.total > 0 ? `${counts.total}` : "—" },
           { label: "Mini-Apps", value: "17" },
           { label: "Enterprise Products", value: "7" },
           { label: "Data Layers", value: "7" },

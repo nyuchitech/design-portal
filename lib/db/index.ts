@@ -335,6 +335,59 @@ export async function deleteComponent(name: string): Promise<void> {
   if (error) throw new Error(error.message)
 }
 
+// ── Registry count queries ──────────────────────────────────────────
+
+export interface RegistryCounts {
+  total: number
+  ui: number
+  blocks: number
+  hooks: number
+  lib: number
+}
+
+/**
+ * Get live component counts from the database, grouped by registry_type.
+ * Used to replace hardcoded numbers in landing page components.
+ * Returns zeros if database is not configured or not seeded.
+ */
+export async function getRegistryCounts(): Promise<RegistryCounts> {
+  if (!isSupabaseConfigured()) {
+    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
+  }
+
+  try {
+    const [total, ui, blocks, hooks, lib] = await Promise.all([
+      getPublicClient().from("components").select("*", { count: "exact", head: true }),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:ui"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:block"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:hook"),
+      getPublicClient()
+        .from("components")
+        .select("*", { count: "exact", head: true })
+        .eq("registry_type", "registry:lib"),
+    ])
+
+    return {
+      total: total.count ?? 0,
+      ui: ui.count ?? 0,
+      blocks: blocks.count ?? 0,
+      hooks: hooks.count ?? 0,
+      lib: lib.count ?? 0,
+    }
+  } catch {
+    return { total: 0, ui: 0, blocks: 0, hooks: 0, lib: 0 }
+  }
+}
+
 // ── Database info ───────────────────────────────────────────────────
 
 /**
