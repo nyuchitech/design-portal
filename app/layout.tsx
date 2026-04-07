@@ -19,7 +19,7 @@ const fontMono = JetBrains_Mono({
 const SITE_URL = "https://design.nyuchi.com"
 const SITE_NAME = "Nyuchi Design Portal"
 const SITE_DESCRIPTION =
-  "294 production-ready UI components, blocks, and charts built on the Five African Minerals design system. The canonical design system for the bundu ecosystem. Install directly into your project with the shadcn CLI."
+  "The canonical design system for the bundu ecosystem — components, brand, MCP server, and AI-native developer tooling built on the Five African Minerals palette. Install directly into your project with the shadcn CLI."
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
