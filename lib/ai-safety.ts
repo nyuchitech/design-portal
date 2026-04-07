@@ -8,6 +8,7 @@
  * Install via: npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
  */
 
+import sanitizeHtml from "sanitize-html"
 import { createLogger } from "@/lib/observability"
 
 const logger = createLogger("ai-safety")
@@ -419,52 +420,36 @@ export function scanInputSecurity(input: string): SecurityScanResult {
 /**
  * Sanitise AI output to prevent HTML injection when rendered in a browser.
  *
- * Uses a defence-in-depth approach:
- * 1. Remove known dangerous complete tag pairs (script, iframe, style, object, embed)
- * 2. Remove any remaining opening tags of those elements (handles unclosed / malformed variants)
- * 3. Strip on* event handler attributes and dangerous URI schemes
- * 4. Entity-encode any remaining `<` and `>` characters — this is the final guarantee
- *    that no HTML injects even if a pattern above is bypassed
+ * Uses `sanitize-html` with a strict allowlist: only safe inline text-formatting
+ * tags (`b`, `i`, `em`, `strong`, `code`, `pre`) are permitted with no attributes.
+ * All other tags — including `<script>`, `<iframe>`, `<style>`, `<object>`,
+ * `<embed>`, and any tag with event-handler attributes — are stripped entirely.
+ *
+ * `sanitize-html` parses the HTML tree rather than applying regex patterns, so it
+ * handles malformed, nested, and obfuscated injection attempts that regex chains
+ * cannot reliably cover.
  *
  * @example
  * ```ts
- * sanitizeAIOutput("<script>alert(1)</script>Hello")  // "Hello"
- * sanitizeAIOutput("</script >Injected")              // "Injected"
- * sanitizeAIOutput("<img src=x onerror=alert(1)>")    // "&lt;img src=x&gt;"
+ * sanitizeAIOutput("<script>alert(1)</script>Hello")       // "Hello"
+ * sanitizeAIOutput('<img src=x onerror="alert(1)">')       // ""
+ * sanitizeAIOutput("<b>bold</b> and <em>italic</em>")      // "<b>bold</b> and <em>italic</em>"
+ * sanitizeAIOutput("Plain text is returned unchanged.")    // "Plain text is returned unchanged."
  * ```
  */
 export function sanitizeAIOutput(output: string): string {
-  // Pass 1 — remove complete dangerous element pairs (greedy, case-insensitive)
-  // Use [\s\S] instead of . to cross newlines; end tags allow optional whitespace
-  let result = output
-    .replace(/<script[\s\S]*?<\/script\s*>/gi, "")
-    .replace(/<iframe[\s\S]*?<\/iframe\s*>/gi, "")
-    .replace(/<style[\s\S]*?<\/style\s*>/gi, "")
-    .replace(/<object[\s\S]*?<\/object\s*>/gi, "")
-    .replace(/<embed[\s\S]*?<\/embed\s*>/gi, "")
-
-  // Pass 2 — remove any remaining opening tags of dangerous elements
-  // (handles unclosed tags, fragments like <scr\nipt>, and stray closing tags)
-  result = result
-    .replace(/<\/?\s*script[^>]*>/gi, "")
-    .replace(/<\/?\s*iframe[^>]*>/gi, "")
-    .replace(/<\/?\s*style[^>]*>/gi, "")
-    .replace(/<\/?\s*object[^>]*>/gi, "")
-    .replace(/<\/?\s*embed[^>]*>/gi, "")
-
-  // Pass 3 — strip event handler attributes and dangerous URI schemes
-  result = result
-    .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "")
-    .replace(/\bjavascript\s*:/gi, "")
-    .replace(/\bdata\s*:\s*text\/html/gi, "")
-    .replace(/\bvbscript\s*:/gi, "")
-
-  // Pass 4 — entity-encode remaining angle brackets
-  // This is the hard guarantee: even if a tag fragment survived passes 1–3,
-  // it cannot execute as HTML after encoding.
-  result = result.replace(/</g, "&lt;").replace(/>/g, "&gt;")
-
-  return result
+  return sanitizeHtml(output, {
+    // Only allow safe inline formatting — no layout, no media, no scripting
+    allowedTags: ["b", "i", "em", "strong", "code", "pre"],
+    // No attributes on any tag — eliminates event handlers and dangerous href/src values
+    allowedAttributes: {},
+    // Strip dangerous URI schemes in any attribute value that slips through
+    allowedSchemes: ["https", "http", "mailto"],
+    // Disallow data: and javascript: URIs
+    allowedSchemesByTag: {},
+    // Discard any content inside disallowed tags (rather than leaving text nodes)
+    disallowedTagsMode: "discard",
+  })
 }
 
 // ---------------------------------------------------------------------------
