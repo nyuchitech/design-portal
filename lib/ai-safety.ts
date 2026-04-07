@@ -401,20 +401,55 @@ export function scanInputSecurity(input: string): SecurityScanResult {
 
 /**
  * Sanitise AI output to prevent HTML injection when rendered in a browser.
- * Strip `<script>`, `<iframe>`, on* event handlers, and data: URIs.
+ *
+ * Uses a defence-in-depth approach:
+ * 1. Remove known dangerous complete tag pairs (script, iframe, style, object, embed)
+ * 2. Remove any remaining opening tags of those elements (handles unclosed / malformed variants)
+ * 3. Strip on* event handler attributes and dangerous URI schemes
+ * 4. Entity-encode any remaining `<` and `>` characters — this is the final guarantee
+ *    that no HTML injects even if a pattern above is bypassed
  *
  * @example
  * ```ts
  * sanitizeAIOutput("<script>alert(1)</script>Hello")  // "Hello"
+ * sanitizeAIOutput("</script >Injected")              // "Injected"
+ * sanitizeAIOutput("<img src=x onerror=alert(1)>")    // "&lt;img src=x&gt;"
  * ```
  */
 export function sanitizeAIOutput(output: string): string {
-  return output
-    .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, "")
-    .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, "")
-    .replace(/\s+on\w+\s*=\s*["'][^"']*["']/gi, "")
-    .replace(/javascript\s*:/gi, "")
-    .replace(/data:\s*text\/html/gi, "")
+  // Pass 1 — remove complete dangerous element pairs (greedy, case-insensitive)
+  // Use [\s\S] instead of . to cross newlines; end tags allow optional whitespace
+  let result = output
+    .replace(/<script[\s\S]*?<\/script\s*>/gi, "")
+    .replace(/<iframe[\s\S]*?<\/iframe\s*>/gi, "")
+    .replace(/<style[\s\S]*?<\/style\s*>/gi, "")
+    .replace(/<object[\s\S]*?<\/object\s*>/gi, "")
+    .replace(/<embed[\s\S]*?<\/embed\s*>/gi, "")
+
+  // Pass 2 — remove any remaining opening tags of dangerous elements
+  // (handles unclosed tags, fragments like <scr\nipt>, and stray closing tags)
+  result = result
+    .replace(/<\/?\s*script[^>]*>/gi, "")
+    .replace(/<\/?\s*iframe[^>]*>/gi, "")
+    .replace(/<\/?\s*style[^>]*>/gi, "")
+    .replace(/<\/?\s*object[^>]*>/gi, "")
+    .replace(/<\/?\s*embed[^>]*>/gi, "")
+
+  // Pass 3 — strip event handler attributes and dangerous URI schemes
+  result = result
+    .replace(/\bon\w+\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]*)/gi, "")
+    .replace(/\bjavascript\s*:/gi, "")
+    .replace(/\bdata\s*:\s*text\/html/gi, "")
+    .replace(/\bvbscript\s*:/gi, "")
+
+  // Pass 4 — entity-encode remaining angle brackets
+  // This is the hard guarantee: even if a tag fragment survived passes 1–3,
+  // it cannot execute as HTML after encoding.
+  result = result
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+
+  return result
 }
 
 // ---------------------------------------------------------------------------
