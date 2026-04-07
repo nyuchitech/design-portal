@@ -1,9 +1,11 @@
 # Ecosystem App Setup Skill
 
 ## Description
+
 Bootstrap a new bundu ecosystem app using the Nyuchi Design Portal registry — installs components, sets up the correct theme tokens, typography, and theming from the canonical design system.
 
 ## Trigger
+
 When the user says "create a new bundu app", "add a new ecosystem app", "bootstrap a mukoko app", "set up a new nyuchi product", or "start a new app in the ecosystem".
 
 ## Instructions
@@ -24,6 +26,7 @@ pnpm dlx shadcn@latest init
 ```
 
 When prompted, choose:
+
 - Style: **New York**
 - Base color: **Neutral**
 - CSS variables: **Yes**
@@ -59,6 +62,7 @@ This creates `components.json`. Update it:
 Replace `app/globals.css` with the Five African Minerals theme. The canonical source is `app/globals.css` in the design-portal repo. The critical blocks are:
 
 **Required CSS custom properties:**
+
 ```css
 @import "tailwindcss";
 
@@ -66,11 +70,11 @@ Replace `app/globals.css` with the Five African Minerals theme. The canonical so
 
 @theme inline {
   /* Five African Minerals */
-  --color-cobalt: #0047AB;
-  --color-tanzanite: #B388FF;
-  --color-malachite: #64FFDA;
-  --color-gold: #FFD740;
-  --color-terracotta: #D4A574;
+  --color-cobalt: #0047ab;
+  --color-tanzanite: #b388ff;
+  --color-malachite: #64ffda;
+  --color-gold: #ffd740;
+  --color-terracotta: #d4a574;
 
   /* Radius system — ecosystem numbers: 7, 12, 14, 17 */
   --radius-sm: 7px;
@@ -86,14 +90,14 @@ Replace `app/globals.css` with the Five African Minerals theme. The canonical so
 }
 
 :root {
-  --background: #FAF9F5;
+  --background: #faf9f5;
   --foreground: #141413;
   /* ... full token set from design-portal/app/globals.css */
 }
 
 .dark {
-  --background: #0A0A0A;
-  --foreground: #F5F5F4;
+  --background: #0a0a0a;
+  --foreground: #f5f5f4;
   /* ... */
 }
 ```
@@ -132,7 +136,9 @@ const jetbrainsMono = JetBrains_Mono({
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${notoSans.variable} ${notoSerif.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body
+        className={`${notoSans.variable} ${notoSerif.variable} ${jetbrainsMono.variable} font-sans`}
+      >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           {children}
         </ThemeProvider>
@@ -155,7 +161,10 @@ Create `components/theme-provider.tsx`:
 
 import { ThemeProvider as NextThemesProvider } from "next-themes"
 
-export function ThemeProvider({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) {
+export function ThemeProvider({
+  children,
+  ...props
+}: React.ComponentProps<typeof NextThemesProvider>) {
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>
 }
 ```
@@ -215,15 +224,15 @@ hooks/
 
 ### Key Rules for All Ecosystem Apps
 
-| Rule | Detail |
-|------|--------|
+| Rule                  | Detail                                                                                                      |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- |
 | Install from registry | Never copy-paste component code — always `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>` |
-| Colors | Always CSS custom properties — never hardcoded hex |
-| Buttons | Always `rounded-full` — pill shape is brand identity |
-| Touch targets | 56px default, 48px minimum |
-| Typography | Noto Sans (body), Noto Serif (display), JetBrains Mono (code) |
-| Wordmarks | Always lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe` |
-| Theme | `next-themes` with `attribute="class"`, `defaultTheme="system"`, `enableSystem` |
+| Colors                | Always CSS custom properties — never hardcoded hex                                                          |
+| Buttons               | Always `rounded-full` — pill shape is brand identity                                                        |
+| Touch targets         | 56px default, 48px minimum                                                                                  |
+| Typography            | Noto Sans (body), Noto Serif (display), JetBrains Mono (code)                                               |
+| Wordmarks             | Always lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`                                         |
+| Theme                 | `next-themes` with `attribute="class"`, `defaultTheme="system"`, `enableSystem`                             |
 
 ### Ubuntu Layer — Community-First from Day One
 
@@ -237,12 +246,14 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
 ```
 
 `lib/accessibility.ts` provides:
+
 - `apcaContrast(text, bg)` — compute APCA Lc contrast value
 - `MINERAL_CONTRAST_TABLE` — pre-computed Lc values for all minerals
 - `TOUCH_TARGETS` — `{ default: 56, minimum: 48, css: { default: "h-14", minimum: "h-12" } }`
 - `COMPONENT_CHECKLIST` — 15-point Ubuntu/APCA checklist
 
 `lib/ai-safety.ts` provides:
+
 - `fullSafetyCheck(input)` — combined injection + security + cultural scan
 - `validateCulturalContext(text)` — Ubuntu alignment, Western-centric assumption detection
 - `AICircuitBreaker` — circuit breaker for AI calls
@@ -250,6 +261,7 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
 - `UBUNTU` — Ubuntu philosophy constants for AI system prompts
 
 **Ubuntu runtime rules:**
+
 - Use `UBUNTU.aiFraming` in every Claude/AI system prompt
 - Run `validateCulturalContext()` on AI output before rendering
 - Use `withAISafety()` wrapper on every AI API call
@@ -260,10 +272,10 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
 
 Every app has an assigned mineral accent. Use it for the app's primary brand colour:
 
-| App type | Brand | Mineral | CSS Variable |
-|----------|-------|---------|--------------|
-| Consumer/super app | mukoko | Tanzanite `#B388FF` | `--color-tanzanite` |
-| Enterprise/infrastructure | nyuchi | Gold `#FFD740` | `--color-gold` |
-| AI companion | shamwari | Cobalt `#0047AB` | `--color-cobalt` |
-| Events/gatherings | nhimbe | Malachite `#64FFDA` | `--color-malachite` |
-| Ecosystem-level | bundu | Terracotta `#D4A574` | `--color-terracotta` |
+| App type                  | Brand    | Mineral              | CSS Variable         |
+| ------------------------- | -------- | -------------------- | -------------------- |
+| Consumer/super app        | mukoko   | Tanzanite `#B388FF`  | `--color-tanzanite`  |
+| Enterprise/infrastructure | nyuchi   | Gold `#FFD740`       | `--color-gold`       |
+| AI companion              | shamwari | Cobalt `#0047AB`     | `--color-cobalt`     |
+| Events/gatherings         | nhimbe   | Malachite `#64FFDA`  | `--color-malachite`  |
+| Ecosystem-level           | bundu    | Terracotta `#D4A574` | `--color-terracotta` |

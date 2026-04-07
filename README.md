@@ -68,28 +68,28 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/card \
 
 ## Registry Categories
 
-| Category | Count | Examples |
-|---|---|---|
-| **Forms & Input** | 28 | input, phone-input, date-range-picker, tag-input, rich-text-editor, combobox, input-otp |
-| **Chat & Messaging** | 8 | chat-bubble, chat-list, chat-input, chat-layout |
-| **AI & Chatbot** | 8 | ai-chat, prompt-input, streaming-text |
-| **Data Display** | 14 | data-table, tree-view, kanban-board, virtual-list, json-viewer, timeline |
-| **User & Profile** | 8 | avatar, user-card, profile-header, activity-feed |
-| **E-commerce** | 7 | product-card, cart-item, order-summary |
-| **Calendar** | 7 | calendar, calendar-week-view, event-card, time-slot-picker |
-| **Productivity** | 6 | todo-item, checklist, comment-thread |
-| **Developer Tools** | 7 | api-key-display, code-tabs, log-viewer, json-viewer |
-| **Security** | 5 | permission-badge, mfa-setup, session-list |
-| **Content & Media** | 6 | markdown-renderer, video-player, lightbox |
-| **Navigation** | 8 | tabs, stepper, app-switcher, bottom-sheet, mega-menu |
-| **Layout** | 10 | split-view, masonry-grid, infinite-scroll, page-header |
-| **Feedback** | 10 | announcement-bar, cookie-consent, onboarding-tour, toast, progress |
-| **Chart Blocks** | 70 | area, bar, line, pie, radar, radial, tooltip |
-| **Page Blocks** | 35 | dashboard, login, signup, sidebar, profile, settings |
-| **Mukoko Ecosystem** | 4 | mukoko-header, mukoko-footer, mukoko-sidebar, mukoko-bottom-nav |
-| **Infrastructure** | 3 | error-boundary, lazy-section, section-error-boundary |
-| **Hooks** | 3 | use-toast, use-mobile, use-memory-pressure |
-| **Lib Utilities** | 11 | utils, observability, circuit-breaker, retry, timeout, fallback-chain, chaos, ai-safety |
+| Category             | Count | Examples                                                                                |
+| -------------------- | ----- | --------------------------------------------------------------------------------------- |
+| **Forms & Input**    | 28    | input, phone-input, date-range-picker, tag-input, rich-text-editor, combobox, input-otp |
+| **Chat & Messaging** | 8     | chat-bubble, chat-list, chat-input, chat-layout                                         |
+| **AI & Chatbot**     | 8     | ai-chat, prompt-input, streaming-text                                                   |
+| **Data Display**     | 14    | data-table, tree-view, kanban-board, virtual-list, json-viewer, timeline                |
+| **User & Profile**   | 8     | avatar, user-card, profile-header, activity-feed                                        |
+| **E-commerce**       | 7     | product-card, cart-item, order-summary                                                  |
+| **Calendar**         | 7     | calendar, calendar-week-view, event-card, time-slot-picker                              |
+| **Productivity**     | 6     | todo-item, checklist, comment-thread                                                    |
+| **Developer Tools**  | 7     | api-key-display, code-tabs, log-viewer, json-viewer                                     |
+| **Security**         | 5     | permission-badge, mfa-setup, session-list                                               |
+| **Content & Media**  | 6     | markdown-renderer, video-player, lightbox                                               |
+| **Navigation**       | 8     | tabs, stepper, app-switcher, bottom-sheet, mega-menu                                    |
+| **Layout**           | 10    | split-view, masonry-grid, infinite-scroll, page-header                                  |
+| **Feedback**         | 10    | announcement-bar, cookie-consent, onboarding-tour, toast, progress                      |
+| **Chart Blocks**     | 70    | area, bar, line, pie, radar, radial, tooltip                                            |
+| **Page Blocks**      | 35    | dashboard, login, signup, sidebar, profile, settings                                    |
+| **Mukoko Ecosystem** | 4     | mukoko-header, mukoko-footer, mukoko-sidebar, mukoko-bottom-nav                         |
+| **Infrastructure**   | 3     | error-boundary, lazy-section, section-error-boundary                                    |
+| **Hooks**            | 3     | use-toast, use-mobile, use-memory-pressure                                              |
+| **Lib Utilities**    | 11    | utils, observability, circuit-breaker, retry, timeout, fallback-chain, chaos, ai-safety |
 
 ---
 
@@ -167,13 +167,13 @@ design.nyuchi.com
 
 The design system is built on five colors, each named after an African mineral:
 
-| Mineral | Hex | CSS Variable | Usage |
-|---|---|---|---|
-| Cobalt | `#0047AB` | `--color-cobalt` | Primary blue, links, CTAs |
-| Tanzanite | `#B388FF` | `--color-tanzanite` | Purple accent, brand/logo |
-| Malachite | `#64FFDA` | `--color-malachite` | Cyan accent, success states |
-| Gold | `#FFD740` | `--color-gold` | Yellow accent, rewards, highlights |
-| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community |
+| Mineral    | Hex       | CSS Variable         | Usage                              |
+| ---------- | --------- | -------------------- | ---------------------------------- |
+| Cobalt     | `#0047AB` | `--color-cobalt`     | Primary blue, links, CTAs          |
+| Tanzanite  | `#B388FF` | `--color-tanzanite`  | Purple accent, brand/logo          |
+| Malachite  | `#64FFDA` | `--color-malachite`  | Cyan accent, success states        |
+| Gold       | `#FFD740` | `--color-gold`       | Yellow accent, rewards, highlights |
+| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community             |
 
 ---
 
@@ -228,11 +228,11 @@ All data flows through Supabase. API routes read from the database -- there are 
 
 The mukoko platform has three authoritative databases:
 
-| Source | Database | Owner | Role |
-|---|---|---|---|
-| Relational | Supabase / PostgreSQL | Platform | Identity, places, events, commerce, wallet |
-| Non-relational | ScyllaDB | Platform | All content and streams — messages, articles, AI conversations |
-| Personal | Web3 Pod (TBD) | Individual | Digital Twin memory, preferences, AI context |
+| Source         | Database              | Owner      | Role                                                           |
+| -------------- | --------------------- | ---------- | -------------------------------------------------------------- |
+| Relational     | Supabase / PostgreSQL | Platform   | Identity, places, events, commerce, wallet                     |
+| Non-relational | ScyllaDB              | Platform   | All content and streams — messages, articles, AI conversations |
+| Personal       | Web3 Pod (TBD)        | Individual | Digital Twin memory, preferences, AI context                   |
 
 Everything else — CouchDB (sync protocol), Cloudflare edge (KV + Durable Objects), RxDB/SQLite (device), Apache Doris (open data) — derives from these three sources.
 
@@ -250,40 +250,40 @@ Available tools: `list_components`, `get_component`, `search_components`, `get_d
 
 ## Tech Stack
 
-| Layer | Technology | Version |
-|---|---|---|
-| Framework | Next.js (App Router) | 16.2.2 |
-| Language | TypeScript (strict mode) | 6.0.2 |
-| Package Manager | pnpm | -- |
-| Styling | Tailwind CSS + CSS custom properties | 4.2.2 |
-| Component Primitives | Radix UI + Base UI | radix-ui 1.4.3, @base-ui/react 1.3.0 |
-| Variant Management | class-variance-authority (CVA) | 0.7.1 |
-| Charts | Recharts | 3.8.1 |
-| Forms | react-hook-form + zod | 7.72.0 / 4.3.6 |
-| Database | Supabase | 2.101.1 |
-| Documentation | Nextra | 4.6.1 |
-| Search | Pagefind | 1.4.0 |
-| Icons | Lucide React | 1.7.0 |
-| MCP | @modelcontextprotocol/sdk | 1.29.0 |
-| Testing | Vitest + Testing Library | 4.1.2 |
-| CI/CD | GitHub Actions + Vercel | -- |
+| Layer                | Technology                           | Version                              |
+| -------------------- | ------------------------------------ | ------------------------------------ |
+| Framework            | Next.js (App Router)                 | 16.2.2                               |
+| Language             | TypeScript (strict mode)             | 6.0.2                                |
+| Package Manager      | pnpm                                 | --                                   |
+| Styling              | Tailwind CSS + CSS custom properties | 4.2.2                                |
+| Component Primitives | Radix UI + Base UI                   | radix-ui 1.4.3, @base-ui/react 1.3.0 |
+| Variant Management   | class-variance-authority (CVA)       | 0.7.1                                |
+| Charts               | Recharts                             | 3.8.1                                |
+| Forms                | react-hook-form + zod                | 7.72.0 / 4.3.6                       |
+| Database             | Supabase                             | 2.101.1                              |
+| Documentation        | Nextra                               | 4.6.1                                |
+| Search               | Pagefind                             | 1.4.0                                |
+| Icons                | Lucide React                         | 1.7.0                                |
+| MCP                  | @modelcontextprotocol/sdk            | 1.29.0                               |
+| Testing              | Vitest + Testing Library             | 4.1.2                                |
+| CI/CD                | GitHub Actions + Vercel              | --                                   |
 
 ---
 
 ## Commands
 
-| Command | Description |
-|---|---|
-| `pnpm dev` | Start development server (port 11736) |
-| `pnpm build` | Production build (includes Pagefind indexing) |
-| `pnpm lint` | Run ESLint |
-| `pnpm test` | Run test suite (Vitest) |
-| `pnpm test:watch` | Run tests in watch mode |
-| `pnpm typecheck` | TypeScript type checking |
-| `pnpm start` | Start production server |
-| `pnpm registry:build` | Generate static registry JSON into `public/r/` |
-| `pnpm db:seed` | Seed Supabase from registry.json and brand data |
-| `pnpm db:reseed` | Force re-seed (idempotent upsert) |
+| Command               | Description                                     |
+| --------------------- | ----------------------------------------------- |
+| `pnpm dev`            | Start development server (port 11736)           |
+| `pnpm build`          | Production build (includes Pagefind indexing)   |
+| `pnpm lint`           | Run ESLint                                      |
+| `pnpm test`           | Run test suite (Vitest)                         |
+| `pnpm test:watch`     | Run tests in watch mode                         |
+| `pnpm typecheck`      | TypeScript type checking                        |
+| `pnpm start`          | Start production server                         |
+| `pnpm registry:build` | Generate static registry JSON into `public/r/`  |
+| `pnpm db:seed`        | Seed Supabase from registry.json and brand data |
+| `pnpm db:reseed`      | Force re-seed (idempotent upsert)               |
 
 ---
 
@@ -291,17 +291,17 @@ Available tools: `list_components`, `get_component`, `search_components`, `get_d
 
 This design system powers every app in the bundu ecosystem:
 
-| App | URL | Role |
-|---|---|---|
-| mukoko | [mukoko.com](https://mukoko.com) | Africa's super app — 17 mini-apps, 4 substrate |
-| mukoko weather | [weather.mukoko.com](https://weather.mukoko.com) | Hyperlocal forecasts, farming intelligence |
-| mukoko news | [news.mukoko.com](https://news.mukoko.com) | Pan-African news aggregation |
-| nhimbe | [nhimbe.com](https://nhimbe.com) | Events and cultural gatherings |
-| lingo | [lingo.mukoko.com](https://lingo.mukoko.com) | African language learning |
-| shamwari | [shamwari.ai](https://shamwari.ai) | Sovereign AI companion |
-| bushtrade | [bushtrade.co.zw](https://bushtrade.co.zw) | Rentals-first marketplace |
-| nyuchi | [nyuchi.com](https://nyuchi.com) | Enterprise layer — 7 products |
-| bundu | [bundu.family](https://bundu.family) | The ecosystem |
+| App            | URL                                              | Role                                           |
+| -------------- | ------------------------------------------------ | ---------------------------------------------- |
+| mukoko         | [mukoko.com](https://mukoko.com)                 | Africa's super app — 17 mini-apps, 4 substrate |
+| mukoko weather | [weather.mukoko.com](https://weather.mukoko.com) | Hyperlocal forecasts, farming intelligence     |
+| mukoko news    | [news.mukoko.com](https://news.mukoko.com)       | Pan-African news aggregation                   |
+| nhimbe         | [nhimbe.com](https://nhimbe.com)                 | Events and cultural gatherings                 |
+| lingo          | [lingo.mukoko.com](https://lingo.mukoko.com)     | African language learning                      |
+| shamwari       | [shamwari.ai](https://shamwari.ai)               | Sovereign AI companion                         |
+| bushtrade      | [bushtrade.co.zw](https://bushtrade.co.zw)       | Rentals-first marketplace                      |
+| nyuchi         | [nyuchi.com](https://nyuchi.com)                 | Enterprise layer — 7 products                  |
+| bundu          | [bundu.family](https://bundu.family)             | The ecosystem                                  |
 
 ---
 
@@ -309,18 +309,18 @@ This design system powers every app in the bundu ecosystem:
 
 All endpoints are under `/api/v1/` and documented in [`openapi.yaml`](openapi.yaml). All responses include CORS headers and appropriate caching.
 
-| Endpoint | Method | Description |
-|---|---|---|
-| `/api/v1` | GET | Discovery document -- lists all resources |
-| `/api/v1/ui` | GET | Component registry index |
-| `/api/v1/ui/{name}` | GET | Individual component with inlined source code |
-| `/api/v1/brand` | GET | Brand system (minerals, typography, spacing) |
-| `/api/v1/ecosystem` | GET | Architecture principles and framework decisions |
-| `/api/v1/data-layer` | GET | Local-first + cloud layer specification |
-| `/api/v1/pipeline` | GET | Open data pipeline (Redpanda, Flink, Doris) |
-| `/api/v1/sovereignty` | GET | Technology sovereignty assessments |
-| `/api/v1/db` | GET | Database operations |
-| `/api/v1/health` | GET | Service health check |
+| Endpoint              | Method | Description                                     |
+| --------------------- | ------ | ----------------------------------------------- |
+| `/api/v1`             | GET    | Discovery document -- lists all resources       |
+| `/api/v1/ui`          | GET    | Component registry index                        |
+| `/api/v1/ui/{name}`   | GET    | Individual component with inlined source code   |
+| `/api/v1/brand`       | GET    | Brand system (minerals, typography, spacing)    |
+| `/api/v1/ecosystem`   | GET    | Architecture principles and framework decisions |
+| `/api/v1/data-layer`  | GET    | Local-first + cloud layer specification         |
+| `/api/v1/pipeline`    | GET    | Open data pipeline (Redpanda, Flink, Doris)     |
+| `/api/v1/sovereignty` | GET    | Technology sovereignty assessments              |
+| `/api/v1/db`          | GET    | Database operations                             |
+| `/api/v1/health`      | GET    | Service health check                            |
 
 ---
 

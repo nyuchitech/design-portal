@@ -62,11 +62,13 @@ export function validatePromptLength(input: string, maxLength = 2000): boolean {
  * ```
  */
 export function sanitizeUserInput(input: string): string {
-  return input
-    // Remove null bytes and other control chars (keep newlines/tabs)
-    // eslint-disable-next-line no-control-regex
-    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
-    .trim()
+  return (
+    input
+      // Remove null bytes and other control chars (keep newlines/tabs)
+      // eslint-disable-next-line no-control-regex
+      .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+      .trim()
+  )
 }
 
 /**
@@ -171,9 +173,17 @@ export function detectPromptInjection(input: string): {
       const source = pattern.source.toLowerCase()
       if (source.includes("ignore") || source.includes("forget") || source.includes("new")) {
         flags.push("system_override")
-      } else if (source.includes("pretend") || source.includes("act as") || source.includes("you are now")) {
+      } else if (
+        source.includes("pretend") ||
+        source.includes("act as") ||
+        source.includes("you are now")
+      ) {
         flags.push("role_confusion")
-      } else if (source.includes("reveal") || source.includes("repeat") || source.includes("what")) {
+      } else if (
+        source.includes("reveal") ||
+        source.includes("repeat") ||
+        source.includes("what")
+      ) {
         flags.push("data_exfiltration")
       } else if (source.includes("system")) {
         flags.push("delimiter_injection")
@@ -284,9 +294,10 @@ export class RateLimiter {
 
     entry.timestamps.push(now)
     const remaining = this.config.maxRequests - entry.timestamps.length
-    const resetMs = entry.timestamps.length > 0
-      ? entry.timestamps[0] + this.config.windowMs - now
-      : this.config.windowMs
+    const resetMs =
+      entry.timestamps.length > 0
+        ? entry.timestamps[0] + this.config.windowMs - now
+        : this.config.windowMs
 
     return { allowed: true, remaining, resetMs: Math.max(0, resetMs) }
   }
@@ -331,8 +342,14 @@ const SECURITY_PATTERNS: Array<{ pattern: RegExp; category: string }> = [
   // Many-shot / token stuffing
   { pattern: /(.{5,})\1{10,}/i, category: "token_stuffing" },
   // Indirect / second-order injection
-  { pattern: /summarize\s+(this\s+)?document.{0,50}(ignore|forget)/i, category: "indirect_injection" },
-  { pattern: /translate\s+(this\s+)?.{0,30}(ignore|disregard)\s+(all|previous)/i, category: "indirect_injection" },
+  {
+    pattern: /summarize\s+(this\s+)?document.{0,50}(ignore|forget)/i,
+    category: "indirect_injection",
+  },
+  {
+    pattern: /translate\s+(this\s+)?.{0,30}(ignore|disregard)\s+(all|previous)/i,
+    category: "indirect_injection",
+  },
   // Output hijacking
   { pattern: /output\s+only\s+(the\s+)?(following|this)/i, category: "output_hijacking" },
   { pattern: /respond\s+(only\s+)?with\s+exactly/i, category: "output_hijacking" },
@@ -445,9 +462,7 @@ export function sanitizeAIOutput(output: string): string {
   // Pass 4 — entity-encode remaining angle brackets
   // This is the hard guarantee: even if a tag fragment survived passes 1–3,
   // it cannot execute as HTML after encoding.
-  result = result
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
+  result = result.replace(/</g, "&lt;").replace(/>/g, "&gt;")
 
   return result
 }
@@ -619,8 +634,8 @@ const HALLUCINATION_SIGNALS = [
 
 /** Patterns that suggest the AI invented a citation */
 const FABRICATED_CITATION_SIGNALS = [
-  /\((\w[\w\s,]+,\s*\d{4})\)/g,  // (Author, Year) APA style — may be hallucinated
-  /\[\d+\]\s*https?:\/\//g,       // [1] https:// — possibly fabricated URL
+  /\((\w[\w\s,]+,\s*\d{4})\)/g, // (Author, Year) APA style — may be hallucinated
+  /\[\d+\]\s*https?:\/\//g, // [1] https:// — possibly fabricated URL
 ]
 
 export interface IntegrityCheckResult {
@@ -731,7 +746,8 @@ export const UBUNTU = {
   /** Core philosophical statement */
   principle: "Umuntu ngumuntu ngabantu — A person is a person through other persons.",
   /** Short framing for AI system prompts */
-  aiFraming: "You operate in the Ubuntu tradition: community-first, dignity-centred, context-aware.",
+  aiFraming:
+    "You operate in the Ubuntu tradition: community-first, dignity-centred, context-aware.",
   /** Response style guidance */
   responseStyle: [
     "Frame benefits in terms of community and shared prosperity",

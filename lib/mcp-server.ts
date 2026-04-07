@@ -58,16 +58,22 @@ export function createMukokoMcpServer(): McpServer {
         registryDependencies: c.registry_dependencies,
       }))
       return {
-        contents: [{
-          uri: "mukoko://registry",
-          mimeType: "application/json",
-          text: JSON.stringify({
-            $schema: "https://ui.shadcn.com/schema/registry.json",
-            name: "mukoko",
-            homepage: "https://design.nyuchi.com",
-            items,
-          }, null, 2),
-        }],
+        contents: [
+          {
+            uri: "mukoko://registry",
+            mimeType: "application/json",
+            text: JSON.stringify(
+              {
+                $schema: "https://ui.shadcn.com/schema/registry.json",
+                name: "mukoko",
+                homepage: "https://design.nyuchi.com",
+                items,
+              },
+              null,
+              2
+            ),
+          },
+        ],
       }
     }
   )
@@ -79,11 +85,13 @@ export function createMukokoMcpServer(): McpServer {
     async () => {
       const brand = await getBrandSystem()
       return {
-        contents: [{
-          uri: "mukoko://brand",
-          mimeType: "application/json",
-          text: JSON.stringify(brand, null, 2),
-        }],
+        contents: [
+          {
+            uri: "mukoko://brand",
+            mimeType: "application/json",
+            text: JSON.stringify(brand, null, 2),
+          },
+        ],
       }
     }
   )
@@ -93,16 +101,15 @@ export function createMukokoMcpServer(): McpServer {
     "mukoko://design-tokens",
     { description: "Five African Minerals palette and semantic color tokens" },
     async () => {
-      const [minerals, semanticColors] = await Promise.all([
-        getMinerals(),
-        getSemanticColors(),
-      ])
+      const [minerals, semanticColors] = await Promise.all([getMinerals(), getSemanticColors()])
       return {
-        contents: [{
-          uri: "mukoko://design-tokens",
-          mimeType: "application/json",
-          text: JSON.stringify({ minerals, semanticColors }, null, 2),
-        }],
+        contents: [
+          {
+            uri: "mukoko://design-tokens",
+            mimeType: "application/json",
+            text: JSON.stringify({ minerals, semanticColors }, null, 2),
+          },
+        ],
       }
     }
   )
@@ -124,20 +131,26 @@ export function createMukokoMcpServer(): McpServer {
           getRemovedTechnologies(),
         ])
       return {
-        contents: [{
-          uri: "mukoko://architecture",
-          mimeType: "application/json",
-          text: JSON.stringify({
-            principles,
-            frameworkDecision: framework,
-            localDataLayer: localData,
-            cloudLayer: cloud,
-            pipeline,
-            dataOwnership: ownership,
-            sovereignty,
-            removedTechnologies: removed,
-          }, null, 2),
-        }],
+        contents: [
+          {
+            uri: "mukoko://architecture",
+            mimeType: "application/json",
+            text: JSON.stringify(
+              {
+                principles,
+                frameworkDecision: framework,
+                localDataLayer: localData,
+                cloudLayer: cloud,
+                pipeline,
+                dataOwnership: ownership,
+                sovereignty,
+                removedTechnologies: removed,
+              },
+              null,
+              2
+            ),
+          },
+        ],
       }
     }
   )
@@ -145,25 +158,55 @@ export function createMukokoMcpServer(): McpServer {
   server.resource(
     "ubuntu",
     "mukoko://ubuntu",
-    { description: "Ubuntu philosophy and community-first design doctrine for the bundu ecosystem" },
+    {
+      description: "Ubuntu philosophy and community-first design doctrine for the bundu ecosystem",
+    },
     async () => {
       const ubuntuData = {
         philosophy: {
           principle: "Umuntu ngumuntu ngabantu — A person is a person through other persons.",
-          origin: "Nguni Bantu — rooted in Zulu, Ndebele, Xhosa, and related Southern African languages",
-          meaning: "Ubuntu describes the essence of being human: humanity, dignity, communal interdependence, and shared prosperity. It is not merely a philosophy but a lived behavioural framework.",
-          aiFraming: "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community-first, dignity-centred, context-aware, and locally grounded.",
+          origin:
+            "Nguni Bantu — rooted in Zulu, Ndebele, Xhosa, and related Southern African languages",
+          meaning:
+            "Ubuntu describes the essence of being human: humanity, dignity, communal interdependence, and shared prosperity. It is not merely a philosophy but a lived behavioural framework.",
+          aiFraming:
+            "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community-first, dignity-centred, context-aware, and locally grounded.",
         },
         designPrinciples: [
-          { title: "Shared devices", description: "Design for multiple family members on one account — not individual user isolation. Account switching, family profiles, and shared history are first-class features." },
-          { title: "Outdoor readability", description: "High contrast (APCA Lc 90+ for body text), large touch targets (56px default), sun-readable colour choices. Users are in markets, fields, and streets — not air-conditioned offices." },
-          { title: "Intermittent connectivity", description: "Offline-first architecture. Graceful degradation. Every action that can be queued locally must be. Connectivity is a gift, not a given." },
-          { title: "Budget hardware", description: "Performance budget: 100KB JS, 3G-optimised, <3s TTI on mid-range Android. The flagship experience must work on a Tecno Spark." },
-          { title: "All ages and literacy levels", description: "No age-gate assumptions. Iconography supplements text. Voice input is a peer-class interaction method. Swahili, Shona, Ndebele, and English are all valid primary languages." },
-          { title: "Community data ownership", description: "Individual data belongs to the individual and their community. No dark patterns. Data portability is non-negotiable. The community's aggregate data benefits the community first." },
+          {
+            title: "Shared devices",
+            description:
+              "Design for multiple family members on one account — not individual user isolation. Account switching, family profiles, and shared history are first-class features.",
+          },
+          {
+            title: "Outdoor readability",
+            description:
+              "High contrast (APCA Lc 90+ for body text), large touch targets (56px default), sun-readable colour choices. Users are in markets, fields, and streets — not air-conditioned offices.",
+          },
+          {
+            title: "Intermittent connectivity",
+            description:
+              "Offline-first architecture. Graceful degradation. Every action that can be queued locally must be. Connectivity is a gift, not a given.",
+          },
+          {
+            title: "Budget hardware",
+            description:
+              "Performance budget: 100KB JS, 3G-optimised, <3s TTI on mid-range Android. The flagship experience must work on a Tecno Spark.",
+          },
+          {
+            title: "All ages and literacy levels",
+            description:
+              "No age-gate assumptions. Iconography supplements text. Voice input is a peer-class interaction method. Swahili, Shona, Ndebele, and English are all valid primary languages.",
+          },
+          {
+            title: "Community data ownership",
+            description:
+              "Individual data belongs to the individual and their community. No dark patterns. Data portability is non-negotiable. The community's aggregate data benefits the community first.",
+          },
         ],
         communityFirst: {
-          description: "Every feature decision asks: does this benefit the community, or just the individual? Does it strengthen relationships, or fragment them?",
+          description:
+            "Every feature decision asks: does this benefit the community, or just the individual? Does it strengthen relationships, or fragment them?",
           examples: [
             "Shared watchlists (nhimbe events) — 'who else is going?' over 'my tickets'",
             "Group weather summaries (mukoko-weather) — 'your farming area' over 'your personal forecast'",
@@ -186,11 +229,13 @@ export function createMukokoMcpServer(): McpServer {
       }
 
       return {
-        contents: [{
-          uri: "mukoko://ubuntu",
-          mimeType: "application/json",
-          text: JSON.stringify(ubuntuData, null, 2),
-        }],
+        contents: [
+          {
+            uri: "mukoko://ubuntu",
+            mimeType: "application/json",
+            text: JSON.stringify(ubuntuData, null, 2),
+          },
+        ],
       }
     }
   )
@@ -199,7 +244,10 @@ export function createMukokoMcpServer(): McpServer {
 
   function toolError(context: string, err: unknown) {
     const message = err instanceof Error ? err.message : JSON.stringify(err)
-    return { content: [{ type: "text" as const, text: `${context}: ${message}` }], isError: true as const }
+    return {
+      content: [{ type: "text" as const, text: `${context}: ${message}` }],
+      isError: true as const,
+    }
   }
 
   /** Read a component's source code from disk, given its file path relative to project root. */
@@ -215,23 +263,29 @@ export function createMukokoMcpServer(): McpServer {
     "list_components",
     "List Nyuchi design portal components. Filter by registry type (ui/hook/lib) and/or category.",
     {
-      type: z.enum(["all", "registry:ui", "registry:hook", "registry:lib", "registry:block"]).default("all").describe("Filter by registry type"),
-      category: z.string().optional().describe("Filter by category (e.g. 'forms', 'overlay', 'navigation', 'data-display', 'layout', 'feedback', 'action', 'ai', 'chat', 'calendar', 'developer', 'security', 'ecommerce', 'mukoko')"),
+      type: z
+        .enum(["all", "registry:ui", "registry:hook", "registry:lib", "registry:block"])
+        .default("all")
+        .describe("Filter by registry type"),
+      category: z
+        .string()
+        .optional()
+        .describe(
+          "Filter by category (e.g. 'forms', 'overlay', 'navigation', 'data-display', 'layout', 'feedback', 'action', 'ai', 'chat', 'calendar', 'developer', 'security', 'ecommerce', 'mukoko')"
+        ),
     },
     async ({ type, category }) => {
       try {
         const components = await getAllComponents()
 
-        let items = type === "all"
-          ? components
-          : components.filter(c => c.registry_type === type)
+        let items = type === "all" ? components : components.filter((c) => c.registry_type === type)
 
         if (category) {
           const lower = category.toLowerCase()
-          items = items.filter(c => c.category?.toLowerCase().includes(lower))
+          items = items.filter((c) => c.category?.toLowerCase().includes(lower))
         }
 
-        const summary = items.map(c => ({
+        const summary = items.map((c) => ({
           name: c.name,
           type: c.registry_type,
           category: c.category,
@@ -255,19 +309,25 @@ export function createMukokoMcpServer(): McpServer {
     "Get a component's full source code, metadata, and dependencies from the Nyuchi design portal.",
     {
       name: z.string().describe("Component name (e.g., 'button', 'card', 'use-toast')"),
-      include_docs: z.boolean().default(false).describe("Include documentation, use cases, and examples"),
+      include_docs: z
+        .boolean()
+        .default(false)
+        .describe("Include documentation, use cases, and examples"),
     },
     async ({ name, include_docs }) => {
       try {
-        const component = include_docs
-          ? await getComponentWithDocs(name)
-          : await getComponent(name)
+        const component = include_docs ? await getComponentWithDocs(name) : await getComponent(name)
 
         if (!component) {
           const all = await getAllComponents()
-          const available = all.map(c => c.name).join(", ")
+          const available = all.map((c) => c.name).join(", ")
           return {
-            content: [{ type: "text" as const, text: `Component "${name}" not found. Available: ${available}` }],
+            content: [
+              {
+                type: "text" as const,
+                text: `Component "${name}" not found. Available: ${available}`,
+              },
+            ],
             isError: true,
           }
         }
@@ -323,28 +383,40 @@ export function createMukokoMcpServer(): McpServer {
 
         if (!component.docs) {
           return {
-            content: [{
-              type: "text" as const,
-              text: JSON.stringify({
-                name: component.name,
-                description: component.description,
-                message: "No extended documentation available for this component.",
-                installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${component.name}`,
-              }, null, 2),
-            }],
+            content: [
+              {
+                type: "text" as const,
+                text: JSON.stringify(
+                  {
+                    name: component.name,
+                    description: component.description,
+                    message: "No extended documentation available for this component.",
+                    installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${component.name}`,
+                  },
+                  null,
+                  2
+                ),
+              },
+            ],
           }
         }
 
         return {
-          content: [{
-            type: "text" as const,
-            text: JSON.stringify({
-              name: component.name,
-              description: component.description,
-              ...component.docs,
-              installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${component.name}`,
-            }, null, 2),
-          }],
+          content: [
+            {
+              type: "text" as const,
+              text: JSON.stringify(
+                {
+                  name: component.name,
+                  description: component.description,
+                  ...component.docs,
+                  installCommand: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${component.name}`,
+                },
+                null,
+                2
+              ),
+            },
+          ],
         }
       } catch (err) {
         return toolError(`Failed to get docs for "${name}"`, err)
@@ -357,7 +429,10 @@ export function createMukokoMcpServer(): McpServer {
     "Search Nyuchi design portal components by name or description keyword.",
     {
       query: z.string().describe("Search query to match against component names and descriptions"),
-      type: z.enum(["all", "registry:ui", "registry:hook", "registry:lib", "registry:block"]).default("all").describe("Filter results by registry type"),
+      type: z
+        .enum(["all", "registry:ui", "registry:hook", "registry:lib", "registry:block"])
+        .default("all")
+        .describe("Filter results by registry type"),
     },
     async ({ query, type }) => {
       try {
@@ -365,7 +440,7 @@ export function createMukokoMcpServer(): McpServer {
         let matches = await searchComponents(query)
 
         if (type !== "all") {
-          matches = matches.filter(c => c.registry_type === type)
+          matches = matches.filter((c) => c.registry_type === type)
         }
 
         if (matches.length === 0) {
@@ -374,7 +449,7 @@ export function createMukokoMcpServer(): McpServer {
           }
         }
 
-        const results = matches.map(c => ({
+        const results = matches.map((c) => ({
           name: c.name,
           type: c.registry_type,
           category: c.category,
@@ -395,16 +470,28 @@ export function createMukokoMcpServer(): McpServer {
     "get_design_tokens",
     "Get Mukoko design tokens: Five African Minerals palette, semantic colors, typography, spacing, or radii.",
     {
-      category: z.enum(["minerals", "semantic-colors", "typography", "spacing", "radii", "all"]).default("all").describe("Token category to retrieve"),
+      category: z
+        .enum(["minerals", "semantic-colors", "typography", "spacing", "radii", "all"])
+        .default("all")
+        .describe("Token category to retrieve"),
     },
     async ({ category }) => {
       const brand = await getBrandSystem()
       if (!brand) {
-        return { content: [{ type: "text" as const, text: "Brand system not available. Database may not be seeded." }], isError: true }
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: "Brand system not available. Database may not be seeded.",
+            },
+          ],
+          isError: true,
+        }
       }
       const data: Record<string, unknown> = {}
       if (category === "all" || category === "minerals") data.minerals = brand.minerals
-      if (category === "all" || category === "semantic-colors") data.semanticColors = brand.semanticColors
+      if (category === "all" || category === "semantic-colors")
+        data.semanticColors = brand.semanticColors
       if (category === "all" || category === "typography") data.typography = brand.typography
       if (category === "all" || category === "spacing") data.spacing = brand.spacing
       if (category === "all" || category === "radii") data.radii = brand.meta?.radii
@@ -423,25 +510,31 @@ export function createMukokoMcpServer(): McpServer {
       description: z.string().describe("One-line description of the component"),
       variants: z.array(z.string()).optional().describe("Visual variant names"),
       sizes: z.array(z.string()).optional().describe("Size variant names"),
-      hasRadix: z.boolean().default(false).describe("Whether the component uses Radix UI primitives"),
-      isClient: z.boolean().default(false).describe("Whether the component needs 'use client' directive"),
+      hasRadix: z
+        .boolean()
+        .default(false)
+        .describe("Whether the component uses Radix UI primitives"),
+      isClient: z
+        .boolean()
+        .default(false)
+        .describe("Whether the component needs 'use client' directive"),
     },
     async ({ name, description, variants, sizes, hasRadix, isClient }) => {
       const pascalName = name
         .split("-")
-        .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
         .join("")
 
-      const camelVariants = name.replace(/-./g, x => x[1].toUpperCase())
-      const variantEntries = (variants || ["default"]).map(v => `        ${v}: "",`).join("\n")
-      const sizeEntries = (sizes || ["default"]).map(s => `        ${s}: "",`).join("\n")
+      const camelVariants = name.replace(/-./g, (x) => x[1].toUpperCase())
+      const variantEntries = (variants || ["default"]).map((v) => `        ${v}: "",`).join("\n")
+      const sizeEntries = (sizes || ["default"]).map((s) => `        ${s}: "",`).join("\n")
 
       const imports = [
         'import * as React from "react"',
         'import { cva, type VariantProps } from "class-variance-authority"',
       ]
       if (hasRadix) imports.push('import { Slot } from "radix-ui"')
-      imports.push('', 'import { cn } from "@/lib/utils"')
+      imports.push("", 'import { cn } from "@/lib/utils"')
 
       const source = `${isClient ? '"use client"\n\n' : ""}${imports.join("\n")}
 
@@ -481,10 +574,12 @@ export { ${pascalName}, ${camelVariants}Variants }
 `
 
       return {
-        content: [{
-          type: "text" as const,
-          text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies: [...(hasRadix ? ["radix-ui"] : []), "class-variance-authority"], files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Add the registry entry to \`registry.json\`\n3. Run \`pnpm registry:build\` to regenerate static files\n4. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n\n### Ubuntu Design Checklist\n- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum — outdoor use, all ages\n- [ ] APCA contrast Lc 90+ for body text against both light (#FAF9F5) and dark (#0A0A0A) backgrounds\n- [ ] Designed for shared devices — avoid personal-only state assumptions\n- [ ] Works at 3G speeds — no heavy dependencies unless necessary\n- [ ] All strings externalisable for Shona/Ndebele/English localisation\n- [ ] Community-first framing — benefits the group, not just the individual`,
-        }],
+        content: [
+          {
+            type: "text" as const,
+            text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies: [...(hasRadix ? ["radix-ui"] : []), "class-variance-authority"], files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Add the registry entry to \`registry.json\`\n3. Run \`pnpm registry:build\` to regenerate static files\n4. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n\n### Ubuntu Design Checklist\n- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum — outdoor use, all ages\n- [ ] APCA contrast Lc 90+ for body text against both light (#FAF9F5) and dark (#0A0A0A) backgrounds\n- [ ] Designed for shared devices — avoid personal-only state assumptions\n- [ ] Works at 3G speeds — no heavy dependencies unless necessary\n- [ ] All strings externalisable for Shona/Ndebele/English localisation\n- [ ] Community-first framing — benefits the group, not just the individual`,
+          },
+        ],
       }
     }
   )
@@ -498,13 +593,15 @@ export { ${pascalName}, ${camelVariants}Variants }
     async ({ components: requested }) => {
       try {
         const all = await getAllComponents()
-        const names = new Set(all.map(c => c.name))
-        const valid = requested.filter(n => names.has(n))
-        const invalid = requested.filter(n => !names.has(n))
+        const names = new Set(all.map((c) => c.name))
+        const valid = requested.filter((n) => names.has(n))
+        const invalid = requested.filter((n) => !names.has(n))
 
         let text = ""
         if (valid.length > 0) {
-          text += valid.map(n => `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${n}`).join("\n")
+          text += valid
+            .map((n) => `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/${n}`)
+            .join("\n")
         }
         if (invalid.length > 0) {
           text += `\n\nNot found: ${invalid.join(", ")}`
@@ -526,7 +623,15 @@ export { ${pascalName}, ${camelVariants}Variants }
     async ({ brand: brandName }) => {
       const brandData = await getBrandSystem()
       if (!brandData) {
-        return { content: [{ type: "text" as const, text: "Brand system not available. Database may not be seeded." }], isError: true }
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: "Brand system not available. Database may not be seeded.",
+            },
+          ],
+          isError: true,
+        }
       }
       const found = brandData.ecosystem.find(
         (b: { name: string }) => b.name === brandName.toLowerCase()
@@ -535,16 +640,24 @@ export { ${pascalName}, ${camelVariants}Variants }
       if (!found) {
         const available = brandData.ecosystem.map((b: { name: string }) => b.name).join(", ")
         return {
-          content: [{ type: "text" as const, text: `Brand "${brandName}" not found. Available: ${available}` }],
+          content: [
+            {
+              type: "text" as const,
+              text: `Brand "${brandName}" not found. Available: ${available}`,
+            },
+          ],
           isError: true,
         }
       }
 
-      const mineral = brandData.minerals.find(
-        (m: { name: string }) => m.name === found.mineral
-      )
+      const mineral = brandData.minerals.find((m: { name: string }) => m.name === found.mineral)
       return {
-        content: [{ type: "text" as const, text: JSON.stringify({ ...found, mineralDetails: mineral }, null, 2) }],
+        content: [
+          {
+            type: "text" as const,
+            text: JSON.stringify({ ...found, mineralDetails: mineral }, null, 2),
+          },
+        ],
       }
     }
   )
@@ -553,19 +666,31 @@ export { ${pascalName}, ${camelVariants}Variants }
     "get_architecture_info",
     "Get Mukoko ecosystem architecture information: principles, data layer, pipeline, or sovereignty details.",
     {
-      category: z.enum(["principles", "framework", "local-data-layer", "cloud-layer", "open-data-pipeline", "data-ownership", "sovereignty", "removed", "all"]).describe("Architecture category to retrieve"),
+      category: z
+        .enum([
+          "principles",
+          "framework",
+          "local-data-layer",
+          "cloud-layer",
+          "open-data-pipeline",
+          "data-ownership",
+          "sovereignty",
+          "removed",
+          "all",
+        ])
+        .describe("Architecture category to retrieve"),
     },
     async ({ category }) => {
       try {
         const fetchMap: Record<string, () => Promise<unknown>> = {
-          "principles": () => getArchitecturePrinciples(),
-          "framework": () => getFrameworkDecision(),
+          principles: () => getArchitecturePrinciples(),
+          framework: () => getFrameworkDecision(),
           "local-data-layer": () => getLocalDataLayer(),
           "cloud-layer": () => getCloudLayer(),
           "open-data-pipeline": () => getPipeline(),
           "data-ownership": () => getDataOwnership(),
-          "sovereignty": () => getSovereignty(),
-          "removed": () => getRemovedTechnologies(),
+          sovereignty: () => getSovereignty(),
+          removed: () => getRemovedTechnologies(),
         }
 
         if (category === "all") {
@@ -592,15 +717,20 @@ export { ${pascalName}, ${camelVariants}Variants }
     "get_ubuntu_principles",
     "Get Ubuntu philosophy principles and community-first design doctrine for the bundu ecosystem. Use when designing new features, writing AI prompts, or onboarding new team members.",
     {
-      aspect: z.enum(["all", "philosophy", "design", "community", "ai-framing", "languages"]).default("all").describe("Aspect of Ubuntu doctrine to retrieve"),
+      aspect: z
+        .enum(["all", "philosophy", "design", "community", "ai-framing", "languages"])
+        .default("all")
+        .describe("Aspect of Ubuntu doctrine to retrieve"),
     },
     async ({ aspect }) => {
       const ubuntu = {
         philosophy: {
           principle: "Umuntu ngumuntu ngabantu — A person is a person through other persons.",
           origin: "Nguni Bantu (Zulu, Ndebele, Xhosa, Shona traditions)",
-          meaning: "Ubuntu is the philosophical foundation of the bundu ecosystem. It defines how we build: community-first, dignity-centred, locally grounded.",
-          aiFraming: "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community benefit over individual optimisation, local context over universal assumptions, dignity as a non-negotiable baseline.",
+          meaning:
+            "Ubuntu is the philosophical foundation of the bundu ecosystem. It defines how we build: community-first, dignity-centred, locally grounded.",
+          aiFraming:
+            "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community benefit over individual optimisation, local context over universal assumptions, dignity as a non-negotiable baseline.",
         },
         design: [
           "Shared devices — design for families, not isolated individuals",
@@ -630,7 +760,8 @@ export { ${pascalName}, ${camelVariants}Variants }
         languages: {
           primary: ["English (en-ZW)", "Shona (sn)", "Ndebele (nd)"],
           supported: ["Zulu (zu)", "Sotho (st)", "Swahili (sw)", "Chewa (ny)"],
-          principle: "All UI must be designed for localisation from day one. String externalisation is required.",
+          principle:
+            "All UI must be designed for localisation from day one. String externalisation is required.",
         },
       }
 

@@ -1,9 +1,11 @@
 # Scaffold Component Skill
 
 ## Description
+
 Scaffold a new Mukoko UI component: generate the file, update registry.json, and verify the API serves it correctly.
 
 ## Trigger
+
 When the user says "add a new component", "create a component", "scaffold [component name]", "I need a [X] component", or "build a new [X] for the registry".
 
 ## Instructions
@@ -30,6 +32,7 @@ This returns the full TSX source and the registry JSON entry.
 ### Step 2 — Create the component file
 
 Write the generated source to `components/ui/<name>.tsx`. Make sure to:
+
 - Set 56px default touch target height (`h-14`) and 48px minimum (`h-12` for sm)
 - Use CSS custom properties from `globals.css` — never hardcoded hex
 - Add `data-slot="<name>"` to the root element
@@ -46,9 +49,7 @@ Open `registry.json` and add the registry entry to the `items` array. Schema:
   "description": "<description>",
   "dependencies": ["class-variance-authority"],
   "registryDependencies": [],
-  "files": [
-    { "path": "components/ui/<name>.tsx", "type": "registry:ui" }
-  ]
+  "files": [{ "path": "components/ui/<name>.tsx", "type": "registry:ui" }]
 }
 ```
 
@@ -72,16 +73,16 @@ Expected: `200 OK` with `$schema`, `name`, `type`, `files[0].content` containing
 
 ### Component Rules (non-negotiable)
 
-| Rule | Detail |
-|------|--------|
-| Touch targets | 56px default (`h-14`), 48px minimum (`h-12`) |
-| Buttons | Always `rounded-full` — pill shape is the brand identity |
-| Colors | Always Tailwind classes → CSS custom properties. Never `#hex` or `style={{}}` |
-| Exports | Named only — `export { ComponentName, componentNameVariants }` |
-| Slot | `data-slot="<name>"` on root element |
-| client | `"use client"` only when hooks / event handlers / browser APIs used |
-| Mineral strip | Always vertical — left-edge accent only |
-| cn() | All className composition via `cn()` from `@/lib/utils` |
+| Rule          | Detail                                                                        |
+| ------------- | ----------------------------------------------------------------------------- |
+| Touch targets | 56px default (`h-14`), 48px minimum (`h-12`)                                  |
+| Buttons       | Always `rounded-full` — pill shape is the brand identity                      |
+| Colors        | Always Tailwind classes → CSS custom properties. Never `#hex` or `style={{}}` |
+| Exports       | Named only — `export { ComponentName, componentNameVariants }`                |
+| Slot          | `data-slot="<name>"` on root element                                          |
+| client        | `"use client"` only when hooks / event handlers / browser APIs used           |
+| Mineral strip | Always vertical — left-edge accent only                                       |
+| cn()          | All className composition via `cn()` from `@/lib/utils`                       |
 
 ### Ubuntu Design Checklist
 
@@ -95,6 +96,7 @@ Every component must pass before it's registry-ready:
 - [ ] **Community framing** — state and context designed for group use, not just personal
 
 **APCA quick reference:**
+
 - Body text → Lc 90+ (`text-foreground` on `bg-background` = Lc ~100 ✓)
 - Large text / headings → Lc 75+
 - UI labels / buttons → Lc 60+
@@ -105,11 +107,11 @@ Every component must pass before it's registry-ready:
 ### Pattern Reference
 
 ```tsx
-"use client"  // only if needed
+"use client" // only if needed
 
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui"  // only if polymorphic
+import { Slot } from "radix-ui" // only if polymorphic
 
 import { cn } from "@/lib/utils"
 
@@ -124,9 +126,9 @@ const exampleVariants = cva(
         ghost: "hover:bg-muted hover:text-foreground",
       },
       size: {
-        default: "h-14 px-4 text-sm",   // 56px — default touch target
-        sm: "h-12 px-3 text-sm",         // 48px — minimum touch target
-        lg: "h-16 px-6 text-base",       // 64px — prominent actions
+        default: "h-14 px-4 text-sm", // 56px — default touch target
+        sm: "h-12 px-3 text-sm", // 48px — minimum touch target
+        lg: "h-16 px-6 text-base", // 64px — prominent actions
       },
     },
     defaultVariants: { variant: "default", size: "default" },

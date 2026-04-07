@@ -62,7 +62,10 @@ const nextConfig = {
         headers: [
           { key: "Access-Control-Allow-Origin", value: "*" },
           { key: "Access-Control-Allow-Methods", value: "GET, POST, DELETE, OPTIONS" },
-          { key: "Access-Control-Allow-Headers", value: "Content-Type, MCP-Protocol-Version, MCP-Session-Id" },
+          {
+            key: "Access-Control-Allow-Headers",
+            value: "Content-Type, MCP-Protocol-Version, MCP-Session-Id",
+          },
         ],
       },
 
@@ -70,16 +73,17 @@ const nextConfig = {
       {
         source: "/r/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600" },
+          {
+            key: "Cache-Control",
+            value: "public, max-age=3600, s-maxage=86400, stale-while-revalidate=3600",
+          },
         ],
       },
 
       // ── Cache llms.txt and robots.txt for crawlers ───────────────────
       {
         source: "/(llms.txt|robots.txt|sitemap.xml)",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" },
-        ],
+        headers: [{ key: "Cache-Control", value: "public, max-age=86400, s-maxage=604800" }],
       },
     ]
   },

@@ -52,11 +52,7 @@ export function hexToRgb(hex: string): [number, number, number] {
  * Coefficients per ITU-R BT.709.
  */
 function relativeLuminance(r: number, g: number, b: number): number {
-  return (
-    0.2126729 * linearizeSrgb(r) +
-    0.7151522 * linearizeSrgb(g) +
-    0.0721750 * linearizeSrgb(b)
-  )
+  return 0.2126729 * linearizeSrgb(r) + 0.7151522 * linearizeSrgb(g) + 0.072175 * linearizeSrgb(b)
 }
 
 /**
@@ -200,7 +196,8 @@ export function checkContrast(
     })
     return {
       ...result,
-      recommendation: `Lc ${lc} is below the required Lc ${required} for "${category}". ` +
+      recommendation:
+        `Lc ${lc} is below the required Lc ${required} for "${category}". ` +
         `Darken the text or lighten the background to increase contrast.`,
     }
   }
@@ -223,24 +220,24 @@ export const MINERAL_CONTRAST_TABLE = {
     background: "#FAF9F5",
     foreground: { hex: "#141413", lc: 99.7, category: "bodyText" as const },
     mutedForeground: { hex: "#5C5B58", lc: 66.4, category: "uiText" as const },
-    cobalt:     { hex: "#0047AB", lc: 78.2, category: "largeText" as const },
-    tanzanite:  { hex: "#4B0082", lc: 92.1, category: "bodyText" as const },
-    malachite:  { hex: "#004D40", lc: 91.3, category: "bodyText" as const },
-    gold:       { hex: "#5D4037", lc: 79.0, category: "largeText" as const },
+    cobalt: { hex: "#0047AB", lc: 78.2, category: "largeText" as const },
+    tanzanite: { hex: "#4B0082", lc: 92.1, category: "bodyText" as const },
+    malachite: { hex: "#004D40", lc: 91.3, category: "bodyText" as const },
+    gold: { hex: "#5D4037", lc: 79.0, category: "largeText" as const },
     terracotta: { hex: "#8B4513", lc: 73.6, category: "largeText" as const },
-    destructive:{ hex: "#B3261E", lc: 71.8, category: "largeText" as const },
+    destructive: { hex: "#B3261E", lc: 71.8, category: "largeText" as const },
   },
   dark: {
     /** Background: #0A0A0A (deep night) */
     background: "#0A0A0A",
     foreground: { hex: "#F5F5F4", lc: 99.2, category: "bodyText" as const },
     mutedForeground: { hex: "#9A9A95", lc: 63.1, category: "uiText" as const },
-    cobalt:     { hex: "#00B0FF", lc: 83.4, category: "bodyText" as const },
-    tanzanite:  { hex: "#B388FF", lc: 91.4, category: "bodyText" as const },
-    malachite:  { hex: "#64FFDA", lc: 88.7, category: "bodyText" as const },
-    gold:       { hex: "#FFD740", lc: 90.2, category: "bodyText" as const },
+    cobalt: { hex: "#00B0FF", lc: 83.4, category: "bodyText" as const },
+    tanzanite: { hex: "#B388FF", lc: 91.4, category: "bodyText" as const },
+    malachite: { hex: "#64FFDA", lc: 88.7, category: "bodyText" as const },
+    gold: { hex: "#FFD740", lc: 90.2, category: "bodyText" as const },
     terracotta: { hex: "#D4A574", lc: 78.6, category: "largeText" as const },
-    destructive:{ hex: "#F2B8B5", lc: 82.3, category: "bodyText" as const },
+    destructive: { hex: "#F2B8B5", lc: 82.3, category: "bodyText" as const },
   },
 } as const
 
@@ -269,8 +266,8 @@ export const TOUCH_TARGETS = {
   hitbox: 44,
   /** CSS equivalents */
   css: {
-    default: "h-14",   // 56px
-    minimum: "h-12",   // 48px
+    default: "h-14", // 56px
+    minimum: "h-12", // 48px
     prominent: "h-16", // 64px
   },
   rationale: [
@@ -296,7 +293,8 @@ export const FOCUS_REQUIREMENTS = {
   /** Focus ring must have Lc 45+ against its adjacent surface */
   minRingContrast: 45,
   /** Tailwind class pattern for focus rings — use on all interactive elements */
-  tailwindPattern: "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+  tailwindPattern:
+    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
   /** Never remove focus visibility — use :focus-visible, not :focus */
   neverRemoveFocus: true,
 } as const

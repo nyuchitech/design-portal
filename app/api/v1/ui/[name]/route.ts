@@ -14,10 +14,7 @@ const CORS_CACHE = {
  *
  * Reads metadata and source code from Supabase.
  */
-export async function GET(
-  _request: Request,
-  { params }: { params: Promise<{ name: string }> }
-) {
+export async function GET(_request: Request, { params }: { params: Promise<{ name: string }> }) {
   try {
     const { name } = await params
 
@@ -32,8 +29,7 @@ export async function GET(
       return NextResponse.json(
         {
           error: "Database not configured",
-          message:
-            "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
+          message: "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY.",
         },
         { status: 503, headers: { "Access-Control-Allow-Origin": "*" } }
       )

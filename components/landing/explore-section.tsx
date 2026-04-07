@@ -1,13 +1,4 @@
-import {
-  Blocks,
-  Palette,
-  BookOpen,
-  BarChart3,
-  Layers,
-  Shield,
-  Code,
-  Globe,
-} from "lucide-react"
+import { Blocks, Palette, BookOpen, BarChart3, Layers, Shield, Code, Globe } from "lucide-react"
 
 const sections = [
   {
@@ -76,14 +67,15 @@ export function ExploreSection() {
     <section className="px-4 py-16 sm:px-6 md:py-28">
       <div className="mx-auto max-w-5xl">
         <div className="mb-10 text-center sm:mb-14">
-          <p className="mb-3 text-sm font-medium uppercase tracking-widest text-muted-foreground">
+          <p className="mb-3 text-sm font-medium tracking-widest text-muted-foreground uppercase">
             Explore
           </p>
-          <h2 className="font-serif text-balance text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+          <h2 className="font-serif text-2xl font-bold tracking-tight text-balance text-foreground sm:text-3xl md:text-4xl">
             Everything you need to build
           </h2>
           <p className="mt-3 text-sm text-muted-foreground sm:mt-4 sm:text-base">
-            Design system, component library, architecture reference, and developer docs — all in one place.
+            Design system, component library, architecture reference, and developer docs — all in
+            one place.
           </p>
         </div>
 
@@ -99,9 +91,7 @@ export function ExploreSection() {
                   <section.icon className="size-5" />
                 </div>
                 {section.count && (
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {section.count}
-                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">{section.count}</span>
                 )}
               </div>
               <div>

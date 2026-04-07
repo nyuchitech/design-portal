@@ -128,11 +128,7 @@ const jsonLd = {
         "@type": "ImageObject",
         url: `${SITE_URL}/icons/mukoko-icon-dark-cobalt.svg`,
       },
-      sameAs: [
-        "https://github.com/nyuchitech",
-        "https://nyuchi.com",
-        "https://mukoko.com",
-      ],
+      sameAs: ["https://github.com/nyuchitech", "https://nyuchi.com", "https://mukoko.com"],
     },
     {
       "@type": "SoftwareApplication",

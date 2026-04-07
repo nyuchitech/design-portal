@@ -47,7 +47,11 @@ function CopyCommand() {
         {command}
       </code>
       <span className="flex size-8 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors group-hover:text-foreground">
-        {copied ? <Check className="size-4 text-[var(--color-malachite)]" /> : <Copy className="size-4" />}
+        {copied ? (
+          <Check className="size-4 text-[var(--color-malachite)]" />
+        ) : (
+          <Copy className="size-4" />
+        )}
       </span>
     </button>
   )
@@ -76,7 +80,7 @@ export function Hero() {
               href={p.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full border border-border px-2.5 py-0.5 text-[11px] font-mono text-muted-foreground transition-colors hover:text-foreground"
+              className="rounded-full border border-border px-2.5 py-0.5 font-mono text-[11px] text-muted-foreground transition-colors hover:text-foreground"
             >
               {p.label}
             </a>
@@ -85,16 +89,15 @@ export function Hero() {
       </div>
 
       <div className="flex max-w-3xl flex-col items-center gap-4 sm:gap-6">
-        <h1 className="font-serif text-balance text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
+        <h1 className="font-serif text-3xl font-bold tracking-tight text-balance text-foreground sm:text-4xl md:text-6xl lg:text-7xl">
           The design system
           <br />
           for the bundu ecosystem
         </h1>
-        <p className="max-w-xl text-pretty text-base leading-relaxed text-muted-foreground md:text-lg">
-          294 production-ready components, blocks, and charts rooted in the
-          Five African Minerals palette. One design system powering mukoko,
-          nyuchi, and every app in the bundu family. Install with the shadcn
-          CLI — no packages, no lock-in.
+        <p className="max-w-xl text-base leading-relaxed text-pretty text-muted-foreground md:text-lg">
+          294 production-ready components, blocks, and charts rooted in the Five African Minerals
+          palette. One design system powering mukoko, nyuchi, and every app in the bundu family.
+          Install with the shadcn CLI — no packages, no lock-in.
         </p>
       </div>
 
@@ -108,9 +111,7 @@ export function Hero() {
             </a>
           </Button>
           <Button variant="outline" size="lg" className="w-full sm:w-auto" asChild>
-            <a href="/docs">
-              Documentation
-            </a>
+            <a href="/docs">Documentation</a>
           </Button>
         </div>
       </div>
