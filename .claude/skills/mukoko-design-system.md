@@ -52,8 +52,9 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component-name>
 | `get_brand_info` | Get brand details (bundu, nyuchi, mukoko, shamwari, nhimbe) |
 | `get_architecture_info` | Get architecture by category (principles, framework, sovereignty, etc.) |
 | `get_database_status` | Get DB row counts and connection status |
+| `get_ubuntu_principles` | Get Ubuntu philosophy and community-first design doctrine |
 
-**4 Resources:** `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`
+**5 Resources:** `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`
 
 ### Design Token Reference
 
@@ -207,6 +208,65 @@ All under `/api/v1/`, documented in `openapi.yaml`:
 | `GET /api/v1/ui/{name}` | Component with source code |
 | `GET /api/v1/ecosystem` | Architecture principles |
 | `GET /api/v1/health` | Health check |
+
+### Ubuntu Philosophy — Community-First Design
+
+**"Umuntu ngumuntu ngabantu" — A person is a person through other persons.**
+
+Ubuntu is not a branding exercise. It is the behavioural foundation of every design decision in the bundu ecosystem:
+
+| Ubuntu Principle | Design Implication |
+|---|---|
+| Shared devices | Design for families, not isolated individuals. Account switching, family profiles, shared history are first-class. |
+| Outdoor readability | APCA Lc 90+ body text, 56px touch targets, sun-readable contrast. Users are in markets, fields, streets. |
+| Intermittent connectivity | Offline-first. Queue locally, sync when able. Connectivity is a gift, not a given. |
+| Budget hardware | 100KB JS budget, 3G-optimised, <3s TTI on mid-range Android (Tecno Spark is the reference device). |
+| All ages | No age-gate assumptions. Icons supplement text. Voice is first-class. No forced English-only UI. |
+| Community data ownership | Data belongs to the individual and their community. No dark patterns. Data portability is non-negotiable. |
+
+**AI framing rule:** Never frame benefits as purely individual. "You and your community" beats "you personally". Shona, Ndebele, and English are all valid primary languages — do not treat English as default.
+
+**Ubuntu Design Checklist** (every new component):
+- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum
+- [ ] APCA Lc 90+ body text on both #FAF9F5 (light) and #0A0A0A (dark)
+- [ ] Works on shared devices — no personal-only state assumptions
+- [ ] Performant on 3G — no unnecessary heavy dependencies
+- [ ] All strings externalisable for Shona/Ndebele/English localisation
+- [ ] Community-first framing — benefits the group, not just the individual
+
+Use `get_ubuntu_principles` MCP tool for the full doctrine. Access via `mukoko://ubuntu` resource.
+
+### Accessibility — APCA 3.0 AAA
+
+The ecosystem follows **APCA (Advanced Perceptual Contrast Algorithm)** — WCAG 3.0 AAA standard, not the outdated WCAG 2.x ratio method.
+
+**Minimum Lc values by text role:**
+| Role | Min Lc | Tailwind / Token |
+|------|--------|-----------------|
+| Body text | Lc 90 | `text-foreground` on `bg-background` |
+| Large text (≥18pt) | Lc 75 | headings, hero text |
+| Display text | Lc 60 | section labels, card titles |
+| UI text / labels | Lc 60 | buttons, inputs, badges |
+| Non-text (icons, borders) | Lc 45 | icon strokes, dividers |
+| Inactive / disabled | Lc 30 | placeholder text, disabled states |
+| Decorative | Lc 15 | background patterns |
+
+**Pre-computed mineral Lc values** (light bg `#FAF9F5` / dark bg `#0A0A0A`):
+| Mineral | Light Lc | Dark Lc | Body text safe? |
+|---------|----------|---------|-----------------|
+| Cobalt `#0047AB` | ~78 | — | Large text only in light |
+| Cobalt dark `#00B0FF` | — | ~83 | ✓ large text in dark |
+| Tanzanite `#4B0082` | ~92 | — | ✓ body text in light |
+| Tanzanite dark `#B388FF` | — | ~78 | Large text only in dark |
+| Malachite `#64FFDA` | ~62 | — | Display/UI in light |
+| Gold `#FFD740` | ~61 | — | Display/UI in light |
+| Terracotta `#D4A574` | ~56 | — | Non-text only in light |
+| Foreground light `#141413` | ~100 | — | ✓ all roles |
+| Foreground dark `#F5F5F4` | — | ~99 | ✓ all roles |
+
+**Library:** `lib/accessibility.ts` — exports `apcaContrast()`, `checkContrast()`, `MINERAL_CONTRAST_TABLE`, `TOUCH_TARGETS`, `COMPONENT_CHECKLIST`.
+
+Install via: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/accessibility`
 
 ### MCP Configuration
 

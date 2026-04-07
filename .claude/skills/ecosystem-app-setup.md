@@ -225,6 +225,37 @@ hooks/
 | Wordmarks | Always lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe` |
 | Theme | `next-themes` with `attribute="class"`, `defaultTheme="system"`, `enableSystem` |
 
+### Ubuntu Layer — Community-First from Day One
+
+Every bundu ecosystem app must embed Ubuntu principles from setup, not as an afterthought:
+
+**Step 9 — Install the accessibility and AI safety libraries**
+
+```bash
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/accessibility
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
+```
+
+`lib/accessibility.ts` provides:
+- `apcaContrast(text, bg)` — compute APCA Lc contrast value
+- `MINERAL_CONTRAST_TABLE` — pre-computed Lc values for all minerals
+- `TOUCH_TARGETS` — `{ default: 56, minimum: 48, css: { default: "h-14", minimum: "h-12" } }`
+- `COMPONENT_CHECKLIST` — 15-point Ubuntu/APCA checklist
+
+`lib/ai-safety.ts` provides:
+- `fullSafetyCheck(input)` — combined injection + security + cultural scan
+- `validateCulturalContext(text)` — Ubuntu alignment, Western-centric assumption detection
+- `AICircuitBreaker` — circuit breaker for AI calls
+- `withAISafety(fn, fallback, timeoutMs)` — safe AI call wrapper
+- `UBUNTU` — Ubuntu philosophy constants for AI system prompts
+
+**Ubuntu runtime rules:**
+- Use `UBUNTU.aiFraming` in every Claude/AI system prompt
+- Run `validateCulturalContext()` on AI output before rendering
+- Use `withAISafety()` wrapper on every AI API call
+- Set `lang="sn"` / `lang="nd"` on multilingual content blocks
+- Never gate content behind English-only — internationalise from day one
+
 ### Brand Assignment
 
 Every app has an assigned mineral accent. Use it for the app's primary brand colour:

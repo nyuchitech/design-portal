@@ -83,6 +83,25 @@ Expected: `200 OK` with `$schema`, `name`, `type`, `files[0].content` containing
 | Mineral strip | Always vertical — left-edge accent only |
 | cn() | All className composition via `cn()` from `@/lib/utils` |
 
+### Ubuntu Design Checklist
+
+Every component must pass before it's registry-ready:
+
+- [ ] **Touch target** ≥ 56px (`h-14`) default, ≥ 48px (`h-12`) minimum — outdoor use, all ages
+- [ ] **APCA contrast** Lc 90+ for body text on both `#FAF9F5` (light) and `#0A0A0A` (dark)
+- [ ] **Shared device safe** — no assumptions that one person owns the device
+- [ ] **3G performant** — no unnecessary heavy imports, lazy-load where possible
+- [ ] **Localisable** — all visible strings can be passed as props (no hardcoded English)
+- [ ] **Community framing** — state and context designed for group use, not just personal
+
+**APCA quick reference:**
+- Body text → Lc 90+ (`text-foreground` on `bg-background` = Lc ~100 ✓)
+- Large text / headings → Lc 75+
+- UI labels / buttons → Lc 60+
+- Non-text (icons, borders) → Lc 45+
+- `--color-cobalt` on light bg = Lc ~78 → large text only
+- `--color-tanzanite` (`#4B0082`) on light bg = Lc ~92 → body text safe ✓
+
 ### Pattern Reference
 
 ```tsx

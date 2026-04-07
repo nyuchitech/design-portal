@@ -1293,7 +1293,7 @@
     {
       "name": "ai-safety",
       "type": "registry:lib",
-      "description": "AI safety utilities: input validation, prompt injection detection, and sliding-window rate limiting.",
+      "description": "AI safety utilities: input validation, prompt injection detection, adversarial security scanning, AI circuit breaker, output integrity validation, and Ubuntu cultural context layer.",
       "dependencies": [],
       "registryDependencies": [
         "observability"
@@ -1301,6 +1301,21 @@
       "files": [
         {
           "path": "lib/ai-safety.ts",
+          "type": "registry:lib"
+        }
+      ]
+    },
+    {
+      "name": "accessibility",
+      "type": "registry:lib",
+      "description": "APCA 3.0 AAA accessibility utilities: contrast checking, pre-computed mineral Lc values, touch target constants, component checklist, and Ubuntu-informed design guidelines.",
+      "dependencies": [],
+      "registryDependencies": [
+        "observability"
+      ],
+      "files": [
+        {
+          "path": "lib/accessibility.ts",
           "type": "registry:lib"
         }
       ]

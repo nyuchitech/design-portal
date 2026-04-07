@@ -142,6 +142,59 @@ export function createMukokoMcpServer(): McpServer {
     }
   )
 
+  server.resource(
+    "ubuntu",
+    "mukoko://ubuntu",
+    { description: "Ubuntu philosophy and community-first design doctrine for the bundu ecosystem" },
+    async () => {
+      const ubuntuData = {
+        philosophy: {
+          principle: "Umuntu ngumuntu ngabantu — A person is a person through other persons.",
+          origin: "Nguni Bantu — rooted in Zulu, Ndebele, Xhosa, and related Southern African languages",
+          meaning: "Ubuntu describes the essence of being human: humanity, dignity, communal interdependence, and shared prosperity. It is not merely a philosophy but a lived behavioural framework.",
+          aiFraming: "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community-first, dignity-centred, context-aware, and locally grounded.",
+        },
+        designPrinciples: [
+          { title: "Shared devices", description: "Design for multiple family members on one account — not individual user isolation. Account switching, family profiles, and shared history are first-class features." },
+          { title: "Outdoor readability", description: "High contrast (APCA Lc 90+ for body text), large touch targets (56px default), sun-readable colour choices. Users are in markets, fields, and streets — not air-conditioned offices." },
+          { title: "Intermittent connectivity", description: "Offline-first architecture. Graceful degradation. Every action that can be queued locally must be. Connectivity is a gift, not a given." },
+          { title: "Budget hardware", description: "Performance budget: 100KB JS, 3G-optimised, <3s TTI on mid-range Android. The flagship experience must work on a Tecno Spark." },
+          { title: "All ages and literacy levels", description: "No age-gate assumptions. Iconography supplements text. Voice input is a peer-class interaction method. Swahili, Shona, Ndebele, and English are all valid primary languages." },
+          { title: "Community data ownership", description: "Individual data belongs to the individual and their community. No dark patterns. Data portability is non-negotiable. The community's aggregate data benefits the community first." },
+        ],
+        communityFirst: {
+          description: "Every feature decision asks: does this benefit the community, or just the individual? Does it strengthen relationships, or fragment them?",
+          examples: [
+            "Shared watchlists (nhimbe events) — 'who else is going?' over 'my tickets'",
+            "Group weather summaries (mukoko-weather) — 'your farming area' over 'your personal forecast'",
+            "Community marketplace trust scores — built on social proof, not anonymous ratings",
+          ],
+        },
+        aiResponseStyle: [
+          "Frame benefits in terms of community and shared prosperity — not individual gain",
+          "Use local examples (Zimbabwe, Southern Africa, East Africa) where relevant",
+          "Respect elders, family structures, and communal decision-making patterns",
+          "Avoid individualist framing: prefer 'you and your community' over 'you personally'",
+          "Acknowledge that multiple languages coexist — Shona, Ndebele, and English are all valid primary languages",
+          "Do not assume Western infrastructure: credit cards, fast broadband, and single-user households are not universal",
+        ],
+        languages: {
+          primary: ["English (en-ZW)", "Shona (sn)", "Ndebele (nd)"],
+          supported: ["Zulu (zu)", "Sotho (st)", "Swahili (sw)", "Chewa (ny)"],
+          note: "All user-facing text should be designed for localisation. String externalisation is required from day one.",
+        },
+      }
+
+      return {
+        contents: [{
+          uri: "mukoko://ubuntu",
+          mimeType: "application/json",
+          text: JSON.stringify(ubuntuData, null, 2),
+        }],
+      }
+    }
+  )
+
   // ─── Tools ───────────────────────────────────────────────────────────
 
   function toolError(context: string, err: unknown) {
@@ -430,7 +483,7 @@ export { ${pascalName}, ${camelVariants}Variants }
       return {
         content: [{
           type: "text" as const,
-          text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies: [...(hasRadix ? ["radix-ui"] : []), "class-variance-authority"], files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Add the registry entry to \`registry.json\`\n3. Run \`pnpm registry:build\` to regenerate static files\n4. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\``,
+          text: `## ${pascalName}\n\n\`\`\`tsx\n${source}\`\`\`\n\n### Registry Entry\n\n\`\`\`json\n${JSON.stringify({ name, type: "registry:ui", description, dependencies: [...(hasRadix ? ["radix-ui"] : []), "class-variance-authority"], files: [{ path: `components/ui/${name}.tsx`, type: "registry:ui" }] }, null, 2)}\n\`\`\`\n\n### Next Steps\n1. Create \`components/ui/${name}.tsx\` with the code above\n2. Add the registry entry to \`registry.json\`\n3. Run \`pnpm registry:build\` to regenerate static files\n4. Verify: \`curl http://localhost:3000/api/v1/ui/${name}\`\n\n### Ubuntu Design Checklist\n- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum — outdoor use, all ages\n- [ ] APCA contrast Lc 90+ for body text against both light (#FAF9F5) and dark (#0A0A0A) backgrounds\n- [ ] Designed for shared devices — avoid personal-only state assumptions\n- [ ] Works at 3G speeds — no heavy dependencies unless necessary\n- [ ] All strings externalisable for Shona/Ndebele/English localisation\n- [ ] Community-first framing — benefits the group, not just the individual`,
         }],
       }
     }
@@ -531,6 +584,60 @@ export { ${pascalName}, ${camelVariants}Variants }
         }
       } catch (err) {
         return toolError("Failed to fetch architecture data", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_ubuntu_principles",
+    "Get Ubuntu philosophy principles and community-first design doctrine for the bundu ecosystem. Use when designing new features, writing AI prompts, or onboarding new team members.",
+    {
+      aspect: z.enum(["all", "philosophy", "design", "community", "ai-framing", "languages"]).default("all").describe("Aspect of Ubuntu doctrine to retrieve"),
+    },
+    async ({ aspect }) => {
+      const ubuntu = {
+        philosophy: {
+          principle: "Umuntu ngumuntu ngabantu — A person is a person through other persons.",
+          origin: "Nguni Bantu (Zulu, Ndebele, Xhosa, Shona traditions)",
+          meaning: "Ubuntu is the philosophical foundation of the bundu ecosystem. It defines how we build: community-first, dignity-centred, locally grounded.",
+          aiFraming: "AI systems in the bundu ecosystem operate in the Ubuntu tradition: community benefit over individual optimisation, local context over universal assumptions, dignity as a non-negotiable baseline.",
+        },
+        design: [
+          "Shared devices — design for families, not isolated individuals",
+          "Outdoor readability — APCA Lc 90+ body text, 56px touch targets, sun-readable contrast",
+          "Intermittent connectivity — offline-first, queue locally, sync when able",
+          "Budget hardware — 100KB JS budget, 3G-optimised, Tecno Spark must work",
+          "All ages — no age-gate assumptions, icons supplement text, voice is first-class",
+          "Community data ownership — individual data benefits the community",
+        ],
+        community: {
+          coreQuestion: "Does this feature benefit the community, or just the individual?",
+          patterns: [
+            "Group features over solo features",
+            "Social proof over anonymous ratings",
+            "Shared context over personal dashboards",
+            "Local news over global feeds",
+          ],
+        },
+        "ai-framing": [
+          "Frame responses in terms of community and shared benefit",
+          "Use local examples (Zimbabwe, Southern Africa) where relevant",
+          "Respect communal decision-making: families and elders matter",
+          "Do not assume Western infrastructure (credit cards, broadband, single-user households)",
+          "Shona, Ndebele, and English are all valid primary languages — do not treat English as default",
+          "Do not describe Africa as a monolith — specify countries and regions",
+        ],
+        languages: {
+          primary: ["English (en-ZW)", "Shona (sn)", "Ndebele (nd)"],
+          supported: ["Zulu (zu)", "Sotho (st)", "Swahili (sw)", "Chewa (ny)"],
+          principle: "All UI must be designed for localisation from day one. String externalisation is required.",
+        },
+      }
+
+      const result = aspect === "all" ? ubuntu : ubuntu[aspect as keyof typeof ubuntu]
+
+      return {
+        content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
       }
     }
   )
