@@ -22,6 +22,26 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level=moderate
 
+  registry:
+    name: Registry Snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Verify registry.json matches Supabase
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+        if: env.NEXT_PUBLIC_SUPABASE_URL != ''
+        run: pnpm registry:verify
+
   lint:
     name: Lint
     runs-on: ubuntu-latest

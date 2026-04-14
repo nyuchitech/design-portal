@@ -5,8 +5,8 @@ import { Head } from "nextra/components"
 import { getPageMap } from "nextra/page-map"
 import "nextra-theme-docs/style.css"
 import "./globals.css"
-import { MukokoLogo } from "@/components/brand/mukoko-logo"
-import { MineralStrip } from "@/components/brand/mineral-strip"
+import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
+import { MineralStrip } from "@/components/layout/mineral-strip"
 import { Footer as CustomFooter } from "@/components/landing/footer"
 
 const fontSans = Noto_Sans({ subsets: ["latin"], variable: "--font-sans" })
@@ -96,7 +96,7 @@ export const viewport: Viewport = {
 
 const navbar = (
   <Navbar
-    logo={<MukokoLogo size={24} suffix="design" />}
+    logo={<NyuchiLogo size={24} suffix="design" />}
     projectLink="https://github.com/nyuchitech/design-portal"
   />
 )

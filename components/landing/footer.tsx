@@ -1,5 +1,5 @@
 import { Separator } from "@/components/ui/separator"
-import { MukokoLogo } from "@/components/brand/mukoko-logo"
+import { NyuchiLogo } from "@/components/layout/nyuchi-logo"
 
 const minerals = [
   { name: "cobalt", color: "bg-[var(--color-cobalt)]" },
@@ -165,7 +165,7 @@ export function Footer() {
 
         <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
           <div className="flex flex-col gap-3">
-            <MukokoLogo size={24} showWordmark={true} suffix="design" />
+            <NyuchiLogo size={24} suffix="design" />
             <p className="max-w-xs text-xs leading-relaxed text-muted-foreground">
               The design system for the bundu ecosystem — powering mukoko, nyuchi, and every app in
               the family. Built on the Five African Minerals palette.

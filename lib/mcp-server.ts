@@ -7,9 +7,6 @@
  * All data is read from Supabase — zero hardcoded content.
  */
 
-import { readFile } from "fs/promises"
-import { join } from "path"
-
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { z } from "zod"
 import {
@@ -332,15 +329,6 @@ export async function createMukokoMcpServer(): Promise<McpServer> {
     }
   }
 
-  /** Read a component's source code from disk, given its file path relative to project root. */
-  async function readSourceFromDisk(filePath: string): Promise<string | null> {
-    try {
-      return await readFile(join(process.cwd(), filePath), "utf-8")
-    } catch {
-      return null
-    }
-  }
-
   server.tool(
     "list_components",
     "List Nyuchi design portal components. Filter by registry type (ui/hook/lib) and/or category.",
@@ -424,11 +412,8 @@ export async function createMukokoMcpServer(): Promise<McpServer> {
           }
         }
 
-        // Read source code from DB or fall back to disk
-        let sourceCode = component.source_code ?? null
-        if (!sourceCode && component.files.length > 0) {
-          sourceCode = await readSourceFromDisk(component.files[0].path)
-        }
+        // Source code is stored in Supabase; no disk fallback post-v4.0.26.
+        const sourceCode = component.source_code ?? null
 
         const result: Record<string, unknown> = {
           name: component.name,
