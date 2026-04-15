@@ -20,7 +20,10 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - run: pnpm audit --audit-level=moderate
+      # --ignore-registry-errors keeps CI green when npmjs.org's audit
+      # endpoint is degraded (the "quick" endpoint was retired in April 2026;
+      # pnpm 10.x still calls it). Remove once pnpm ships a fix.
+      - run: pnpm audit --audit-level=moderate --ignore-registry-errors
 
   registry:
     name: Registry Snapshot
