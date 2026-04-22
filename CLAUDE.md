@@ -64,27 +64,27 @@ design-portal (this repo)
 
 ## 3. Tech Stack
 
-| Layer                | Technology                                      | Version                              |
-| -------------------- | ----------------------------------------------- | ------------------------------------ |
-| Framework            | Next.js (App Router) + Nextra MDX docs          | 16.2.3                               |
-| Language             | TypeScript (strict mode)                        | 6.0.2                                |
-| Package Manager      | pnpm                                            | —                                    |
-| Styling              | Tailwind CSS + CSS custom properties            | 4.2.2                                |
-| Component Primitives | Radix UI + Base UI                              | radix-ui 1.4.3, @base-ui/react 1.3.0 |
-| Variant Management   | class-variance-authority (CVA)                  | 0.7.1                                |
-| Class Composition    | clsx + tailwind-merge                           | via `cn()` in `lib/utils.ts`         |
-| Icons                | Lucide React                                    | 1.7.0                                |
-| Theming              | next-themes                                     | 0.4.6                                |
-| Forms                | react-hook-form + zod                           | 7.72.0 / 4.3.6                       |
-| Charts               | Recharts                                        | 3.8.1                                |
-| Testing              | Vitest + Testing Library                        | 4.1.2                                |
-| Observability        | Structured logging (`lib/observability.ts`)     | Built-in                             |
-| Metrics              | MCP usage tracking (`lib/metrics.ts`)           | Built-in                             |
-| Site search          | Pagefind (built in `postbuild` step)            | static index in `public/_pagefind/`  |
-| Database             | Supabase (PostgreSQL) — single source of truth  | 2.103.0                              |
-| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)     | 1.29.0                               |
-| CI/CD                | GitHub Actions + Vercel                         | —                                    |
-| Deployment           | Vercel                                          | —                                    |
+| Layer                | Technology                                     | Version                              |
+| -------------------- | ---------------------------------------------- | ------------------------------------ |
+| Framework            | Next.js (App Router) + Nextra MDX docs         | 16.2.3                               |
+| Language             | TypeScript (strict mode)                       | 6.0.2                                |
+| Package Manager      | pnpm                                           | —                                    |
+| Styling              | Tailwind CSS + CSS custom properties           | 4.2.2                                |
+| Component Primitives | Radix UI + Base UI                             | radix-ui 1.4.3, @base-ui/react 1.3.0 |
+| Variant Management   | class-variance-authority (CVA)                 | 0.7.1                                |
+| Class Composition    | clsx + tailwind-merge                          | via `cn()` in `lib/utils.ts`         |
+| Icons                | Lucide React                                   | 1.7.0                                |
+| Theming              | next-themes                                    | 0.4.6                                |
+| Forms                | react-hook-form + zod                          | 7.72.0 / 4.3.6                       |
+| Charts               | Recharts                                       | 3.8.1                                |
+| Testing              | Vitest + Testing Library                       | 4.1.2                                |
+| Observability        | Structured logging (`lib/observability.ts`)    | Built-in                             |
+| Metrics              | MCP usage tracking (`lib/metrics.ts`)          | Built-in                             |
+| Site search          | Pagefind (built in `postbuild` step)           | static index in `public/_pagefind/`  |
+| Database             | Supabase (PostgreSQL) — single source of truth | 2.103.0                              |
+| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)    | 1.29.0                               |
+| CI/CD                | GitHub Actions + Vercel                        | —                                    |
+| Deployment           | Vercel                                         | —                                    |
 
 ---
 
@@ -219,17 +219,17 @@ design-portal/
 
 **Single source of truth: the Supabase `components` table** — 545 stable items across 10 architecture layers, with metadata, dependencies, source code, docs, and version history split across:
 
-| Table                  | Purpose                                           |
-| ---------------------- | ------------------------------------------------- |
-| `components`           | Name, type, description, deps, files, source_code, architecture_layer, category, status |
-| `component_docs`       | Use cases, variants, a11y notes (per component)   |
-| `component_versions`   | Per-component version history                     |
-| `documentation_pages`  | Long-form MDX-equivalent docs (10 pages)          |
-| `changelog`            | Releases (currently 4.0.0 → 4.0.26)               |
-| `ai_instructions`      | System prompts per target (mcp-server, claude, copilot) |
-| `fundi_issues`         | Self-healing issue tracking                       |
-| `brand_*`              | Minerals, semantic colors, typography, spacing, ecosystem brands |
-| `architecture_*`       | Principles, data layer, pipeline, sovereignty assessments |
+| Table                 | Purpose                                                                                 |
+| --------------------- | --------------------------------------------------------------------------------------- |
+| `components`          | Name, type, description, deps, files, source_code, architecture_layer, category, status |
+| `component_docs`      | Use cases, variants, a11y notes (per component)                                         |
+| `component_versions`  | Per-component version history                                                           |
+| `documentation_pages` | Long-form MDX-equivalent docs (10 pages)                                                |
+| `changelog`           | Releases (currently 4.0.0 → 4.0.26)                                                     |
+| `ai_instructions`     | System prompts per target (mcp-server, claude, copilot)                                 |
+| `fundi_issues`        | Self-healing issue tracking                                                             |
+| `brand_*`             | Minerals, semantic colors, typography, spacing, ecosystem brands                        |
+| `architecture_*`      | Principles, data layer, pipeline, sovereignty assessments                               |
 
 API responses follow the shadcn registry schema at `https://ui.shadcn.com/schema/registry.json`.
 
@@ -546,30 +546,30 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-| Endpoint                                   | Description                                                  | Supabase source                |
-| ------------------------------------------ | ------------------------------------------------------------ | ------------------------------ |
-| `GET /api/v1`                              | Discovery document — lists all resources                     | —                              |
-| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)      | `brand_*` tables               |
-| `GET /api/v1/ui`                           | Component registry index                                     | `components`                   |
-| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)       | `components`                   |
-| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                   | `component_docs`               |
-| `GET /api/v1/ui/{name}/versions`           | Component version history                                    | `component_versions`           |
-| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision                 | `architecture_principles`      |
-| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                      | `architecture_data_layer`      |
-| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)                | `architecture_pipeline`        |
-| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                           | `architecture_sovereignty`     |
-| `GET /api/v1/docs`                         | List documentation pages                                     | `documentation_pages`          |
-| `GET /api/v1/docs/{slug}`                  | Single documentation page                                    | `documentation_pages`          |
-| `GET /api/v1/changelog`                    | All releases                                                 | `changelog`                    |
-| `GET /api/v1/changelog/{version}`          | Single release                                               | `changelog`                    |
-| `GET /api/v1/ai/instructions`              | List AI instruction sets                                     | `ai_instructions`              |
-| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot)      | `ai_instructions`              |
-| `GET /api/v1/fundi`                        | Open self-healing issues                                     | `fundi_issues`                 |
-| `GET /api/v1/fundi/{id}`                   | Single fundi issue                                           | `fundi_issues`                 |
-| `GET /api/v1/fundi/stats`                  | Aggregate learning stats                                     | `fundi_issues`                 |
-| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)        | multiple                       |
-| `GET /api/v1/stats`                        | Live counts (total stable, per layer, per category)          | `components`                   |
-| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)                  | runtime checks                 |
+| Endpoint                             | Description                                             | Supabase source            |
+| ------------------------------------ | ------------------------------------------------------- | -------------------------- |
+| `GET /api/v1`                        | Discovery document — lists all resources                | —                          |
+| `GET /api/v1/brand`                  | Brand system (minerals, typography, spacing, ecosystem) | `brand_*` tables           |
+| `GET /api/v1/ui`                     | Component registry index                                | `components`               |
+| `GET /api/v1/ui/{name}`              | Individual component (shadcn format, with source code)  | `components`               |
+| `GET /api/v1/ui/{name}/docs`         | Component docs (use cases, variants, a11y)              | `component_docs`           |
+| `GET /api/v1/ui/{name}/versions`     | Component version history                               | `component_versions`       |
+| `GET /api/v1/ecosystem`              | Architecture principles & framework decision            | `architecture_principles`  |
+| `GET /api/v1/data-layer`             | Local-first + cloud layer specification                 | `architecture_data_layer`  |
+| `GET /api/v1/pipeline`               | Open data pipeline (Redpanda → Flink → Doris)           | `architecture_pipeline`    |
+| `GET /api/v1/sovereignty`            | Technology sovereignty assessments                      | `architecture_sovereignty` |
+| `GET /api/v1/docs`                   | List documentation pages                                | `documentation_pages`      |
+| `GET /api/v1/docs/{slug}`            | Single documentation page                               | `documentation_pages`      |
+| `GET /api/v1/changelog`              | All releases                                            | `changelog`                |
+| `GET /api/v1/changelog/{version}`    | Single release                                          | `changelog`                |
+| `GET /api/v1/ai/instructions`        | List AI instruction sets                                | `ai_instructions`          |
+| `GET /api/v1/ai/instructions/{name}` | Instruction set by target (mcp-server, claude, copilot) | `ai_instructions`          |
+| `GET /api/v1/fundi`                  | Open self-healing issues                                | `fundi_issues`             |
+| `GET /api/v1/fundi/{id}`             | Single fundi issue                                      | `fundi_issues`             |
+| `GET /api/v1/fundi/stats`            | Aggregate learning stats                                | `fundi_issues`             |
+| `GET /api/v1/search?q=`              | Cross-resource search (components + docs + changelog)   | multiple                   |
+| `GET /api/v1/stats`                  | Live counts (total stable, per layer, per category)     | `components`               |
+| `GET /api/v1/health`                 | Service health check (`no-cache, no-store`)             | runtime checks             |
 
 **Common response headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *` (except `/health` which is `no-cache, no-store`).
 
@@ -604,36 +604,36 @@ Configured in `.claude/settings.json`:
 
 ### Resources (read-only data)
 
-| URI                      | Description                                                  |
-| ------------------------ | ------------------------------------------------------------ |
-| `mukoko://registry`      | Full component registry index                                |
-| `mukoko://brand`         | Complete brand system data                                   |
-| `mukoko://design-tokens` | Five African Minerals palette + semantic tokens              |
-| `mukoko://architecture`  | Ecosystem architecture (principles, framework, sovereignty)  |
-| `mukoko://ubuntu`        | Ubuntu philosophy — community-first design doctrine          |
+| URI                      | Description                                                 |
+| ------------------------ | ----------------------------------------------------------- |
+| `mukoko://registry`      | Full component registry index                               |
+| `mukoko://brand`         | Complete brand system data                                  |
+| `mukoko://design-tokens` | Five African Minerals palette + semantic tokens             |
+| `mukoko://architecture`  | Ecosystem architecture (principles, framework, sovereignty) |
+| `mukoko://ubuntu`        | Ubuntu philosophy — community-first design doctrine         |
 
 ### Tools (callable actions)
 
-| Tool                       | Description                                                                       |
-| -------------------------- | --------------------------------------------------------------------------------- |
-| `list_components`          | List all registry components, optionally filtered by type/layer                   |
-| `get_component`            | Get a component's source code + metadata                                          |
-| `get_component_docs`       | Get a component's structured documentation (use cases, variants, a11y notes)      |
-| `get_component_links`      | Get all portal URLs for a component                                               |
-| `get_component_versions`   | Get version history for a component                                               |
-| `search_components`        | Search components by name / description / category                                |
-| `get_design_tokens`        | Get color palette, typography, spacing tokens                                     |
-| `scaffold_component`       | Generate a new component following the CVA + Radix + cn() pattern                 |
-| `get_install_command`      | Get the shadcn CLI install command for one or more components                     |
-| `get_brand_info`           | Get information about a specific ecosystem brand                                  |
-| `get_architecture_info`    | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty)  |
-| `get_ubuntu_principles`    | Read the Ubuntu philosophy doctrine                                               |
-| `get_database_status`      | Health/diagnostic info about the Supabase connection                              |
-| `get_usage_stats`          | MCP/API usage metrics                                                             |
-| `get_layer_summary`        | Component count, categories, and names for a given architecture layer (1–10)     |
-| `get_ai_instructions`      | Read system prompts from `ai_instructions` by target                              |
-| `get_changelog`            | Recent releases from the `changelog` table                                        |
-| `get_documentation_page`   | Read a documentation page by slug from `documentation_pages`                      |
+| Tool                     | Description                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------- |
+| `list_components`        | List all registry components, optionally filtered by type/layer                  |
+| `get_component`          | Get a component's source code + metadata                                         |
+| `get_component_docs`     | Get a component's structured documentation (use cases, variants, a11y notes)     |
+| `get_component_links`    | Get all portal URLs for a component                                              |
+| `get_component_versions` | Get version history for a component                                              |
+| `search_components`      | Search components by name / description / category                               |
+| `get_design_tokens`      | Get color palette, typography, spacing tokens                                    |
+| `scaffold_component`     | Generate a new component following the CVA + Radix + cn() pattern                |
+| `get_install_command`    | Get the shadcn CLI install command for one or more components                    |
+| `get_brand_info`         | Get information about a specific ecosystem brand                                 |
+| `get_architecture_info`  | Get architecture info by category (ecosystem, data-layer, pipeline, sovereignty) |
+| `get_ubuntu_principles`  | Read the Ubuntu philosophy doctrine                                              |
+| `get_database_status`    | Health/diagnostic info about the Supabase connection                             |
+| `get_usage_stats`        | MCP/API usage metrics                                                            |
+| `get_layer_summary`      | Component count, categories, and names for a given architecture layer (1–10)     |
+| `get_ai_instructions`    | Read system prompts from `ai_instructions` by target                             |
+| `get_changelog`          | Recent releases from the `changelog` table                                       |
+| `get_documentation_page` | Read a documentation page by slug from `documentation_pages`                     |
 
 ### Architecture
 
@@ -669,7 +669,7 @@ The 545 stable registry items live in the Supabase `components` table and are or
 | **Mukoko Ecosystem**      | 4     | mukoko-bottom-nav, mukoko-footer, mukoko-header, mukoko-sidebar                                                                                                                                                                                                                                                                                                            |
 | **Infrastructure**        | 3     | error-boundary, lazy-section, section-error-boundary                                                                                                                                                                                                                                                                                                                       |
 | **Hooks**                 | 3     | use-memory-pressure, use-mobile, use-toast                                                                                                                                                                                                                                                                                                                                 |
-| **Resilience (lib)**      | 9     | ai-safety, chaos, circuit-breaker, fallback-chain, observability, retry, timeout, utils, architecture (served only via the registry — no longer files in this repo)                                                                                                                                                                                                       |
+| **Resilience (lib)**      | 9     | ai-safety, chaos, circuit-breaker, fallback-chain, observability, retry, timeout, utils, architecture (served only via the registry — no longer files in this repo)                                                                                                                                                                                                        |
 | **Chart Blocks**          | 70    | area (10), bar (10), line (10), pie (11), radar (14), radial (6), tooltip (9)                                                                                                                                                                                                                                                                                              |
 | **Page Blocks**           | 35    | dashboard-01, login-01–05, signup-01–05, sidebar-01–16, profile-page, profile-settings, onboarding-flow, error-page, empty-state, notification-center, search-results, command-center                                                                                                                                                                                      |
 
@@ -790,11 +790,11 @@ Three workflows in `.github/workflows/`:
 
 Every commit must pass all gates before pushing. `.husky/pre-commit` enforces this automatically and runs three steps:
 
-| Gate                     | Command                                                          | Failure means                                                |
-| ------------------------ | ---------------------------------------------------------------- | ------------------------------------------------------------ |
-| **Lint + format (staged)** | `pnpm exec lint-staged` (eslint --max-warnings=0 + prettier --write) | ESLint warning/error or unformatted code                  |
-| **Type check (project)** | `pnpm typecheck`                                                 | TypeScript error                                             |
-| **Security audit**       | `pnpm audit --audit-level=moderate --ignore-registry-errors`     | Unresolved vulnerability — update deps or add pnpm override  |
+| Gate                       | Command                                                              | Failure means                                               |
+| -------------------------- | -------------------------------------------------------------------- | ----------------------------------------------------------- |
+| **Lint + format (staged)** | `pnpm exec lint-staged` (eslint --max-warnings=0 + prettier --write) | ESLint warning/error or unformatted code                    |
+| **Type check (project)**   | `pnpm typecheck`                                                     | TypeScript error                                            |
+| **Security audit**         | `pnpm audit --audit-level=moderate --ignore-registry-errors`         | Unresolved vulnerability — update deps or add pnpm override |
 
 CI additionally runs `pnpm test` and `pnpm build` (and `pnpm registry:verify` to guard against `registry.json` drifting from Supabase).
 
