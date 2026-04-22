@@ -766,6 +766,20 @@ Three workflows in `.github/workflows/`:
 2. Verifies tag version matches `package.json` version
 3. Creates a GitHub release with auto-generated release notes
 
+### Org-wide required `lint /` checks
+
+Every bundu ecosystem repo must ship a `.github/workflows/lint.yml` whose jobs report under the `lint /` namespace. The org branch-protection rule on `main` requires:
+
+| Reported check name    | Tool                                      |
+| ---------------------- | ----------------------------------------- |
+| `lint / actionlint`    | actionlint (workflow YAML lint)           |
+| `lint / JSON validity` | every tracked `*.json` parses             |
+| `lint / prettier`      | `prettier --check` everything formattable |
+| `lint / markdownlint`  | markdownlint-cli2                         |
+| `lint / yamllint`      | yamllint                                  |
+
+Important: the `lint /` prefix is **part of the check name** as far as branch protection is concerned, even though GitHub's PR UI also uses it as a visual grouping label. GitHub Actions reports the bare job `name:` field to the Checks API, so each job must literally be named `lint / <tool>`. If you call the job `actionlint`, branch protection sees a check called `actionlint` and waits forever for `lint / actionlint`. Use the `lint.yml` in this repo as the canonical template.
+
 ### Versioning
 
 - **Current version:** 4.0.26 (must match in `package.json`, `lib/mcp-server.ts`, the `changelog` table in Supabase, and `components/landing/footer.tsx`)
