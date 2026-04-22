@@ -11,7 +11,15 @@ permissions:
 
 jobs:
   actionlint:
-    name: actionlint
+    # Job-name MUST include the "lint / " prefix so the emitted check
+    # name matches the org/repo branch-protection rule
+    # ("lint / actionlint"). GitHub reports the bare job `name:` field
+    # to the Checks API; the "lint /" prefix users see in the PR UI is
+    # a UI grouping label, NOT part of the reported check name.
+    # Re-tested against PR #43 — without this prefix the required
+    # checks stayed forever "Waiting for status to be reported" even
+    # though every job was green.
+    name: lint / actionlint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,7 +38,7 @@ jobs:
           ./actionlint -color
 
   json-validity:
-    name: JSON validity
+    name: lint / JSON validity
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -57,7 +65,7 @@ jobs:
           exit "$fail"
 
   prettier:
-    name: prettier
+    name: lint / prettier
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -73,7 +81,7 @@ jobs:
         run: pnpm exec prettier --check "**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}" --ignore-path .prettierignore
 
   markdownlint:
-    name: markdownlint
+    name: lint / markdownlint
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -86,7 +94,7 @@ jobs:
         run: npx --yes markdownlint-cli2@0.15.0
 
   yamllint:
-    name: yamllint
+    name: lint / yamllint
     runs-on: ubuntu-latest
     permissions:
       contents: read
