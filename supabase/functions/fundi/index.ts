@@ -5,6 +5,27 @@
 // promotes the worst ones into GitHub issues so a human (or Claude Code)
 // can fix them, and maintains an append-only healing log.
 //
+// ──────────────────────────────────────────────────────────────────────
+// Deployment matrix — when fundi reporting is enabled per environment:
+//
+//   ON BY DEFAULT
+//     - Every Nyuchi-owned domain  (*.nyuchi.com, nyuchi.africa, …)
+//     - Every Mukoko-owned domain  (*.mukoko.com)
+//     - All `dev` environments     (NODE_ENV=development on bundu repos)
+//     - Allow-listed staging environments (per-app config)
+//
+//   OPT-IN
+//     - External customers consuming the registry. They set
+//       NEXT_PUBLIC_FUNDI_ENABLED=1 (or equivalent) on their own
+//       infrastructure to route their L8 callsites here. No data is
+//       sent without an explicit opt-in.
+//
+// The L8 callsite library decides whether to POST to this endpoint;
+// this function trusts the source and writes to fundi_issues. The
+// `source` field on each report identifies which environment originated
+// it so we can filter / triage by ecosystem.
+// ──────────────────────────────────────────────────────────────────────
+//
 // This function is the single ingress point for fundi. It has two routes:
 //
 //   POST /fundi

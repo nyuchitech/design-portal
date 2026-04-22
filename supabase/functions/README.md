@@ -84,15 +84,31 @@ The PAT must be able to create issues and add labels on that repo.
 
 **Auth model:**
 
-- `POST /functions/v1/fundi` — **unauthenticated** by design (L8 callsites
-  anywhere in the ecosystem can report issues). Validation enforces a
-  strict scope/severity/symptom shape; fingerprint dedup limits row
-  growth.
+- `POST /functions/v1/fundi` — **unauthenticated by design.** L8
+  assurance callsites anywhere in the ecosystem can report. The L8
+  client library, not this endpoint, decides whether to send. Validation
+  here enforces a strict scope/severity/symptom shape and fingerprint
+  dedup limits row growth.
 - `POST /functions/v1/fundi/heal` — **requires a Bearer token** matching
   either `SUPABASE_SERVICE_ROLE_KEY` (auto-injected; what the documented
   pg_cron schedule uses) or `FUNDI_HEAL_TOKEN` if set. Returns 401
   otherwise. This prevents an unauthenticated caller from triggering
   GitHub-issue creation via the heal loop.
+
+**Who reports to fundi (deployment matrix):**
+
+| Environment                             | Fundi reporting |
+| --------------------------------------- | --------------- |
+| `*.nyuchi.com`, `nyuchi.africa`, …      | **On by default** |
+| `*.mukoko.com`                          | **On by default** |
+| Any bundu-repo `NODE_ENV=development`   | **On by default** |
+| Allow-listed staging environments       | **On by default** (per-app config) |
+| External customers consuming the registry | **Opt-in** (set `NEXT_PUBLIC_FUNDI_ENABLED=1`) |
+
+The L8 client library on the consumer side reads its environment and
+decides whether to POST. No data leaves an external customer's
+infrastructure without an explicit opt-in. Every report carries a
+`source` field so triage can filter by ecosystem.
 
 ### `analytics`
 
