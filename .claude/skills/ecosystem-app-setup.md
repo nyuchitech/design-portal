@@ -188,7 +188,7 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/circuit-breaker
 npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/retry
 ```
 
-Install additional components as needed from the 294-item registry.
+Install additional components as needed from the 545-item registry.
 
 ### Step 7 — Configure PostCSS for Tailwind CSS 4
 
