@@ -766,19 +766,33 @@ Three workflows in `.github/workflows/`:
 2. Verifies tag version matches `package.json` version
 3. Creates a GitHub release with auto-generated release notes
 
-### Org-wide required `lint /` checks
+### Org-wide required checks — `<workflow> /` naming convention
 
-Every bundu ecosystem repo must ship a `.github/workflows/lint.yml` whose jobs report under the `lint /` namespace. The org branch-protection rule on `main` requires:
+Every bundu ecosystem repo's branch-protection rule on `main` requires status checks named in `<workflow> / <job>` form. The current required set is:
 
-| Reported check name    | Tool                                      |
-| ---------------------- | ----------------------------------------- |
-| `lint / actionlint`    | actionlint (workflow YAML lint)           |
-| `lint / JSON validity` | every tracked `*.json` parses             |
-| `lint / prettier`      | `prettier --check` everything formattable |
-| `lint / markdownlint`  | markdownlint-cli2                         |
-| `lint / yamllint`      | yamllint                                  |
+| Reported check name      | Source workflow / job                          |
+| ------------------------ | ---------------------------------------------- |
+| `CI / Build`             | `.github/workflows/ci.yml` → `build`           |
+| `CI / Lint`              | `.github/workflows/ci.yml` → `lint`            |
+| `CI / Test`              | `.github/workflows/ci.yml` → `test`            |
+| `CI / Type Check`        | `.github/workflows/ci.yml` → `typecheck`       |
+| `CI / Security Audit`    | `.github/workflows/ci.yml` → `audit`           |
+| `CI / Registry Snapshot` | `.github/workflows/ci.yml` → `registry`        |
+| `lint / actionlint`      | `.github/workflows/lint.yml` → `actionlint`    |
+| `lint / JSON validity`   | `.github/workflows/lint.yml` → `json-validity` |
+| `lint / prettier`        | `.github/workflows/lint.yml` → `prettier`      |
+| `lint / markdownlint`    | `.github/workflows/lint.yml` → `markdownlint`  |
+| `lint / yamllint`        | `.github/workflows/lint.yml` → `yamllint`      |
 
-Important: the `lint /` prefix is **part of the check name** as far as branch protection is concerned, even though GitHub's PR UI also uses it as a visual grouping label. GitHub Actions reports the bare job `name:` field to the Checks API, so each job must literally be named `lint / <tool>`. If you call the job `actionlint`, branch protection sees a check called `actionlint` and waits forever for `lint / actionlint`. Use the `lint.yml` in this repo as the canonical template.
+**Critical implementation detail.** The `<workflow> /` prefix is **part of the check name** as far as branch protection is concerned, even though GitHub's PR UI also uses it as a visual grouping label. GitHub Actions reports the bare job `name:` field to the Checks API — so each job's `name:` field must **literally include the prefix**:
+
+```yaml
+jobs:
+  build:
+    name: CI / Build # not just "Build"
+```
+
+If you call the job `Build`, branch protection sees a check called `Build` and waits forever for `CI / Build`. Both `ci.yml` and `lint.yml` in this repo are the canonical templates; copy the `name:` pattern when bootstrapping a new ecosystem repo.
 
 ### Versioning
 
