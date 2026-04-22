@@ -58,10 +58,10 @@ git checkout -b feature/your-feature
 ### Before You Code
 
 1. **Read [CLAUDE.md](CLAUDE.md)** -- it is the definitive reference for this codebase, covering architecture, conventions, and the full design system specification
-2. **Understand the [Five African Minerals design system](https://design.nyuchi.com/brand/colors)** -- all colors come from five mineral-named tokens
-3. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
-4. **Check `registry.json`** before modifying components to understand the dependency graph
-5. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
+1. **Understand the [Five African Minerals design system](https://design.nyuchi.com/brand/colors)** -- all colors come from five mineral-named tokens
+1. **Browse existing components** in `components/ui/` to understand the CVA + Radix + cn() pattern
+1. **Check `registry.json`** before modifying components to understand the dependency graph
+1. **Understand the DB-first architecture** -- API routes read from Supabase, not hardcoded objects
 
 ### Key Principles
 
@@ -148,7 +148,7 @@ function MyComponent({
 export { MyComponent, myComponentVariants }
 ```
 
-2. **Add an entry to `registry.json`**:
+1. **Add an entry to `registry.json`**:
 
 ```json
 {
@@ -166,15 +166,15 @@ export { MyComponent, myComponentVariants }
 }
 ```
 
-3. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
+1. **Upsert the component** into Supabase (`components` table). The portal serves it from the DB on the next request — no rebuild required.
 
-4. **Sync the registry snapshot** (regenerates `registry.json` + any committed portal primitives from Supabase; CI fails on drift via `pnpm registry:verify`):
+1. **Sync the registry snapshot** (regenerates `registry.json` + any committed portal primitives from Supabase; CI fails on drift via `pnpm registry:verify`):
 
 ```bash
 pnpm registry:sync
 ```
 
-5. **Add tests** in `__tests__/components/`:
+1. **Add tests** in `__tests__/components/`:
 
 ```tsx
 import { render, screen } from "@testing-library/react"
@@ -188,7 +188,7 @@ describe("MyComponent", () => {
 })
 ```
 
-6. **Verify** the component serves correctly:
+1. **Verify** the component serves correctly:
 
 ```bash
 curl http://localhost:11736/api/v1/ui/my-component
@@ -204,7 +204,7 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
    - Chart blocks go in the appropriate chart type directory
    - Page blocks go in the appropriate page type directory
 
-2. **Add to `registry.json`** with type `registry:block`:
+1. **Add to `registry.json`** with type `registry:block`:
 
 ```json
 {
@@ -222,7 +222,7 @@ Blocks are complete page compositions (dashboards, login pages, settings panels,
 }
 ```
 
-3. **Seed the database and rebuild the registry** as with UI components.
+1. **Seed the database and rebuild the registry** as with UI components.
 
 ---
 
@@ -243,7 +243,7 @@ The portal uses Nextra (MDX) for documentation pages. There are 71 pages across 
    - `/architecture` -- ecosystem architecture
    - `/registry` -- registry internals (schema, MCP, contributing, consuming)
 
-2. **Create the MDX file** in the appropriate `app/<section>/` directory:
+1. **Create the MDX file** in the appropriate `app/<section>/` directory:
 
 ```mdx
 # Page Title
@@ -255,7 +255,7 @@ Description of the page content.
 Content here.
 ```
 
-3. **Update the section's `_meta.ts`** to include navigation for your new page.
+1. **Update the section's `_meta.ts`** to include navigation for your new page.
 
 ---
 
@@ -318,11 +318,11 @@ All four must pass. The CI pipeline runs lint, typecheck, and test in parallel, 
 ### Review Process
 
 1. Submit your PR with a clear description explaining the "why"
-2. Reference any related issues
-3. CI will run automatically (lint, typecheck, test, build)
-4. An AI code review via Claude will check design system adherence, accessibility, and code quality
-5. A maintainer will review and provide feedback
-6. Once approved and CI passes, a maintainer will merge
+1. Reference any related issues
+1. CI will run automatically (lint, typecheck, test, build)
+1. An AI code review via Claude will check design system adherence, accessibility, and code quality
+1. A maintainer will review and provide feedback
+1. Once approved and CI passes, a maintainer will merge
 
 ---
 
@@ -331,17 +331,17 @@ All four must pass. The CI pipeline runs lint, typecheck, and test in parallel, 
 This project uses semantic versioning. The version number appears in **four places** that must stay in sync:
 
 1. `package.json` -- `version` field
-2. `lib/brand.ts` -- `BRAND_SYSTEM.version`
-3. `lib/architecture.ts` -- version reference
-4. `components/landing/footer.tsx` -- footer display
+1. `lib/brand.ts` -- `BRAND_SYSTEM.version`
+1. `lib/architecture.ts` -- version reference
+1. `components/landing/footer.tsx` -- footer display
 
 Only maintainers create version tags and releases. The release process:
 
 1. Update version in all four locations
-2. Commit: `git commit -m "Release vX.Y.Z"`
-3. Tag: `git tag vX.Y.Z`
-4. Push: `git push && git push --tags`
-5. GitHub Actions validates and creates the release automatically
+1. Commit: `git commit -m "Release vX.Y.Z"`
+1. Tag: `git tag vX.Y.Z`
+1. Push: `git push && git push --tags`
+1. GitHub Actions validates and creates the release automatically
 
 ---
 

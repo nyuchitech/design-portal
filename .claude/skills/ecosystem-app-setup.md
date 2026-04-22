@@ -1,25 +1,20 @@
-# Ecosystem App Setup Skill
+---
+name: ecosystem-app-setup
+description: Use when the user is bootstrapping a new bundu-ecosystem app (mukoko mini-app, nyuchi enterprise product, nhimbe events module, shamwari surface, or a sister brand) from scratch. Sets up Next.js + shadcn CLI + Tailwind 4 + next-themes against the Nyuchi Design Portal registry so the new app ships with the canonical tokens, typography, radius scale, and component API. Also use when the user says things like "create a new bundu app", "scaffold a mukoko app", "start a new nyuchi product".
+---
 
-## Description
+# Ecosystem App Setup
 
-Bootstrap a new bundu ecosystem app using the Nyuchi Design Portal registry — installs components, sets up the correct theme tokens, typography, and theming from the canonical design system.
+You are bootstrapping a new bundu ecosystem app that consumes the Nyuchi Design Portal registry at <https://design.nyuchi.com>. Consistency across the ecosystem is non-negotiable — follow every step.
 
-## Trigger
-
-When the user says "create a new bundu app", "add a new ecosystem app", "bootstrap a mukoko app", "set up a new nyuchi product", or "start a new app in the ecosystem".
-
-## Instructions
-
-You are setting up a new bundu ecosystem app that consumes the Nyuchi Design Portal registry. Follow every step — consistency across the ecosystem is non-negotiable.
-
-### Step 1 — Create the Next.js project
+## Step 1 — Create the Next.js project
 
 ```bash
 pnpm create next-app@latest <app-name> --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"
 cd <app-name>
 ```
 
-### Step 2 — Install shadcn CLI and init
+## Step 2 — Install shadcn CLI and init
 
 ```bash
 pnpm dlx shadcn@latest init
@@ -57,7 +52,7 @@ This creates `components.json`. Update it:
 }
 ```
 
-### Step 3 — Copy the canonical theme tokens
+## Step 3 — Copy the canonical theme tokens
 
 Replace `app/globals.css` with the Five African Minerals theme. The canonical source is `app/globals.css` in the design-portal repo. The critical blocks are:
 
@@ -104,7 +99,7 @@ Replace `app/globals.css` with the Five African Minerals theme. The canonical so
 
 Copy the complete `:root` and `.dark` blocks verbatim from the design-portal source.
 
-### Step 4 — Set up typography
+## Step 4 — Set up typography
 
 ```bash
 pnpm add @next/font
@@ -148,7 +143,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 }
 ```
 
-### Step 5 — Set up next-themes
+## Step 5 — Set up next-themes
 
 ```bash
 pnpm add next-themes
@@ -169,7 +164,7 @@ export function ThemeProvider({
 }
 ```
 
-### Step 6 — Install core components from the registry
+## Step 6 — Install core components from the registry
 
 ```bash
 # Utilities (always install first)
@@ -190,7 +185,7 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/retry
 
 Install additional components as needed from the 545-item registry.
 
-### Step 7 — Configure PostCSS for Tailwind CSS 4
+## Step 7 — Configure PostCSS for Tailwind CSS 4
 
 Ensure `postcss.config.mjs`:
 
@@ -204,7 +199,7 @@ export default {
 
 And `package.json` dependencies include `tailwindcss@^4` and `@tailwindcss/postcss`.
 
-### Step 8 — Set up the layered architecture
+## Step 8 — Set up the layered architecture
 
 ```
 app/

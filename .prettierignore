@@ -7,6 +7,7 @@ build/
 # Generated files
 public/r/
 public/_pagefind/
+next-env.d.ts
 
 # Dependencies
 node_modules/

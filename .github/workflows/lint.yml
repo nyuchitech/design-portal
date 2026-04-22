@@ -1,0 +1,79 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  actionlint:
+    name: actionlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install and run actionlint
+        run: |
+          bash <(curl -fsSL https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash)
+          ./actionlint -color
+
+  json-validity:
+    name: JSON validity
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Validate every tracked JSON file parses
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git ls-files '*.json' ':!pnpm-lock.yaml')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No JSON files tracked."
+            exit 0
+          fi
+          fail=0
+          for f in "${files[@]}"; do
+            if ! node -e "JSON.parse(require('fs').readFileSync(process.argv[1],'utf8'))" "$f" > /dev/null 2>&1; then
+              echo "::error file=$f::Invalid JSON"
+              fail=1
+            fi
+          done
+          exit "$fail"
+
+  prettier:
+    name: prettier
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Prettier format check
+        run: pnpm exec prettier --check "**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}" --ignore-path .prettierignore
+
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Run markdownlint-cli2
+        run: npx --yes markdownlint-cli2@0.15.0

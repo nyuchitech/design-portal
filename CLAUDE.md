@@ -376,43 +376,47 @@ This is the canonical design system. All bundu ecosystem apps MUST use these tok
 ### 7.1 Color Palette
 
 **Mineral accent colors** (constant across light/dark):
-| Mineral | Hex | CSS Variable | Usage |
-|---|---|---|---|
-| Cobalt | `#0047AB` | `--color-cobalt` | Primary blue, links, CTAs |
-| Tanzanite | `#B388FF` | `--color-tanzanite` | Purple accent, brand/logo |
-| Malachite | `#64FFDA` | `--color-malachite` | Cyan accent, success states |
-| Gold | `#FFD740` | `--color-gold` | Yellow accent, rewards/highlights |
-| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community |
+
+| Mineral    | Hex       | CSS Variable         | Usage                             |
+| ---------- | --------- | -------------------- | --------------------------------- |
+| Cobalt     | `#0047AB` | `--color-cobalt`     | Primary blue, links, CTAs         |
+| Tanzanite  | `#B388FF` | `--color-tanzanite`  | Purple accent, brand/logo         |
+| Malachite  | `#64FFDA` | `--color-malachite`  | Cyan accent, success states       |
+| Gold       | `#FFD740` | `--color-gold`       | Yellow accent, rewards/highlights |
+| Terracotta | `#D4A574` | `--color-terracotta` | Warm accent, community            |
 
 **Semantic color tokens** (theme-adaptive via CSS custom properties):
-| Token | Light | Dark | Usage |
-|---|---|---|---|
-| `--background` | `#FAF9F5` (warm cream) | `#0A0A0A` (deep night) | Page background |
-| `--foreground` | `#141413` | `#F5F5F4` | Primary text |
-| `--card` | `#FFFFFF` | `#141414` | Card surfaces |
-| `--muted` | `#F3F2EE` | `#1E1E1E` | Subdued backgrounds |
-| `--muted-foreground` | `#5C5B58` | `#9A9A95` | Secondary text |
-| `--border` | `rgba(10,10,10,0.08)` | `rgba(255,255,255,0.08)` | Borders |
-| `--primary` | `#141413` | `#F5F5F4` | Primary interactive |
-| `--destructive` | `#B3261E` | `#F2B8B5` | Error/danger |
+
+| Token                | Light                  | Dark                     | Usage               |
+| -------------------- | ---------------------- | ------------------------ | ------------------- |
+| `--background`       | `#FAF9F5` (warm cream) | `#0A0A0A` (deep night)   | Page background     |
+| `--foreground`       | `#141413`              | `#F5F5F4`                | Primary text        |
+| `--card`             | `#FFFFFF`              | `#141414`                | Card surfaces       |
+| `--muted`            | `#F3F2EE`              | `#1E1E1E`                | Subdued backgrounds |
+| `--muted-foreground` | `#5C5B58`              | `#9A9A95`                | Secondary text      |
+| `--border`           | `rgba(10,10,10,0.08)`  | `rgba(255,255,255,0.08)` | Borders             |
+| `--primary`          | `#141413`              | `#F5F5F4`                | Primary interactive |
+| `--destructive`      | `#B3261E`              | `#F2B8B5`                | Error/danger        |
 
 **Chart colors** (theme-adaptive):
-| Token | Light | Dark |
-|---|---|---|
-| `--chart-1` | `#4B0082` | `#B388FF` (Tanzanite) |
-| `--chart-2` | `#0047AB` | `#00B0FF` (Cobalt) |
-| `--chart-3` | `#004D40` | `#64FFDA` (Malachite) |
-| `--chart-4` | `#5D4037` | `#FFD740` (Gold) |
+
+| Token       | Light     | Dark                   |
+| ----------- | --------- | ---------------------- |
+| `--chart-1` | `#4B0082` | `#B388FF` (Tanzanite)  |
+| `--chart-2` | `#0047AB` | `#00B0FF` (Cobalt)     |
+| `--chart-3` | `#004D40` | `#64FFDA` (Malachite)  |
+| `--chart-4` | `#5D4037` | `#FFD740` (Gold)       |
 | `--chart-5` | `#8B4513` | `#D4A574` (Terracotta) |
 
 **Category-to-mineral mapping** (for apps with activity categories):
-| Category | Mineral | Tailwind classes |
-|---|---|---|
-| Farming | Malachite | `bg-mineral-malachite`, `text-mineral-malachite` |
-| Mining | Terracotta | `bg-mineral-terracotta`, `text-mineral-terracotta` |
-| Travel | Cobalt | `bg-mineral-cobalt`, `text-mineral-cobalt` |
-| Tourism | Tanzanite | `bg-mineral-tanzanite`, `text-mineral-tanzanite` |
-| Sports | Gold | `bg-mineral-gold`, `text-mineral-gold` |
+
+| Category | Mineral    | Tailwind classes                                   |
+| -------- | ---------- | -------------------------------------------------- |
+| Farming  | Malachite  | `bg-mineral-malachite`, `text-mineral-malachite`   |
+| Mining   | Terracotta | `bg-mineral-terracotta`, `text-mineral-terracotta` |
+| Travel   | Cobalt     | `bg-mineral-cobalt`, `text-mineral-cobalt`         |
+| Tourism  | Tanzanite  | `bg-mineral-tanzanite`, `text-mineral-tanzanite`   |
+| Sports   | Gold       | `bg-mineral-gold`, `text-mineral-gold`             |
 
 ### 7.2 Typography
 

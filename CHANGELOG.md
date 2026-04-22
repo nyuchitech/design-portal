@@ -6,6 +6,13 @@ This project follows [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+
+- **`LICENSE`:** the repo was previously unlicensed. Added the MIT License with a note that `/api/v1/stats` usage metrics remain under CC BY 4.0.
+- **`.github/workflows/lint.yml`:** new required-check workflow with four jobs — `actionlint`, `JSON validity`, `prettier`, `markdownlint` — wired to report under the `lint / <tool>` status names the branch protection rules expect.
+- **`.markdownlint-cli2.jsonc`:** explicit markdownlint config so the new job runs with the exact same rules locally and in CI. Existing docs were updated to pass them (blank lines around tables, consistent ordered-list numbering) instead of relaxing the rules.
+- **`.claude/skills/README.md`:** install instructions for the three skills (symlink from a local portal clone, copy via `curl`, or pair with the MCP server). The skills themselves are now in proper `---`-frontmatter format, addressing the "make them installable" request.
+
 ### Docs
 
 - **Rewrote `CLAUDE.md`** to match the post-v4.0.26 Supabase-first state (issue #30). Supabase is now documented as the single source of truth for components, docs, brand, architecture, AI instructions, changelog, and fundi; `registry.json` is described as a generated snapshot produced by `pnpm registry:sync` and verified in CI by `pnpm registry:verify`. Directory tree, API table, MCP tools list (18), and pre-commit gates all refreshed. Covered the new `/api/v1/{docs,changelog,fundi,search,ai/instructions,ui/[name]/docs,ui/[name]/versions}` endpoints and the `mukoko://ubuntu` resource.
@@ -16,6 +23,10 @@ This project follows [Semantic Versioning](https://semver.org/).
 ### Security
 
 - Added `pnpm.overrides` for `hono` (→^4.12.14), `dompurify` (→^3.4.0), and `sanitize-html` (→^2.17.3) to clear three moderate CVEs that were blocking the Security Audit CI job and the local pre-commit `pnpm audit` gate. `pnpm audit --audit-level=moderate` now returns clean.
+- **Workflow permissions hardening:** every job in `.github/workflows/ci.yml` now declares `permissions: contents: read` explicitly, and a top-level default does the same. Resolves six medium CodeQL `actions/missing-workflow-permissions` findings against `main`.
+- **`robots.txt`:** removed the stale `/api/v1/db` `Disallow` (the route no longer exists) and expanded the explicit AI-crawler allow-list — `ClaudeBot`, `Claude-Web`, `anthropic-ai`, `GPTBot`, `ChatGPT-User`, `OAI-SearchBot`, `Googlebot`, `Google-Extended`, `GoogleOther`, `PerplexityBot`, `Perplexity-User`, `FacebookBot`, `Meta-ExternalAgent`, `Meta-ExternalFetcher`, `Applebot`, `Applebot-Extended`, `CCBot`, `cohere-ai`, `Diffbot`, `DuckAssistBot`, `Bytespider`, `YouBot`, `Amazonbot`. The design system is built for AI consumption and the robots file now says so clearly.
+- **`SECURITY.md` rewritten** with concrete response timelines, scoped surface, safe-harbour clause for good-faith security research, explicit out-of-scope items, and a reference to the live `/api/v1/changelog` endpoint instead of a hardcoded version.
+- **`public/llms.txt` refactored** so every count and version points to a live API endpoint. No hardcoded registry totals remain — crawlers / agents are instructed to fetch `/api/v1/stats` for the authoritative numbers.
 
 ### Changed
 

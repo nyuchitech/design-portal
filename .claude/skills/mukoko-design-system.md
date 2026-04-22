@@ -1,135 +1,153 @@
-# Mukoko Design System Skill
+---
+name: mukoko-design-system
+description: Use when working on any bundu-ecosystem app (mukoko, nyuchi, shamwari, nhimbe, design-portal, sister brands) or when the user asks about the Five African Minerals palette, the 3D frontend architecture, Ubuntu design doctrine, component patterns (CVA + Radix + cn), APCA accessibility targets, or shadcn-CLI registry install commands. Always pull live counts, versions, and registry lists from https://design.nyuchi.com — never hardcode them.
+---
 
-## Description
+# Mukoko Design System
 
-Reference and scaffold components for the Nyuchi Design Portal — the Five African Minerals palette, 545 stable registry items across 10 architecture layers, brand guidelines, architecture documentation, and developer portal for the Mukoko ecosystem.
+You are working with the **Nyuchi Design Portal** — the canonical registry, design system, and MCP server for the bundu ecosystem.
 
-## Trigger
+- **Live site:** <https://design.nyuchi.com>
+- **Source of truth:** Supabase (`components`, `component_docs`, `component_versions`, `documentation_pages`, `changelog`, `ai_instructions`, `fundi_issues`, `brand_*`, `architecture_*`)
+- **Install API:** `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>`
+- **MCP endpoint:** `https://design.nyuchi.com/mcp` (Streamable HTTP, POST JSON-RPC)
+- **OpenAPI 3.1:** <https://design.nyuchi.com/api/openapi>
 
-When the user asks about Mukoko design tokens, component patterns, brand colors, typography, blocks, charts, architecture, or wants to create/scaffold a new component for any Mukoko app.
+## Rule: never hardcode metrics
 
-## Instructions
+Every count, version, and catalogue entry lives in Supabase and is served live. When you need one, call the API; do not copy numbers from memory, comments, or stale docs.
 
-You are an expert on the Mukoko design system (Five African Minerals). This is the Nyuchi Design Portal — the definitive reference for building anything in the Mukoko/Nyuchi ecosystem.
+| Need                      | Call                                                           |
+| ------------------------- | -------------------------------------------------------------- |
+| Current version           | `GET /api/v1/changelog` → `[0].version`                        |
+| Total stable items        | `GET /api/v1/stats` → `stable`                                 |
+| Items per layer           | `GET /api/v1/stats` → `byLayer[]`                              |
+| Items per category        | `GET /api/v1/stats` → `byCategory[]`                           |
+| Full registry index       | `GET /api/v1/ui`                                               |
+| One component's source    | `GET /api/v1/ui/{name}`                                        |
+| A component's docs        | `GET /api/v1/ui/{name}/docs`                                   |
+| Component version history | `GET /api/v1/ui/{name}/versions`                               |
+| Documentation page        | `GET /api/v1/docs/{slug}` (or list via `/api/v1/docs`)         |
+| Brand system              | `GET /api/v1/brand`                                            |
+| Architecture topics       | `/api/v1/{ecosystem,data-layer,pipeline,sovereignty}`          |
+| Ubuntu doctrine           | MCP resource `mukoko://ubuntu` or tool `get_ubuntu_principles` |
 
-**Version:** 4.0.26  
-**Live:** design.nyuchi.com  
-**Repo:** github.com/nyuchitech/design-portal
+## Architecture — the 3D frontend model
 
-### Architecture
+Ten layers across five axes. Each component in `components.architecture_layer` (1–10) and `components.layer` (sub-label) sits at exactly one position. Import rule: consume the layer below on the same axis; never sideways or upward.
 
-All data is served from Supabase — zero hardcoded content in the API or MCP layer:
+| #   | `layer` sub-label | Axis          | Covenant                                                 |
+| --- | ----------------- | ------------- | -------------------------------------------------------- |
+| 1   | `tokens`          | Y-axis        | Design decisions are data, not code.                     |
+| 2   | `primitive`       | X-axis        | A primitive does one thing well.                         |
+| 3   | `brand`           | X-axis        | A brand component is a primitive with Ubuntu in it.      |
+| 4   | `safety`          | Y-axis        | Nothing harmful reaches the user.                        |
+| 5   | `resilience`      | Y-axis        | Failure in one part never breaks the whole.              |
+| 6   | `pages`           | X-axis        | A page is a composition, not an implementation.          |
+| 7   | `shell`           | X-axis        | The shell holds the product.                             |
+| 8   | `assurance`       | Z-axis        | What breaks is seen before users feel it.                |
+| 9   | `fundi`           | Outside       | Failure is a learning event, not a user-facing incident. |
+| 10  | `documentation`   | Documentation | The system documents itself.                             |
 
-- MCP server at `/mcp` (Streamable HTTP) reads all data from Supabase
-- All `/api/v1/*` routes read from Supabase, return 503 if DB not configured
-- `registry.json` is a committed snapshot of the Supabase `components` table; regenerate with `pnpm registry:sync`, CI verifies drift with `pnpm registry:verify`. Only the ~35 primitives the portal itself imports are also written to `components/ui/`; the other ~510 items are served only via `/api/v1/ui`.
+**Axis semantics.** X = horizontal composition flow (primitives → brand → pages → shell, what the user sees). Y = vertical infrastructure (tokens / safety / resilience thread through every X-layer). Z = depth observation (assurance watches X and Y without being inside anything). Outside = actors beyond the build (fundi heals autonomously). Documentation = the system describing itself.
 
-### Registry (545 items)
+This is **distinct** from the 7-layer data architecture at `/architecture` (Pod → Relational → Document → Orchestration → Edge → Device → Open Data). Never conflate the two numberings.
 
-| Type             | Count | Description                                                             |
-| ---------------- | ----- | ----------------------------------------------------------------------- |
-| `registry:ui`    | 177   | UI components (button, card, dialog, ai-chat, kanban-board, etc.)       |
-| `registry:hook`  | 3     | Hooks (use-toast, use-mobile, use-memory-pressure)                      |
-| `registry:lib`   | 9     | Utilities (utils, observability, circuit-breaker, retry, timeout, etc.) |
-| `registry:block` | 105   | Blocks (35 page blocks + 70 chart blocks)                               |
-
-**Page Blocks:** 1 dashboard, 5 login, 5 signup, 16 sidebar variants, 8 others (profile, onboarding, error, etc.)  
-**Chart Blocks:** 10 area, 10 bar, 10 line, 11 pie, 14 radar, 6 radial, 9 tooltip
-
-Install any component:
+## Installing registry items
 
 ```bash
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component-name>
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>
 ```
 
-### MCP Server — 10 Tools
+- To discover names: `GET /api/v1/ui` or MCP `list_components`.
+- Install multiple at once: list several URLs on the same `add` command.
+- Registry item types: `registry:ui`, `registry:hook`, `registry:lib`, `registry:block`.
+- Only a small subset of primitives is committed into this repo's `components/ui/`; the rest live only in Supabase and are fetched on install.
 
-| Tool                    | Description                                                             |
-| ----------------------- | ----------------------------------------------------------------------- |
-| `list_components`       | List all components; filter by `type` and/or `category`                 |
-| `get_component`         | Get source code + metadata; set `include_docs: true` for docs           |
-| `get_component_docs`    | Get extended docs: use cases, variants, a11y, examples                  |
-| `search_components`     | DB-level ilike search across name + description                         |
-| `get_design_tokens`     | Get minerals, semantic-colors, typography, spacing, or radii            |
-| `scaffold_component`    | Generate CVA + Radix + cn() scaffold + registry JSON                    |
-| `get_install_command`   | Get shadcn CLI install command(s)                                       |
-| `get_brand_info`        | Get brand details (bundu, nyuchi, mukoko, shamwari, nhimbe)             |
-| `get_architecture_info` | Get architecture by category (principles, framework, sovereignty, etc.) |
-| `get_database_status`   | Get DB row counts and connection status                                 |
-| `get_ubuntu_principles` | Get Ubuntu philosophy and community-first design doctrine               |
+## MCP server
 
-**5 Resources:** `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`
+Connect an MCP client to `https://design.nyuchi.com/mcp`.
 
-### Design Token Reference
+**Tools** (18; always up-to-date via `list_tools`): `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`, `get_documentation_page`.
 
-**Five African Minerals Palette** (constant across light/dark):
-| Mineral | Hex | CSS Variable | Usage |
-|------------|-----------|----------------------|--------------------------------|
-| Cobalt | #0047AB | --color-cobalt | Primary blue, links, CTAs |
-| Tanzanite | #B388FF | --color-tanzanite | Purple accent, brand/logo |
-| Malachite | #64FFDA | --color-malachite | Cyan accent, success states |
-| Gold | #FFD740 | --color-gold | Yellow accent, rewards |
-| Terracotta | #D4A574 | --color-terracotta | Warm accent, community |
+**Resources** (5): `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`.
 
-**Semantic Colors** (theme-adaptive via CSS custom properties):
-| Token | Light | Dark |
-|------------------|-----------|-----------|
-| --background | #FAF9F5 | #0A0A0A |
-| --foreground | #141413 | #F5F5F4 |
-| --card | #FFFFFF | #141414 |
-| --muted | #F3F2EE | #1E1E1E |
-| --primary | #141413 | #F5F5F4 |
+**System prompt** loads at startup from `ai_instructions` (`name='nyuchi-mcp-system-prompt'`) with a 60s TTL cache. To change the prompt, edit the Supabase row; no code deploy needed.
+
+## Five African Minerals
+
+Constant across light and dark. Always consume via CSS custom properties — never paste hex values into TSX.
+
+| Mineral    | Hex     | CSS variable       | Usage                     |
+| ---------- | ------- | ------------------ | ------------------------- |
+| Cobalt     | #0047AB | --color-cobalt     | Primary blue, links, CTAs |
+| Tanzanite  | #B388FF | --color-tanzanite  | Purple accent, brand/logo |
+| Malachite  | #64FFDA | --color-malachite  | Cyan accent, success      |
+| Gold       | #FFD740 | --color-gold       | Yellow accent, rewards    |
+| Terracotta | #D4A574 | --color-terracotta | Warm accent, community    |
+
+### Semantic tokens (theme-adaptive)
+
+| Token         | Light   | Dark    |
+| ------------- | ------- | ------- |
+| --background  | #FAF9F5 | #0A0A0A |
+| --foreground  | #141413 | #F5F5F4 |
+| --card        | #FFFFFF | #141414 |
+| --muted       | #F3F2EE | #1E1E1E |
+| --primary     | #141413 | #F5F5F4 |
 | --destructive | #B3261E | #F2B8B5 |
 
-**Chart Colors** (mineral-mapped):
-| Token | Light | Dark (Mineral) |
-|-----------|-----------|----------------|
-| --chart-1 | #4B0082 | #B388FF (Tanzanite) |
-| --chart-2 | #0047AB | #00B0FF (Cobalt) |
-| --chart-3 | #004D40 | #64FFDA (Malachite) |
-| --chart-4 | #5D4037 | #FFD740 (Gold) |
+### Chart tokens (mineral-mapped)
+
+| Token     | Light   | Dark (mineral)       |
+| --------- | ------- | -------------------- |
+| --chart-1 | #4B0082 | #B388FF (Tanzanite)  |
+| --chart-2 | #0047AB | #00B0FF (Cobalt)     |
+| --chart-3 | #004D40 | #64FFDA (Malachite)  |
+| --chart-4 | #5D4037 | #FFD740 (Gold)       |
 | --chart-5 | #8B4513 | #D4A574 (Terracotta) |
 
-**Typography:**
+### Typography
 
 - Body: Noto Sans (`--font-sans`) — chosen for African language support (diacritics, broad script coverage)
-- Display/Headings: Noto Serif (`--font-serif`)
+- Display / headings: Noto Serif (`--font-serif`)
 - Code: JetBrains Mono (`--font-mono`)
 
 All brand wordmarks are **lowercase**: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`.
 
-**Radius System** (ecosystem numbers: 7, 12, 14, 17):
+### Radius system
+
+Ecosystem numbers 7 / 12 / 14 / 17, derived from `--radius-unit: 7px`.
 
 ```
---radius-unit: 7px
---radius-sm:   7px   — checkboxes, small elements
---radius-md:   12px  — cards, inputs, containers
---radius-lg:   14px  — default, medium containers
---radius-xl:   17px  — large cards, dialogs
---radius-full: 9999px — buttons, badges, pills
+--radius-sm:   7px    checkboxes, small elements
+--radius-md:  12px    cards, inputs, containers
+--radius-lg:  14px    default, medium containers
+--radius-xl:  17px    large cards, dialogs
+--radius-full: 9999px buttons, badges, pills, avatars
 ```
 
-**Buttons are always pill-shaped (`rounded-full`).** This is an executive brand identity decision — not negotiable.
+**Buttons are always pill-shaped (`rounded-full`).** This is an executive brand decision, not a radius-scale value.
 
-**Touch Targets:**
+### Touch targets (non-negotiable)
 
 - Default: 56px height
-- Minimum: 48px height (non-negotiable for African mobile market)
+- Minimum: 48px height (for the African mobile market — outdoor use, shared devices, older Android)
 
-### Component Pattern (CVA + Radix + cn)
+## Component pattern — CVA + Radix + cn()
 
-Every Mukoko UI component follows this exact pattern:
+Every UI component follows this exact shape:
 
 ```tsx
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
-import { Slot } from "radix-ui" // only if polymorphic
+import { Slot } from "radix-ui" // only when polymorphic
 import { cn } from "@/lib/utils"
 
 const componentVariants = cva("base-classes-here", {
   variants: {
     variant: { default: "...", outline: "...", ghost: "..." },
-    size: { default: "h-14 px-4", sm: "h-12 px-3" }, // 56px / 48px touch targets
+    size: { default: "h-14 px-4", sm: "h-12 px-3" }, // 56px / 48px
   },
   defaultVariants: { variant: "default", size: "default" },
 })
@@ -157,134 +175,97 @@ function ComponentName({
 export { ComponentName, componentVariants }
 ```
 
-### Scaffolding a New Component
+**Authoring workflow** (components live in Supabase, not the filesystem):
 
-1. **Upsert the row** into the Supabase `components` (and `component_docs`) tables — source code, architecture_layer, category, dependencies, registry_dependencies, `status='stable'`
-2. **Run** `pnpm registry:sync` to regenerate the `registry.json` snapshot (and, if the portal itself imports the new primitive, the matching file in `components/ui/`)
-3. **Verify** via `curl http://localhost:11736/api/v1/ui/<name>`
-4. **Commit** the updated `registry.json` — CI runs `pnpm registry:verify` and fails on drift
+1. Upsert the row into `components` (and `component_docs`) in Supabase: `source_code`, `architecture_layer`, `category`, `dependencies`, `registry_dependencies`, `status='stable'`.
+2. In this repo: `pnpm registry:sync` regenerates `registry.json` and (if portal-imported) `components/ui/<name>.tsx`.
+3. Verify: `curl http://localhost:11736/api/v1/ui/<name>` returns the source code.
+4. Commit the updated `registry.json` — CI `pnpm registry:verify` fails on drift.
 
-Or use the MCP `scaffold_component` tool to generate the boilerplate.
+## Hard rules
 
-### Styling Rules
+- **No hardcoded colors** in TSX. Use Tailwind classes backed by CSS custom properties from `globals.css`.
+- **No inline `style={{ ... }}`** except where unavoidable (Satori, Three.js, SVG fill/stroke).
+- **`cn()` only** for className composition. No string concatenation.
+- **Named exports only.** No default exports.
+- **`kebab-case`** filenames, **`PascalCase`** component names.
+- **`data-slot`** attribute on the root element of every component (for CSS targeting).
+- **`"use client"`** only when you actually use hooks / event handlers / browser APIs.
+- **Mineral strip is always vertical** — left-edge accent only, never horizontal.
+- **Buttons always `rounded-full`.**
+- **Touch targets ≥ 48px; default 56px.**
 
-- **NEVER use hardcoded hex colors** — always Tailwind classes backed by CSS custom properties
-- Use `cn()` from `@/lib/utils` for ALL className composition — never string concatenation
-- Use `CATEGORY_STYLES` objects for category-specific styling — never dynamic Tailwind class names
-- Named exports only (no default exports)
-- File naming: kebab-case for files, PascalCase for components
-- Add `data-slot` attribute to root element
-- Add `"use client"` only when hooks, event handlers, or browser APIs are used
-- The mineral strip is **always vertical** — left-edge accent only, never horizontal
+## Ubuntu — community-first design
 
-### Layered Architecture
+**Umuntu ngumuntu ngabantu.** _A person is a person through other persons._
 
-```
-Layer 1: Shared primitives (Button, Input, Card, Badge)
-    ↓
-Layer 2: Domain-specific composites (landing sections, feature components)
-    ↓
-Layer 3: Page orchestrators (compose sections, no hardcoded rendering logic)
-    ↓
-Layer 4: Error boundaries + loading states
-    ↓
-Layer 5: Server page wrappers (page.tsx — SEO, data, layout)
-```
+Ubuntu is the behavioural foundation of every design decision in the bundu ecosystem, not a branding veneer.
 
-### Ecosystem Brands
-
-| Brand    | Meaning    | Language | Role                      | Mineral    |
-| -------- | ---------- | -------- | ------------------------- | ---------- |
-| bundu    | Wilderness | Shona    | The complete ecosystem    | Terracotta |
-| nyuchi   | Bee        | Shona    | Infrastructure/enterprise | Gold       |
-| mukoko   | Beehive    | Shona    | Consumer super app        | Tanzanite  |
-| shamwari | Friend     | Shona    | Sovereign AI companion    | Cobalt     |
-| nhimbe   | Gathering  | Shona    | Events & gatherings       | Malachite  |
-
-### API Endpoints
-
-All under `/api/v1/`, documented in `openapi.yaml`:
-
-| Endpoint                | Description                |
-| ----------------------- | -------------------------- |
-| `GET /api/v1`           | Discovery document         |
-| `GET /api/v1/brand`     | Brand system JSON          |
-| `GET /api/v1/ui`        | Registry index (545 items) |
-| `GET /api/v1/ui/{name}` | Component with source code |
-| `GET /api/v1/ecosystem` | Architecture principles    |
-| `GET /api/v1/health`    | Health check               |
-
-### Ubuntu Philosophy — Community-First Design
-
-**"Umuntu ngumuntu ngabantu" — A person is a person through other persons.**
-
-Ubuntu is not a branding exercise. It is the behavioural foundation of every design decision in the bundu ecosystem:
-
-| Ubuntu Principle          | Design Implication                                                                                                 |
+| Ubuntu principle          | Design implication                                                                                                 |
 | ------------------------- | ------------------------------------------------------------------------------------------------------------------ |
 | Shared devices            | Design for families, not isolated individuals. Account switching, family profiles, shared history are first-class. |
-| Outdoor readability       | APCA Lc 90+ body text, 56px touch targets, sun-readable contrast. Users are in markets, fields, streets.           |
-| Intermittent connectivity | Offline-first. Queue locally, sync when able. Connectivity is a gift, not a given.                                 |
+| Outdoor readability       | APCA Lc 90+ body text, 56px touch targets, sun-readable contrast.                                                  |
+| Intermittent connectivity | Offline-first. Queue locally, sync when able.                                                                      |
 | Budget hardware           | 100KB JS budget, 3G-optimised, <3s TTI on mid-range Android (Tecno Spark is the reference device).                 |
-| All ages                  | No age-gate assumptions. Icons supplement text. Voice is first-class. No forced English-only UI.                   |
+| All ages                  | No age-gate assumptions. Icons supplement text. Voice is first-class.                                              |
 | Community data ownership  | Data belongs to the individual and their community. No dark patterns. Data portability is non-negotiable.          |
 
-**AI framing rule:** Never frame benefits as purely individual. "You and your community" beats "you personally". Shona, Ndebele, and English are all valid primary languages — do not treat English as default.
+**AI framing rule.** Never frame benefits as purely individual. "You and your community" beats "you personally". Shona, Ndebele, and English are all valid primary languages — never treat English as default.
 
-**Ubuntu Design Checklist** (every new component):
+**Ubuntu design checklist** (every new component):
 
-- [ ] Touch target ≥ 56px (h-14) default, ≥ 48px (h-12) minimum
-- [ ] APCA Lc 90+ body text on both #FAF9F5 (light) and #0A0A0A (dark)
-- [ ] Works on shared devices — no personal-only state assumptions
-- [ ] Performant on 3G — no unnecessary heavy dependencies
-- [ ] All strings externalisable for Shona/Ndebele/English localisation
-- [ ] Community-first framing — benefits the group, not just the individual
+1. Touch target ≥ 56px default, ≥ 48px minimum
+1. APCA Lc 90+ body text on both `#FAF9F5` and `#0A0A0A`
+1. Works on shared devices — no personal-only state assumptions
+1. Performant on 3G — no gratuitous heavy deps
+1. All strings externalisable for Shona / Ndebele / English
+1. Community-first framing — benefits the group, not just the individual
 
-Use `get_ubuntu_principles` MCP tool for the full doctrine. Access via `mukoko://ubuntu` resource.
+Always call `get_ubuntu_principles` or read `mukoko://ubuntu` for the live doctrine before making doctrine-level claims — issues #45 and #46 are expanding the Ubuntu model (pillars / principles) and the axis tables.
 
-### Accessibility — APCA 3.0 AAA
+## Accessibility — APCA 3.0 AAA
 
-The ecosystem follows **APCA (Advanced Perceptual Contrast Algorithm)** — WCAG 3.0 AAA standard, not the outdated WCAG 2.x ratio method.
+The ecosystem follows **APCA** (Advanced Perceptual Contrast Algorithm) — the WCAG 3.0 AAA standard, not the outdated WCAG 2.x ratio method.
 
-**Minimum Lc values by text role:**
-| Role | Min Lc | Tailwind / Token |
-|------|--------|-----------------|
-| Body text | Lc 90 | `text-foreground` on `bg-background` |
-| Large text (≥18pt) | Lc 75 | headings, hero text |
-| Display text | Lc 60 | section labels, card titles |
-| UI text / labels | Lc 60 | buttons, inputs, badges |
-| Non-text (icons, borders) | Lc 45 | icon strokes, dividers |
-| Inactive / disabled | Lc 30 | placeholder text, disabled states |
-| Decorative | Lc 15 | background patterns |
+| Role                      | Min Lc | Tailwind / token                     |
+| ------------------------- | ------ | ------------------------------------ |
+| Body text                 | Lc 90  | `text-foreground` on `bg-background` |
+| Large text (≥ 18pt)       | Lc 75  | headings, hero text                  |
+| Display text              | Lc 60  | section labels, card titles          |
+| UI text / labels          | Lc 60  | buttons, inputs, badges              |
+| Non-text (icons, borders) | Lc 45  | icon strokes, dividers               |
+| Inactive / disabled       | Lc 30  | placeholder text, disabled states    |
+| Decorative                | Lc 15  | background patterns                  |
 
-**Pre-computed mineral Lc values** (light bg `#FAF9F5` / dark bg `#0A0A0A`):
-| Mineral | Light Lc | Dark Lc | Body text safe? |
-|---------|----------|---------|-----------------|
-| Cobalt `#0047AB` | ~78 | — | Large text only in light |
-| Cobalt dark `#00B0FF` | — | ~83 | ✓ large text in dark |
-| Tanzanite `#4B0082` | ~92 | — | ✓ body text in light |
-| Tanzanite dark `#B388FF` | — | ~78 | Large text only in dark |
-| Malachite `#64FFDA` | ~62 | — | Display/UI in light |
-| Gold `#FFD740` | ~61 | — | Display/UI in light |
-| Terracotta `#D4A574` | ~56 | — | Non-text only in light |
-| Foreground light `#141413` | ~100 | — | ✓ all roles |
-| Foreground dark `#F5F5F4` | — | ~99 | ✓ all roles |
+### Mineral Lc reference (light bg `#FAF9F5` / dark bg `#0A0A0A`)
 
-**Library:** `lib/accessibility.ts` — exports `apcaContrast()`, `checkContrast()`, `MINERAL_CONTRAST_TABLE`, `TOUCH_TARGETS`, `COMPONENT_CHECKLIST`.
+| Mineral                  | Light Lc | Dark Lc | Body-text safe?          |
+| ------------------------ | -------- | ------- | ------------------------ |
+| Cobalt `#0047AB`         | ~78      | —       | Large text only in light |
+| Cobalt dark `#00B0FF`    | —        | ~83     | ✓ large text in dark     |
+| Tanzanite `#4B0082`      | ~92      | —       | ✓ body text in light     |
+| Tanzanite dark `#B388FF` | —        | ~78     | Large text only in dark  |
+| Malachite `#64FFDA`      | ~62      | —       | Display / UI in light    |
+| Gold `#FFD740`           | ~61      | —       | Display / UI in light    |
+| Terracotta `#D4A574`     | ~56      | —       | Non-text only in light   |
 
-Install via: `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/accessibility`
+## Ecosystem brands
 
-### MCP Configuration
+| Brand    | Meaning (Shona) | Role                                 | Mineral tag |
+| -------- | --------------- | ------------------------------------ | ----------- |
+| bundu    | Wilderness      | The complete ecosystem               | Terracotta  |
+| nyuchi   | Bee             | Infrastructure & enterprise products | Gold        |
+| mukoko   | Beehive         | Consumer super app                   | Tanzanite   |
+| shamwari | Friend          | Sovereign AI companion               | Cobalt      |
+| nhimbe   | Gathering       | Events & community gatherings        | Malachite   |
 
-Served at `/mcp` via Streamable HTTP. Configured in `.claude/settings.json`:
+## Common mistakes to avoid
 
-```json
-{
-  "mcpServers": {
-    "design-portal": {
-      "type": "url",
-      "url": "https://design.nyuchi.com/mcp"
-    }
-  }
-}
-```
+- Pasting hex values into TSX (`className="bg-[#0047AB]"`) — use `bg-cobalt` / `bg-primary` backed by CSS variables.
+- Building a parallel component library — install from this registry instead.
+- Hardcoding `"545 components"` or any registry count in copy — always fetch `/api/v1/stats`.
+- Using the outdated WCAG 2.x contrast ratios — APCA Lc is the standard.
+- Capitalising brand wordmarks — always lowercase.
+- Giving a button `rounded-md` or `rounded-lg` — always `rounded-full`.
+- Writing new MDX pages for content that belongs in the `documentation_pages` Supabase table.
+- Treating L9 fundi as "docs" or L10 as "meta/templates" — those mappings were wrong in older docs. L9 = fundi (Outside axis), L10 = documentation (Documentation axis).

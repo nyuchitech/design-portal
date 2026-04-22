@@ -1,18 +1,13 @@
-# Scaffold Component Skill
+---
+name: scaffold-component
+description: Use when adding a new UI component to the Nyuchi Design Portal registry — the canonical design-system source for the bundu ecosystem. Component source lives in Supabase (`components` table), not on disk. The workflow is: MCP `scaffold_component` → upsert Supabase row → `pnpm registry:sync` → verify via `/api/v1/ui/{name}`. Also use when the user says "add a new component", "scaffold [X]", or "I need a [X] component in the registry".
+---
 
-## Description
+# Scaffold a Registry Component
 
-Scaffold a new Mukoko UI component: generate the file, update registry.json, and verify the API serves it correctly.
+You are adding a new component to the Nyuchi Design Portal registry. The source of truth is Supabase — the repo just holds a generated `registry.json` snapshot and a handful of primitives the portal itself imports. Follow every step.
 
-## Trigger
-
-When the user says "add a new component", "create a component", "scaffold [component name]", "I need a [X] component", or "build a new [X] for the registry".
-
-## Instructions
-
-You are scaffolding a new component for the Nyuchi Design Portal registry. Follow every step precisely — this registry is the canonical source for all bundu ecosystem apps.
-
-### Step 1 — Generate the component scaffold
+## Step 1 — Generate the component scaffold
 
 Use the MCP `scaffold_component` tool to generate the boilerplate:
 
@@ -29,7 +24,7 @@ scaffold_component({
 
 This returns the full TSX source and the registry JSON entry.
 
-### Step 2 — Create the component file
+## Step 2 — Create the component file
 
 Write the generated source to `components/ui/<name>.tsx`. Make sure to:
 
@@ -38,24 +33,27 @@ Write the generated source to `components/ui/<name>.tsx`. Make sure to:
 - Add `data-slot="<name>"` to the root element
 - Named exports only — `export { ComponentName, componentNameVariants }`
 
-### Step 3 — Add to registry.json
+## Step 3 — Upsert the row into Supabase
 
-Open `registry.json` and add the registry entry to the `items` array. Schema:
+The `components` table is the source of truth. Insert (or update by `name`) a row with:
 
-```json
-{
-  "name": "<name>",
-  "type": "registry:ui",
-  "description": "<description>",
-  "dependencies": ["class-variance-authority"],
-  "registryDependencies": [],
-  "files": [{ "path": "components/ui/<name>.tsx", "type": "registry:ui" }]
-}
-```
+| Column                  | Value                                                                      |
+| ----------------------- | -------------------------------------------------------------------------- |
+| `name`                  | kebab-case slug                                                            |
+| `type`                  | `registry:ui` / `registry:hook` / `registry:lib` / `registry:block`        |
+| `description`           | one-line description                                                       |
+| `source_code`           | full TSX from Step 2                                                       |
+| `architecture_layer`    | 1–10 (see the 10-layer table in the `mukoko-design-system` skill)          |
+| `category`              | e.g. `action`, `forms-input`, `layout`, `feedback`, `ai-chatbot`, `charts` |
+| `dependencies`          | JSON array of npm package names                                            |
+| `registry_dependencies` | JSON array of other registry item names (e.g. `["button", "badge"]`)       |
+| `status`                | `stable` (or `alpha` / `deprecated`)                                       |
 
-Common `registryDependencies`: if your component uses `Button`, add `"button"`. If it uses `Badge`, add `"badge"`. These are the registry item names, not npm packages.
+If the component has structured docs (use cases, variants, a11y notes, examples), also insert a matching row into `component_docs`. Add a `component_versions` row so the `/api/v1/ui/{name}/versions` history starts from v1.
 
-### Step 4 — Sync the registry snapshot
+Do not hand-edit `registry.json` — it is generated from Supabase in the next step.
+
+## Step 4 — Sync the registry snapshot
 
 ```bash
 pnpm registry:sync
@@ -63,10 +61,11 @@ pnpm registry:sync
 
 This regenerates `registry.json` (and any committed `components/ui/*` primitive the portal itself imports) from Supabase. The dynamic API at `/api/v1/ui/<name>` reads straight from Supabase — no static CDN build required. CI runs `pnpm registry:verify` to fail if the committed snapshot drifts from the database.
 
-### Step 5 — Verify the API
+## Step 5 — Verify the API
 
 ```bash
-curl http://localhost:3000/api/v1/ui/<name>
+# Start the portal dev server first: pnpm dev (defaults to port 11736)
+curl http://localhost:11736/api/v1/ui/<name>
 ```
 
 Expected: `200 OK` with `$schema`, `name`, `type`, `files[0].content` containing the source code.
