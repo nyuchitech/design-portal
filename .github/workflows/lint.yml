@@ -84,3 +84,18 @@ jobs:
           node-version: 22
       - name: Run markdownlint-cli2
         run: npx --yes markdownlint-cli2@0.15.0
+
+  yamllint:
+    name: yamllint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install yamllint
+        run: pip install --upgrade yamllint==1.35.1
+      - name: Run yamllint
+        run: yamllint -f github .
