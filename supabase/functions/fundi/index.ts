@@ -92,14 +92,25 @@ function fingerprintFor(input: FundiIssueInput): string {
   return (h >>> 0).toString(16).padStart(8, "0")
 }
 
+// Scope segments are embedded into GitHub issue labels
+// (`fundi:scope:<scope>`). GitHub rejects labels >50 chars or with
+// special characters, and we don't want a malformed scope to either
+// pollute the label namespace or fail the heal call. Allow a tight
+// alphanum + dot/hyphen/underscore set, 1-40 chars.
+const SCOPE_PATTERN = /^[a-z0-9._-]{1,40}$/i
+
 function validateInput(body: unknown): FundiIssueInput | string {
   if (!body || typeof body !== "object") return "body must be an object"
   const b = body as Record<string, unknown>
   if (typeof b.scope !== "string" || !b.scope) return "scope (string) required"
+  if (!SCOPE_PATTERN.test(b.scope)) {
+    return "scope must be 1-40 chars of [a-z0-9._-] (case-insensitive)"
+  }
   if (!["critical", "high", "medium", "low"].includes(b.severity as string)) {
     return "severity must be critical|high|medium|low"
   }
   if (typeof b.symptom !== "string" || !b.symptom) return "symptom (string) required"
+  if (b.symptom.length > 200) return "symptom must be 1-200 chars"
   return {
     scope: b.scope,
     severity: b.severity as Severity,
@@ -259,6 +270,25 @@ Deno.serve(async (req) => {
 
   try {
     if (path.endsWith("/heal")) {
+      // /heal is a privileged endpoint — it opens real GitHub issues
+      // using the repo PAT. Require a Bearer token matching either the
+      // Supabase service-role key (used by the documented pg_cron
+      // schedule) or a dedicated FUNDI_HEAL_TOKEN secret if operators
+      // want to isolate the trigger from service-role access.
+      const provided = (req.headers.get("authorization") ?? "")
+        .replace(/^Bearer\s+/i, "")
+        .trim()
+      const expectedServiceRole = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")
+      const expectedHealToken = Deno.env.get("FUNDI_HEAL_TOKEN")
+      const ok =
+        (!!expectedServiceRole && provided === expectedServiceRole) ||
+        (!!expectedHealToken && provided === expectedHealToken)
+      if (!ok) {
+        return json(
+          { error: "Unauthorized" },
+          { status: 401, methods: "POST, OPTIONS" }
+        )
+      }
       const result = await heal()
       return json(result, { status: 200, methods: "POST, OPTIONS" })
     }

@@ -861,6 +861,7 @@ When working on this codebase as an AI assistant:
 19. **The playground (`components/playground/`) reads from the API**, not from local files. If you find a `registry.json` import there, refactor it to fetch `/api/v1/ui` (tracked in issue #26).
 20. **API is versioned under `/api/v1/`** — `openapi.yaml` is the contract; update it whenever a route changes.
 21. **Buttons are always pill-shaped (`rounded-full`)** across the entire ecosystem.
+22. **Security findings are never deferred.** Any vulnerability surfaced during a `/security-review`, a manual audit, a CodeQL alert, a Dependabot advisory, or `pnpm audit` must be fixed inside the current PR — even if the original PR scope is "docs only" or "feature X". Do not file a follow-up issue and merge the unfixed code. The only acceptable exception is when the fix concretely requires infrastructure that isn't available on the PR's branch (e.g. a Supabase migration the developer must run); in that case, document the gap in `SECURITY.md`, open a tracking issue, AND still ship every code-level mitigation that doesn't require the missing infrastructure. This rule applies even when the finding is downgraded to "lack of hardening" during false-positive filtering — if a reviewer flagged it, the patch goes in this PR.
 
 ### Open work to be aware of
 

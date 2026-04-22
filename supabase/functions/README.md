@@ -73,9 +73,26 @@ The edge functions expect these exact column names.
 ```bash
 supabase secrets set GITHUB_TOKEN=ghp_xxx        # PAT with `repo:issues` on nyuchi/design-portal
 supabase secrets set FUNDI_GITHUB_REPO=nyuchi/design-portal
+
+# Optional: dedicated token for the /heal endpoint. If unset, /heal
+# accepts the Supabase service-role key instead. Set this secret if
+# you want to isolate the heal trigger from service-role access.
+supabase secrets set FUNDI_HEAL_TOKEN=$(openssl rand -hex 32)
 ```
 
 The PAT must be able to create issues and add labels on that repo.
+
+**Auth model:**
+
+- `POST /functions/v1/fundi` — **unauthenticated** by design (L8 callsites
+  anywhere in the ecosystem can report issues). Validation enforces a
+  strict scope/severity/symptom shape; fingerprint dedup limits row
+  growth.
+- `POST /functions/v1/fundi/heal` — **requires a Bearer token** matching
+  either `SUPABASE_SERVICE_ROLE_KEY` (auto-injected; what the documented
+  pg_cron schedule uses) or `FUNDI_HEAL_TOKEN` if set. Returns 401
+  otherwise. This prevents an unauthenticated caller from triggering
+  GitHub-issue creation via the heal loop.
 
 ### `analytics`
 
@@ -142,8 +159,9 @@ curl -sS -X POST 'https://grjsboqkaywpwatvrzmy.supabase.co/functions/v1/fundi' \
   -H 'Content-Type: application/json' \
   -d '{"scope":"registry","severity":"medium","symptom":"registry.json drifted","context":{"expected":545,"actual":540}}'
 
-# Fundi — manually trigger a heal pass
-curl -sS -X POST 'https://grjsboqkaywpwatvrzmy.supabase.co/functions/v1/fundi/heal'
+# Fundi — manually trigger a heal pass (requires auth, see "Auth model" above)
+curl -sS -X POST 'https://grjsboqkaywpwatvrzmy.supabase.co/functions/v1/fundi/heal' \
+  -H "Authorization: Bearer $SUPABASE_SERVICE_ROLE_KEY"
 ```
 
 ## Local development
