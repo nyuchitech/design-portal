@@ -2,9 +2,9 @@
 
 > The canonical design system for the bundu ecosystem — powering mukoko (17 consumer mini-apps), nyuchi (7 enterprise products), and sister brands. Component registry, brand documentation, architecture reference, AI-native tooling, and developer portal.
 
-[![CI](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchitech/design-portal/actions/workflows/ci.yml)
-[![Release](https://github.com/nyuchitech/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchitech/design-portal/actions/workflows/release.yml)
-[![CodeQL](https://github.com/nyuchitech/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchitech/design-portal/security/code-scanning)
+[![CI](https://github.com/nyuchi/design-portal/actions/workflows/ci.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/ci.yml)
+[![Release](https://github.com/nyuchi/design-portal/actions/workflows/release.yml/badge.svg)](https://github.com/nyuchi/design-portal/actions/workflows/release.yml)
+[![CodeQL](https://github.com/nyuchi/design-portal/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/nyuchi/design-portal/security/code-scanning)
 
 **Version:** 4.0.26 | **Live:** [design.nyuchi.com](https://design.nyuchi.com) | **Docs:** [design.nyuchi.com/docs](https://design.nyuchi.com/docs) | **Observability:** [design.nyuchi.com/observability](https://design.nyuchi.com/observability)
 
@@ -52,7 +52,7 @@ Add to your `.claude/settings.json`:
 }
 ```
 
-Your AI assistant can now call 18 tools:
+Your AI assistant can now call 22 tools:
 
 | Tool                        | What it does                                                                 |
 | --------------------------- | ---------------------------------------------------------------------------- |
@@ -324,7 +324,7 @@ Tier 3 — terminal gate
 ## Local Development
 
 ```bash
-git clone https://github.com/nyuchitech/design-portal.git
+git clone https://github.com/nyuchi/design-portal.git
 cd design-portal
 pnpm install
 
@@ -373,7 +373,7 @@ See [CHANGELOG.md](CHANGELOG.md) for release history.
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines, code standards, and the PR process.
 
-For questions and ideas, use [GitHub Discussions](https://github.com/nyuchitech/design-portal/discussions).
+For questions and ideas, use [GitHub Discussions](https://github.com/nyuchi/design-portal/discussions).
 
 ## Code of Conduct
 
@@ -381,7 +381,7 @@ See [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Built on Ubuntu: _umuntu ngumuntu 
 
 ## Security
 
-See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/nyuchitech/design-portal/security/advisories/new).
+See [SECURITY.md](SECURITY.md) or report privately via [GitHub Security Advisories](https://github.com/nyuchi/design-portal/security/advisories/new).
 
 ## License
 
