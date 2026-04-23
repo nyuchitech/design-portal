@@ -54,32 +54,35 @@ Add to your `.claude/settings.json`:
 
 Your AI assistant can now call 18 tools:
 
-| Tool                     | What it does                                                                |
-| ------------------------ | --------------------------------------------------------------------------- |
-| `list_components`        | Browse all registry items, filter by type/layer/category                    |
-| `get_component`          | Fetch full source code + metadata for any component                         |
-| `get_component_docs`     | Structured docs (use cases, variants, a11y notes)                           |
-| `get_component_versions` | Version history for a component                                             |
-| `get_component_links`    | All portal URLs for a component                                             |
-| `search_components`      | Search by name, description, or category                                    |
-| `scaffold_component`     | Generate a new component following CVA + Radix + cn() patterns              |
-| `get_design_tokens`      | Fetch the Five African Minerals palette + semantic tokens                   |
-| `get_install_command`    | Get the shadcn CLI install command for one or more components               |
-| `get_brand_info`         | Brand system — ecosystem brands, typography, spacing                        |
-| `get_architecture_info`  | Data architecture (principles, data layer, pipeline, sovereignty)           |
-| `get_ubuntu_principles`  | Ubuntu philosophy and community-first design doctrine                       |
-| `get_layer_summary`      | Component count / categories / names for a given frontend layer (1–10)      |
-| `get_ai_instructions`    | System prompts from `ai_instructions` by target (mcp-server/claude/copilot) |
-| `get_changelog`          | Recent releases from the `changelog` table                                  |
-| `get_documentation_page` | Read a documentation page by slug                                           |
-| `get_usage_stats`        | Public API and MCP usage metrics (open data, CC BY 4.0)                     |
-| `get_database_status`    | Registry database status and row counts                                     |
+| Tool                        | What it does                                                                 |
+| --------------------------- | ---------------------------------------------------------------------------- |
+| `list_components`           | Browse all registry items, filter by type/layer/category                     |
+| `get_component`             | Fetch full source code + metadata for any component                          |
+| `get_component_docs`        | Structured docs (use cases, variants, a11y notes)                            |
+| `get_component_versions`    | Version history for a component                                              |
+| `get_component_links`       | All portal URLs for a component                                              |
+| `search_components`         | Search by name, description, or category                                     |
+| `scaffold_component`        | Generate a new component following CVA + Radix + cn() patterns               |
+| `get_design_tokens`         | Fetch the Five African Minerals palette + semantic tokens                    |
+| `get_install_command`       | Get the shadcn CLI install command for one or more components                |
+| `get_brand_info`            | Brand system — ecosystem brands, typography, spacing                         |
+| `get_architecture_info`     | Data architecture (principles, data layer, pipeline, sovereignty)            |
+| `get_ubuntu_doctrine`       | Static Ubuntu philosophy doctrine (philosophy, design, community, languages) |
+| `get_ubuntu_pillars`        | Five Ubuntu Pillars — rows from `ubuntu_pillars`                             |
+| `get_ubuntu_principles`     | Five Ubuntu Principles — rows from `ubuntu_principles`                       |
+| `get_architecture_frontend` | 3D frontend axes + layers                                                    |
+| `get_layer_summary`         | Component count / categories / names for a given frontend layer (1–10)       |
+| `get_ai_instructions`       | System prompts from `ai_instructions` by target (mcp-server/claude/copilot)  |
+| `get_changelog`             | Recent releases from the `changelog` table                                   |
+| `get_documentation_page`    | Read a documentation page by slug                                            |
+| `get_usage_stats`           | Public API and MCP usage metrics (open data, CC BY 4.0)                      |
+| `get_database_status`       | Registry database status and row counts                                      |
 
 **Endpoint:** `POST /mcp` (JSON-RPC) | `GET /mcp` (SSE) | `DELETE /mcp` (cleanup) | `OPTIONS /mcp` (CORS preflight)
 
 ### Claude Code Skill
 
-The `mukoko-design-system` skill (`/.claude/skills/mukoko-design-system.md`) is a pre-built Claude Code skill that teaches AI assistants the Five African Minerals design system:
+The `nyuchi-design-system` skill (`/.claude/skills/nyuchi-design-system.md`) is a pre-built Claude Code skill that teaches AI assistants the Five African Minerals design system:
 
 - Full color palette with APCA contrast values
 - CVA + Radix + `cn()` component patterns
@@ -87,7 +90,7 @@ The `mukoko-design-system` skill (`/.claude/skills/mukoko-design-system.md`) is 
 - APCA Lc 90+ accessibility quick reference
 - Registry install commands
 
-Activate in any session: `/mukoko-design-system`
+Activate in any session: `/nyuchi-design-system`
 
 ---
 

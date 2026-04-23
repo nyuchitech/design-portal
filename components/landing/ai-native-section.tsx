@@ -39,7 +39,7 @@ const mcpConfig = `{
 }`
 
 const skillUsage = `# In any Claude Code session:
-/mukoko-design-system
+/nyuchi-design-system
 
 # Or ask Claude directly:
 @design-portal get_component button
@@ -114,7 +114,7 @@ export function AiNativeSection() {
             <p className="text-xs leading-relaxed text-muted-foreground">
               The{" "}
               <code className="rounded bg-muted px-1 py-0.5 font-mono text-[10px]">
-                mukoko-design-system
+                nyuchi-design-system
               </code>{" "}
               skill teaches Claude Code the Five African Minerals palette, component patterns,
               Ubuntu design principles, and APCA accessibility standards.

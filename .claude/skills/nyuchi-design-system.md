@@ -1,5 +1,5 @@
 ---
-name: mukoko-design-system
+name: nyuchi-design-system
 description: Use when working on any bundu-ecosystem app (mukoko, nyuchi, shamwari, nhimbe, design-portal, sister brands) or when the user asks about the Five African Minerals palette, the 3D frontend architecture, Ubuntu design doctrine, component patterns (CVA + Radix + cn), APCA accessibility targets, or shadcn-CLI registry install commands. Always pull live counts, versions, and registry lists from https://design.nyuchi.com — never hardcode them.
 ---
 
@@ -17,20 +17,20 @@ You are working with the **Nyuchi Design Portal** — the canonical registry, de
 
 Every count, version, and catalogue entry lives in Supabase and is served live. When you need one, call the API; do not copy numbers from memory, comments, or stale docs.
 
-| Need                      | Call                                                           |
-| ------------------------- | -------------------------------------------------------------- |
-| Current version           | `GET /api/v1/changelog` → `[0].version`                        |
-| Total stable items        | `GET /api/v1/stats` → `stable`                                 |
-| Items per layer           | `GET /api/v1/stats` → `byLayer[]`                              |
-| Items per category        | `GET /api/v1/stats` → `byCategory[]`                           |
-| Full registry index       | `GET /api/v1/ui`                                               |
-| One component's source    | `GET /api/v1/ui/{name}`                                        |
-| A component's docs        | `GET /api/v1/ui/{name}/docs`                                   |
-| Component version history | `GET /api/v1/ui/{name}/versions`                               |
-| Documentation page        | `GET /api/v1/docs/{slug}` (or list via `/api/v1/docs`)         |
-| Brand system              | `GET /api/v1/brand`                                            |
-| Architecture topics       | `/api/v1/{ecosystem,data-layer,pipeline,sovereignty}`          |
-| Ubuntu doctrine           | MCP resource `mukoko://ubuntu` or tool `get_ubuntu_principles` |
+| Need                      | Call                                                                                                                                            |
+| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Current version           | `GET /api/v1/changelog` → `[0].version`                                                                                                         |
+| Total stable items        | `GET /api/v1/stats` → `stable`                                                                                                                  |
+| Items per layer           | `GET /api/v1/stats` → `byLayer[]`                                                                                                               |
+| Items per category        | `GET /api/v1/stats` → `byCategory[]`                                                                                                            |
+| Full registry index       | `GET /api/v1/ui`                                                                                                                                |
+| One component's source    | `GET /api/v1/ui/{name}`                                                                                                                         |
+| A component's docs        | `GET /api/v1/ui/{name}/docs`                                                                                                                    |
+| Component version history | `GET /api/v1/ui/{name}/versions`                                                                                                                |
+| Documentation page        | `GET /api/v1/docs/{slug}` (or list via `/api/v1/docs`)                                                                                          |
+| Brand system              | `GET /api/v1/brand`                                                                                                                             |
+| Architecture topics       | `/api/v1/{ecosystem,data-layer,pipeline,sovereignty}`                                                                                           |
+| Ubuntu doctrine           | MCP resource `mukoko://ubuntu` or tool `get_ubuntu_doctrine` (for philosophy) / `get_ubuntu_pillars` / `get_ubuntu_principles` (for table rows) |
 
 ## Architecture — the 3D frontend model
 
@@ -68,7 +68,7 @@ npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>
 
 Connect an MCP client to `https://design.nyuchi.com/mcp`.
 
-**Tools** (18; always up-to-date via `list_tools`): `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`, `get_documentation_page`.
+**Tools** (22; always up-to-date via `list_tools`): `list_components`, `get_component`, `get_component_docs`, `get_component_links`, `get_component_versions`, `search_components`, `get_design_tokens`, `scaffold_component`, `get_install_command`, `get_brand_info`, `get_architecture_info`, `get_architecture_frontend`, `get_ubuntu_doctrine`, `get_ubuntu_pillars`, `get_ubuntu_principles`, `get_database_status`, `get_usage_stats`, `get_layer_summary`, `get_ai_instructions`, `get_changelog`, `get_documentation_page`.
 
 **Resources** (5): `mukoko://registry`, `mukoko://brand`, `mukoko://design-tokens`, `mukoko://architecture`, `mukoko://ubuntu`.
 
@@ -221,7 +221,7 @@ Ubuntu is the behavioural foundation of every design decision in the bundu ecosy
 1. All strings externalisable for Shona / Ndebele / English
 1. Community-first framing — benefits the group, not just the individual
 
-Always call `get_ubuntu_principles` or read `mukoko://ubuntu` for the live doctrine before making doctrine-level claims — issues #45 and #46 are expanding the Ubuntu model (pillars / principles) and the axis tables.
+Always call `get_ubuntu_doctrine` or read `mukoko://ubuntu` for the live philosophy before making doctrine-level claims; for the structured Five Pillars / Five Principles rows, call `get_ubuntu_pillars` / `get_ubuntu_principles`. For the 3D frontend model (5 axes × 10 layers), call `get_architecture_frontend`.
 
 ## Accessibility — APCA 3.0 AAA
 

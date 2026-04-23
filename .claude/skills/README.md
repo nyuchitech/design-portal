@@ -6,7 +6,7 @@ Installable Claude Code skills for working with the bundu ecosystem. Each `.md` 
 
 | Skill                  | When to use                                                                                                                            |
 | ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| `mukoko-design-system` | Working on any bundu-ecosystem app — design tokens, component patterns, Ubuntu doctrine, APCA accessibility, shadcn CLI install flows. |
+| `nyuchi-design-system` | Working on any bundu-ecosystem app — design tokens, component patterns, Ubuntu doctrine, APCA accessibility, shadcn CLI install flows. |
 | `ecosystem-app-setup`  | Bootstrapping a brand-new ecosystem app (new mukoko mini-app, nyuchi product, sister brand, etc.).                                     |
 | `scaffold-component`   | Adding a new UI component to the registry (Supabase-first: MCP `scaffold_component` → upsert → `pnpm registry:sync`).                  |
 
@@ -27,7 +27,7 @@ Install via any of these paths.
 cd ~/src # wherever you keep repos
 git clone https://github.com/nyuchitech/design-portal.git
 mkdir -p ~/.claude/skills
-ln -s "$PWD/design-portal/.claude/skills/mukoko-design-system.md"   ~/.claude/skills/
+ln -s "$PWD/design-portal/.claude/skills/nyuchi-design-system.md"   ~/.claude/skills/
 ln -s "$PWD/design-portal/.claude/skills/ecosystem-app-setup.md"    ~/.claude/skills/
 ln -s "$PWD/design-portal/.claude/skills/scaffold-component.md"     ~/.claude/skills/
 ```
@@ -39,7 +39,7 @@ Symlinking means `git pull` in the portal repo auto-updates the skills in every 
 ```bash
 # From the root of the consumer app (e.g. mukoko-weather):
 mkdir -p .claude/skills
-curl -fsSL -o .claude/skills/mukoko-design-system.md   https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/mukoko-design-system.md
+curl -fsSL -o .claude/skills/nyuchi-design-system.md   https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/nyuchi-design-system.md
 curl -fsSL -o .claude/skills/ecosystem-app-setup.md    https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/ecosystem-app-setup.md
 curl -fsSL -o .claude/skills/scaffold-component.md     https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/scaffold-component.md
 ```
@@ -68,7 +68,7 @@ The MCP server exposes 18 tools and 5 resources that read live data from the Sup
 Start a new Claude Code session in the target project and type:
 
 ```
-/mukoko-design-system
+/nyuchi-design-system
 ```
 
 If the skill is registered, Claude will acknowledge the trigger and load the instructions. You can also type `/` to browse available skills — the three Nyuchi skills should appear with their descriptions.

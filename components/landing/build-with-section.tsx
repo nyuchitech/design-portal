@@ -89,7 +89,7 @@ export function BuildWithSection() {
             <h3 className="font-serif text-xl font-semibold">Install the skills</h3>
             <p className="text-sm leading-relaxed text-muted-foreground">
               Three Claude Code skills ship in this repo:{" "}
-              <code className="font-mono text-xs">mukoko-design-system</code>,{" "}
+              <code className="font-mono text-xs">nyuchi-design-system</code>,{" "}
               <code className="font-mono text-xs">scaffold-component</code>,{" "}
               <code className="font-mono text-xs">ecosystem-app-setup</code>. Symlink or copy into
               your project&apos;s <code className="font-mono text-xs">.claude/skills/</code> and the

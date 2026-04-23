@@ -43,7 +43,7 @@ The `components` table is the source of truth. Insert (or update by `name`) a ro
 | `type`                  | `registry:ui` / `registry:hook` / `registry:lib` / `registry:block`        |
 | `description`           | one-line description                                                       |
 | `source_code`           | full TSX from Step 2                                                       |
-| `architecture_layer`    | 1–10 (see the 10-layer table in the `mukoko-design-system` skill)          |
+| `architecture_layer`    | 1–10 (see the 10-layer table in the `nyuchi-design-system` skill)          |
 | `category`              | e.g. `action`, `forms-input`, `layout`, `feedback`, `ai-chatbot`, `charts` |
 | `dependencies`          | JSON array of npm package names                                            |
 | `registry_dependencies` | JSON array of other registry item names (e.g. `["button", "badge"]`)       |
