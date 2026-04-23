@@ -88,9 +88,11 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
+  // Must match the semantic `--background` token in app/globals.css.
+  // Updated April 2026 when L1 tokens swapped (see nyuchi-tokens registry).
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#FAF9F5" },
-    { media: "(prefers-color-scheme: dark)", color: "#0A0A0A" },
+    { media: "(prefers-color-scheme: light)", color: "#F3F2EE" },
+    { media: "(prefers-color-scheme: dark)", color: "#1B1A17" },
   ],
 }
 
@@ -168,10 +170,11 @@ export default async function RootLayout({
       </Head>
       <body className="font-sans antialiased">
         {/* Mineral strip is a 4px fixed-position accent on the far left of
-            every viewport. We compensate inside the layout wrapper so content
-            never overlaps it — and inside so scrollbars on narrow mobile
-            viewports don't create a double-border effect. */}
-        <MineralStrip className="fixed inset-y-0 left-0 z-[60] h-screen rounded-none" />
+            every viewport. `pl-1` on the layout wrapper reserves 4px so
+            content never overlaps it, and the strip sits at z-40 so the
+            sticky header (z-50) naturally covers it — the strip appears
+            only outside the header band. */}
+        <MineralStrip className="fixed inset-y-0 left-0 z-40 h-screen rounded-none" />
         <div className="pl-1">
           <Layout
             navbar={navbar}

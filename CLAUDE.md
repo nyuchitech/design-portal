@@ -397,16 +397,22 @@ This is the canonical design system. All bundu ecosystem apps MUST use these tok
 
 **Semantic color tokens** (theme-adaptive via CSS custom properties):
 
-| Token                | Light                  | Dark                     | Usage               |
-| -------------------- | ---------------------- | ------------------------ | ------------------- |
-| `--background`       | `#FAF9F5` (warm cream) | `#0A0A0A` (deep night)   | Page background     |
-| `--foreground`       | `#141413`              | `#F5F5F4`                | Primary text        |
-| `--card`             | `#FFFFFF`              | `#141414`                | Card surfaces       |
-| `--muted`            | `#F3F2EE`              | `#1E1E1E`                | Subdued backgrounds |
-| `--muted-foreground` | `#5C5B58`              | `#9A9A95`                | Secondary text      |
-| `--border`           | `rgba(10,10,10,0.08)`  | `rgba(255,255,255,0.08)` | Borders             |
-| `--primary`          | `#141413`              | `#F5F5F4`                | Primary interactive |
-| `--destructive`      | `#B3261E`              | `#F2B8B5`                | Error/danger        |
+> **Values synced from the `nyuchi-tokens` registry (L1), April 2026 AAA-optimised swap.**
+> Surfaces were re-arranged: `background` is now the ambient page base, `card` is the content surface, `muted` is the deepest fill. Border/input alpha tightened to 0.06. Two new tokens added: `overlay` (modal/sheet surface) and `scrim` (modal backdrop).
+
+| Token                  | Light                 | Dark                     | Usage                         |
+| ---------------------- | --------------------- | ------------------------ | ----------------------------- |
+| `--background`         | `#F3F2EE`             | `#1B1A17`                | Ambient page base (L10% dark) |
+| `--foreground`         | `#141413`             | `#F5F5F4`                | Primary text                  |
+| `--card`               | `#FFFFFF`             | `#100F0E`                | Content surface (L6% dark)    |
+| `--muted`              | `#FAF9F5`             | `#050504`                | Deepest fill (L2% dark)       |
+| `--muted-foreground`   | `#494840`             | `#B2AFA8`                | Secondary text (AAA)          |
+| `--overlay`            | `#FFFFFF`             | `#252421`                | Modal / sheet surface (L14%)  |
+| `--scrim`              | `rgba(0,0,0,0.40)`    | `rgba(0,0,0,0.60)`       | Modal backdrop                |
+| `--border`             | `rgba(10,10,10,0.06)` | `rgba(255,255,255,0.06)` | Borders                       |
+| `--primary`            | `#141413`             | `#F5F5F4`                | Primary interactive           |
+| `--primary-foreground` | `#FFFFFF`             | `#1B1A17`                | Text on `--primary`           |
+| `--destructive`        | `#B3261E`             | `#F2B8B5`                | Error / danger                |
 
 **Chart colors** (theme-adaptive):
 
