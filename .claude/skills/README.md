@@ -61,7 +61,7 @@ For the richest experience, also wire up the live MCP server. Add to your Claude
 }
 ```
 
-The MCP server exposes 18 tools and 5 resources that read live data from the Supabase registry (no hardcoded counts). The skills are the _doctrine_ ("what does it mean?"); the MCP server is the _data_ ("what does it currently contain?"). Use them together.
+The MCP server exposes 22 tools and 5 resources that read live data from the Supabase registry (no hardcoded counts). The skills are the _doctrine_ ("what does it mean?"); the MCP server is the _data_ ("what does it currently contain?"). Use them together.
 
 ## Verifying installation
 

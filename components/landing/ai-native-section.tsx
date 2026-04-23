@@ -73,7 +73,7 @@ export function AiNativeSection() {
               </div>
               <div>
                 <h3 className="text-sm font-semibold text-foreground">MCP Server</h3>
-                <p className="text-xs text-muted-foreground">Streamable HTTP · 12 tools</p>
+                <p className="text-xs text-muted-foreground">Streamable HTTP · 22 tools</p>
               </div>
             </div>
             <p className="text-xs leading-relaxed text-muted-foreground">
