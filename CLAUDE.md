@@ -539,7 +539,35 @@ This registry is the template. New apps MUST:
 7. **Use Tailwind CSS 4** with `@tailwindcss/postcss` and the `@theme inline` block pattern
 8. **Follow the `components.json` configuration** for shadcn CLI compatibility
 
-### 8.6 registry.json Schema Reference
+### 8.6 Distribution surface — work-in-progress
+
+The portal today distributes only the component registry (via the shadcn CLI against `/api/v1/ui`). Two distribution gaps are tracked for follow-up work:
+
+1. **No Nyuchi npm package or GitHub Packages listing.** Consumers bootstrap a new app by hand — copying `globals.css`, `components.json`, `lib/utils.ts`, theme-provider wiring. There is no `@nyuchi/cli` or `@nyuchi/create-app` that bundles the install. `release.yml` creates a GitHub Release on tag push but does not `npm publish`.
+2. **Claude Code skills are repo-local only.** `.claude/skills/nyuchi-design-system.md`, `scaffold-component.md`, and `ecosystem-app-setup.md` only activate inside this repo. Consumers have to copy the files manually; there is no `skills add nyuchi/agent-skills` path, no Claude Code plugin marketplace listing, and no `/api/v1/skills/{name}` download endpoint.
+
+**Target distribution pattern** (see tracking issue):
+
+```bash
+# shadcn CLI — unchanged, already live
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
+
+# Skills CLI — the pattern Supabase and others use
+npx skills add nyuchi/agent-skills                  # install all
+npx skills add nyuchi/agent-skills --skill <name>   # install one
+
+# Claude Code plugin marketplace
+/plugin marketplace add nyuchi/agent-skills
+/plugin install nyuchi@nyuchi-design-system
+
+# Direct download from the portal
+GET https://design.nyuchi.com/api/v1/skills           # list
+GET https://design.nyuchi.com/api/v1/skills/{name}    # raw MDX
+```
+
+Skills are source-of-truthed in the existing `ai_instructions` Supabase table (or a new `skills` table if the versioning / audit needs differ) and served via a new `/api/v1/skills/*` endpoint that the CLI consumes. Claude Code plugin support requires a top-level `plugin.json` manifest in the skills repo.
+
+### 8.7 registry.json Schema Reference
 
 ```json
 {
