@@ -823,6 +823,23 @@ pnpm test:watch       # Watch mode for development
 
 ## 14. CI/CD & Versioning
 
+### PR & Commit Workflow
+
+**One PR = many commits. Not one-to-one.**
+
+A PR is a logical unit of work — "add mobile responsiveness", "drop Nextra and wire the dashboard shell", "publish the CLI and skills". Commits inside the PR are the incremental steps that get there. The PR is what reviewers review, what CI gates, what merges to main. The commits are the paper trail of how we got there.
+
+**Hard rules:**
+
+- Never split a logical unit of work across multiple PRs just to keep each PR small. A cohesive change ships as one PR with as many commits as it takes to reach a merge-ready state.
+- Never collapse a PR's history into a single commit. Multiple commits show the incremental steps, make `git bisect` useful, and make review tractable when the reader wants to follow the reasoning.
+- Commit messages are part of the documentation. Each commit's subject + body explains the step it represents and why; reviewers can read the commit graph as a timeline of the PR's reasoning.
+- Target the ratio at roughly **~10 commits per PR**, ~100 PRs to ~1000 commits in a year. That means PRs are substantial, not trivial; commits are incremental, not speculative.
+- A PR does not ship until it is **100% right end-to-end** — no half-measures, no "we'll clean that up in the follow-up". If the app doesn't hold together, the PR doesn't merge. Add more commits to the same PR until it does.
+- Exceptions to bundle-per-PR: security fixes, CI unblocks, and genuinely orthogonal infrastructure changes (see `claude/publish-cli-and-skills` as a parallel-track example) get their own PRs because their merge order is independent.
+
+**Why not one PR per commit?** Because PR overhead (branch protection, CI token spend, human review attention, merge-order sequencing) scales per-PR, not per-commit. A thousand tiny PRs burn a thousand tokens of review attention and produce a thousand merge conflicts. A hundred substantive PRs with ten commits each produce the same code volume with a tenth of the ceremony.
+
 ### GitHub Actions
 
 Three workflows in `.github/workflows/`:
