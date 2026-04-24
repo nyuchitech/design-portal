@@ -1,25 +1,23 @@
 import createMDX from "@next/mdx"
-import rehypeSlug from "rehype-slug"
-import rehypeAutolinkHeadings from "rehype-autolink-headings"
-import rehypePrettyCode from "rehype-pretty-code"
 
 // MDX compilation (replaces Nextra). All `.mdx` files under `app/` are
 // compiled by @next/mdx and routed through Next.js's file-based router.
-// Rehype plugins add:
-//   - `rehype-slug`             — generate heading IDs from text content
-//   - `rehype-autolink-headings` — add anchor links next to headings (# style)
-//   - `rehype-pretty-code`      — syntax highlighting via Shiki
+// Rehype plugins are referenced by NAME (string tuples) rather than
+// imported functions — Turbopack requires loader options to be
+// serialisable for its persistent cache, and function references are
+// not serialisable. Next.js resolves the strings to real plugins at
+// build time from `node_modules`.
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
     rehypePlugins: [
-      rehypeSlug,
+      ["rehype-slug"],
       [
-        rehypeAutolinkHeadings,
+        "rehype-autolink-headings",
         { behavior: "append", properties: { className: ["heading-anchor"] } },
       ],
       [
-        rehypePrettyCode,
+        "rehype-pretty-code",
         {
           theme: { light: "github-light", dark: "github-dark-dimmed" },
           keepBackground: false,
