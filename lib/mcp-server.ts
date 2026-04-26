@@ -36,6 +36,9 @@ import {
   getComponentVersions,
   getArchitectureFrontendAxes,
   getArchitectureFrontendLayers,
+  getArchitectureSnapshot,
+  getAxesSummary,
+  getLayerDetail,
   getUbuntuPillars,
   getUbuntuPrinciples,
 } from "@/lib/db"
@@ -953,6 +956,93 @@ export { ${pascalName}, ${camelVariants}Variants }
         }
       } catch (err) {
         return toolError("Failed to fetch frontend architecture", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_architecture",
+    "Full 3D-architecture snapshot — every axis with its layers, covenants, stakeholders, implementation rules, and live component counts. Single call powers the /architecture explorer page; uses get_architecture() SQL helper.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const axes = await getArchitectureSnapshot()
+        trackMcpTool({ toolName: "get_architecture", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(axes, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_architecture",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch architecture snapshot", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_axes_summary",
+    "Per-axis summary (5 rows: X-axis, Y-axis, Z-axis, Outside, Documentation) with live layer_count and component_count joins. Wraps get_axes_summary() SQL helper.",
+    {},
+    async () => {
+      const start = Date.now()
+      try {
+        const axes = await getAxesSummary()
+        trackMcpTool({ toolName: "get_axes_summary", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(axes, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_axes_summary",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch axes summary", err)
+      }
+    }
+  )
+
+  server.tool(
+    "get_layer_detail",
+    "Single-layer detail (covenant, stakeholder, implementation rules, category breakdown). Used by the /architecture/layers/{n} page; wraps get_layer_detail(p_layer_number int).",
+    {
+      layer_number: z
+        .number()
+        .int()
+        .min(1)
+        .max(10)
+        .describe("Layer number 1–10 (L1 tokens, L2 primitive, ..., L10 documentation)"),
+    },
+    async ({ layer_number }) => {
+      const start = Date.now()
+      try {
+        const detail = await getLayerDetail(layer_number)
+        if (!detail) {
+          trackMcpTool({
+            toolName: "get_layer_detail",
+            durationMs: Date.now() - start,
+            isError: true,
+          })
+          return {
+            content: [{ type: "text" as const, text: `Layer ${layer_number} not found` }],
+            isError: true,
+          }
+        }
+        trackMcpTool({ toolName: "get_layer_detail", durationMs: Date.now() - start })
+        return {
+          content: [{ type: "text" as const, text: JSON.stringify(detail, null, 2) }],
+        }
+      } catch (err) {
+        trackMcpTool({
+          toolName: "get_layer_detail",
+          durationMs: Date.now() - start,
+          isError: true,
+        })
+        return toolError("Failed to fetch layer detail", err)
       }
     }
   )

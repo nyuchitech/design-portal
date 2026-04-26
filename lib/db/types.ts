@@ -729,7 +729,66 @@ export interface ArchitectureFrontendLayerRow {
   updated_at: string
 }
 
-// ── Ubuntu doctrine — issue #45 (`ubuntu_pillars`, `ubuntu_principles`) ──
+// RPC return shapes for the `get_axes_summary()` and `get_layer_detail()`
+// helper functions. These are derived views (axes joined to component
+// counts; layers joined to component counts + category breakdowns), so
+// they don't share a schema with the base tables.
+
+export interface AxisSummaryRow {
+  name: string
+  title: string
+  description: string
+  geometry: ArchitectureAxisGeometry | string
+  metaphor: string
+  sort_order: number
+  layer_count: number
+  component_count: number
+}
+
+export interface LayerCategoryCount {
+  category: string
+  count: number
+}
+
+export interface LayerDetailRow {
+  layer_number: number
+  sub_label: string
+  title: string
+  axis_name: string
+  role: string
+  description: string
+  covenant: string
+  stakeholder: string
+  implementation_rules: string[]
+  component_count: number
+  categories: LayerCategoryCount[]
+}
+
+export interface ArchitectureSnapshotLayer {
+  layer_number: number
+  sub_label: string
+  title: string
+  role: string
+  description: string
+  covenant: string
+  stakeholder: string
+  implementation_rules: string[]
+  sort_order: number
+  component_count: number
+  stable_count: number
+  alpha_count: number
+  deprecated_count: number
+}
+
+export interface ArchitectureSnapshotAxis {
+  name: string
+  title: string
+  description: string
+  geometry: ArchitectureAxisGeometry | string
+  metaphor: string
+  sort_order: number
+  layers: ArchitectureSnapshotLayer[]
+}
 //
 // Five Ubuntu Pillars (the spheres in which Ubuntu is lived) and Five
 // Ubuntu Principles (the operating rules that translate Ubuntu to software).
