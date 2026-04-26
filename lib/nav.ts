@@ -4,7 +4,6 @@ import {
   Box,
   Compass,
   Download,
-  FlaskConical,
   GitPullRequest,
   Layers,
   Package,
@@ -63,10 +62,6 @@ export const SIDEBAR_NAV: NavGroup[] = [
       { label: "Fundi (L9)", href: "/architecture/fundi", icon: Wrench },
       { label: "Observability", href: "/observability", icon: Activity },
     ],
-  },
-  {
-    label: "Playground",
-    items: [{ label: "Playground", href: "/playground", icon: FlaskConical }],
   },
   {
     label: "Guides",

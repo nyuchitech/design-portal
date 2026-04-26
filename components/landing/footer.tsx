@@ -35,7 +35,6 @@ const columns: FooterColumn[] = [
       { label: "Blocks", href: "/blocks" },
       { label: "Charts", href: "/charts" },
       { label: "Patterns", href: "/patterns" },
-      { label: "Playground", href: "/playground" },
     ],
   },
   {
