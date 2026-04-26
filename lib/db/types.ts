@@ -486,45 +486,6 @@ export interface AiInstructionInsert {
   metadata?: Record<string, unknown> | null
 }
 
-// ── Documentation page table types ──────────────────────────────────
-
-export interface DocumentationPageRow {
-  id: number
-  slug: string
-  title: string
-  category: string
-  subcategory: string | null
-  description: string | null
-  content: string
-  author: string | null
-  version: string | null
-  related_layers: number[] | null
-  related_components: string[] | null
-  keywords: string[] | null
-  sort_order: number | null
-  parent_slug: string | null
-  status: string | null
-  created_at: string | null
-  updated_at: string | null
-}
-
-export interface DocumentationPageInsert {
-  slug: string
-  title: string
-  category: string
-  subcategory?: string | null
-  description?: string | null
-  content: string
-  author?: string | null
-  version?: string | null
-  related_layers?: number[] | null
-  related_components?: string[] | null
-  keywords?: string[] | null
-  sort_order?: number | null
-  parent_slug?: string | null
-  status?: string | null
-}
-
 // ── Changelog table types ───────────────────────────────────────────
 
 export interface ChangelogRow {
@@ -716,11 +677,6 @@ export interface Database {
         Row: AiInstructionRow
         Insert: AiInstructionInsert
         Update: Partial<AiInstructionInsert>
-      }
-      documentation_pages: {
-        Row: DocumentationPageRow
-        Insert: DocumentationPageInsert
-        Update: Partial<DocumentationPageInsert>
       }
       changelog: {
         Row: ChangelogRow

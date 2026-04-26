@@ -64,8 +64,6 @@ import type {
   ArchitectureRemovedInsert,
   AiInstructionRow,
   AiInstructionInsert,
-  DocumentationPageRow,
-  DocumentationPageInsert,
   ChangelogRow,
   ChangelogInsert,
   ComponentVersionRow,
@@ -984,75 +982,6 @@ export async function upsertAiInstruction(
 
   if (error) throw new Error(error.message)
   return data as AiInstructionRow
-}
-
-// ── Documentation page queries ──────────────────────────────────────
-
-/**
- * Get a documentation page by slug.
- */
-export async function getDocumentationPage(slug: string): Promise<DocumentationPageRow | null> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("slug", slug)
-    .eq("status", "published")
-    .single()
-
-  if (error) {
-    if (error.code === "PGRST116") return null
-    throw new Error(error.message)
-  }
-  return data as unknown as DocumentationPageRow
-}
-
-/**
- * Get all published documentation pages, grouped by category and sort_order.
- */
-export async function getAllDocumentationPages(): Promise<DocumentationPageRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("status", "published")
-    .order("category")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as DocumentationPageRow[]
-}
-
-/**
- * Get documentation pages by category.
- */
-export async function getDocumentationPagesByCategory(
-  category: string
-): Promise<DocumentationPageRow[]> {
-  const { data, error } = await getPublicClient()
-    .from("documentation_pages")
-    .select("*")
-    .eq("category", category)
-    .eq("status", "published")
-    .order("sort_order")
-
-  if (error) throw new Error(error.message)
-  return (data ?? []) as unknown as DocumentationPageRow[]
-}
-
-/**
- * Upsert a documentation page (admin only).
- */
-export async function upsertDocumentationPage(
-  page: DocumentationPageInsert
-): Promise<DocumentationPageRow> {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const { data, error } = await (getAdminClient() as any)
-    .from("documentation_pages")
-    .upsert(page, { onConflict: "slug" })
-    .select()
-    .single()
-
-  if (error) throw new Error(error.message)
-  return data as DocumentationPageRow
 }
 
 // ── Changelog queries ───────────────────────────────────────────────
