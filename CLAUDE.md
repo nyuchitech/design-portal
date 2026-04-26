@@ -64,27 +64,30 @@ design-portal (this repo)
 
 ## 3. Tech Stack
 
-| Layer                | Technology                                     | Version                                    |
-| -------------------- | ---------------------------------------------- | ------------------------------------------ |
-| Framework            | Next.js (App Router) + `@next/mdx`             | 16.2.4                                     |
-| Language             | TypeScript (strict mode)                       | 6.0.3                                      |
-| Package Manager      | pnpm                                           | 10.33.0                                    |
-| Styling              | Tailwind CSS + CSS custom properties           | 4.2.4                                      |
-| Component Primitives | Radix UI + Base UI                             | radix-ui 1.4.3, @base-ui/react 1.4.1       |
-| Variant Management   | class-variance-authority (CVA)                 | 0.7.1                                      |
-| Class Composition    | clsx + tailwind-merge                          | via `cn()` in `lib/utils.ts`               |
-| Icons                | Lucide React                                   | 1.8.0                                      |
-| Theming              | next-themes                                    | 0.4.6                                      |
-| Forms                | react-hook-form + zod                          | 7.73.1 / 4.3.6                             |
-| Charts               | Recharts                                       | 3.8.1                                      |
-| Testing              | Vitest + Testing Library                       | 4.1.5                                      |
-| Observability        | Structured logging (`lib/observability.ts`)    | Built-in                                   |
-| Metrics              | MCP usage tracking (`lib/metrics.ts`)          | Built-in                                   |
-| Site search          | Pagefind (built in `postbuild` step)           | 1.5.2, static index in `public/_pagefind/` |
-| Database             | Supabase (PostgreSQL) — single source of truth | @supabase/supabase-js 2.104.0              |
-| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)    | 1.29.0                                     |
-| CI/CD                | GitHub Actions + Vercel                        | —                                          |
-| Deployment           | Vercel                                         | —                                          |
+| Layer                | Technology                                      | Version                                    |
+| -------------------- | ----------------------------------------------- | ------------------------------------------ |
+| Framework            | Next.js (App Router) + `@next/mdx`              | 16.2.4                                     |
+| Language             | TypeScript (strict mode)                        | 6.0.3                                      |
+| Package Manager      | pnpm                                            | 10.33.0                                    |
+| Styling              | Tailwind CSS + CSS custom properties            | 4.2.4                                      |
+| Component Primitives | Radix UI + Base UI                              | radix-ui 1.4.3, @base-ui/react 1.4.1       |
+| Variant Management   | class-variance-authority (CVA)                  | 0.7.1                                      |
+| Class Composition    | clsx + tailwind-merge                           | via `cn()` in `lib/utils.ts`               |
+| Icons                | Lucide React                                    | 1.8.0                                      |
+| Theming              | next-themes                                     | 0.4.6                                      |
+| Forms                | react-hook-form + zod                           | 7.73.1 / 4.3.6                             |
+| Charts               | Recharts                                        | 3.8.1                                      |
+| Testing              | Vitest + Testing Library                        | 4.1.5                                      |
+| Observability        | Structured logging (`lib/observability.ts`)     | Built-in                                   |
+| Metrics              | MCP usage tracking (`lib/metrics.ts`)           | Built-in                                   |
+| Site search          | Pagefind (built in `postbuild` step)            | 1.5.2, static index in `public/_pagefind/` |
+| Database             | Supabase (PostgreSQL) — single source of truth  | @supabase/supabase-js 2.104.0              |
+| MCP Server           | @modelcontextprotocol/sdk (Streamable HTTP)     | 1.29.0                                     |
+| CLI                  | @nyuchi/design-cli (workspace package)          | 0.1.0                                      |
+| Skills bundle        | @nyuchi/design-agent-skills (workspace package) | 1.0.0                                      |
+| Workspace            | pnpm workspace (`packages/*`)                   | pnpm 10.33                                 |
+| CI/CD                | GitHub Actions + Vercel                         | —                                          |
+| Deployment           | Vercel                                          | —                                          |
 
 ---
 
@@ -214,12 +217,22 @@ design-portal/
 │   ├── _pagefind/                    # Static search index (built by postbuild)
 │   ├── icons/                        # Favicon assets
 │   └── llms.txt                      # LLM-readable registry summary
+├── packages/                         # pnpm workspace — published npm packages
+│   ├── design-cli/                   # @nyuchi/design-cli — bootstraps consumer
+│   │                                 #   apps (init / add / skills install/update)
+│   └── design-agent-skills/          # @nyuchi/design-agent-skills — published
+│                                     #   snapshot of the Supabase `skills` table;
+│                                     #   regenerated by `pnpm skills:sync`
+├── pnpm-workspace.yaml               # declares packages/* as workspace members
+├── .claude-plugin/
+│   └── plugin.json                   # Claude Code plugin marketplace manifest
+│                                     #   (skills paths + MCP server + icons)
 ├── registry.json                     # Generated snapshot of Supabase `components` (CI verifies drift)
 ├── openapi.yaml                      # OpenAPI 3.1 specification for /api/v1/
 ├── vitest.config.ts, vitest.setup.ts
 ├── components.json                   # shadcn CLI configuration
 ├── next.config.mjs, tsconfig.json, postcss.config.mjs, eslint.config.mjs, .prettierrc
-└── package.json                      # v4.0.38
+└── package.json                      # v4.0.38 (private; the Next.js app at root)
 ```
 
 > **Note on `registry.json`:** post-v4.0.26 the authoritative registry lives in the
@@ -545,44 +558,60 @@ Components are authored **in the Supabase `components` table**, not as files in 
 
 ### 8.5 When Building a New Bundu Ecosystem App
 
-This registry is the template. New apps MUST:
-
-1. **Install components from this registry** via `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>`
-2. **Copy `globals.css` theme tokens** — the `:root`, `.dark`, and `@theme` blocks are the canonical design system
-3. **Use the same typography stack** — Noto Sans, Noto Serif, JetBrains Mono
-4. **Follow the layered architecture** — primitives → composites → orchestrators → error boundaries → server pages
-5. **Use `cn()` for class composition** — install `clsx` + `tailwind-merge`, create `lib/utils.ts`
-6. **Set up `next-themes`** with `attribute="class"`, `defaultTheme="system"`, `enableSystem`
-7. **Use Tailwind CSS 4** with `@tailwindcss/postcss` and the `@theme inline` block pattern
-8. **Follow the `components.json` configuration** for shadcn CLI compatibility
-
-### 8.6 Distribution surface — work-in-progress
-
-The portal today distributes only the component registry (via the shadcn CLI against `/api/v1/ui`). Two distribution gaps are tracked for follow-up work:
-
-1. **No Nyuchi npm package or GitHub Packages listing.** Consumers bootstrap a new app by hand — copying `globals.css`, `components.json`, `lib/utils.ts`, theme-provider wiring. There is no `@nyuchi/cli` or `@nyuchi/create-app` that bundles the install. `release.yml` creates a GitHub Release on tag push but does not `npm publish`.
-2. **Claude Code skills are repo-local only.** `.claude/skills/nyuchi-design-system.md`, `scaffold-component.md`, and `ecosystem-app-setup.md` only activate inside this repo. Consumers have to copy the files manually; there is no `skills add nyuchi/agent-skills` path, no Claude Code plugin marketplace listing, and no `/api/v1/skills/{name}` download endpoint.
-
-**Target distribution pattern** (see tracking issue):
+One command:
 
 ```bash
-# shadcn CLI — unchanged, already live
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
-
-# Skills CLI — the pattern Supabase and others use
-npx skills add nyuchi/agent-skills                  # install all
-npx skills add nyuchi/agent-skills --skill <name>   # install one
-
-# Claude Code plugin marketplace
-/plugin marketplace add nyuchi/agent-skills
-/plugin install nyuchi@nyuchi-design-system
-
-# Direct download from the portal
-GET https://design.nyuchi.com/api/v1/skills           # list
-GET https://design.nyuchi.com/api/v1/skills/{name}    # raw MDX
+npx @nyuchi/design-cli init
 ```
 
-Skills are source-of-truthed in the existing `ai_instructions` Supabase table (or a new `skills` table if the versioning / audit needs differ) and served via a new `/api/v1/skills/*` endpoint that the CLI consumes. Claude Code plugin support requires a top-level `plugin.json` manifest in the skills repo.
+This scaffolds a fresh project with `app/globals.css` (the L1 token block — `:root` + `.dark` + `@theme inline`), `lib/utils.ts` (the `cn()` helper), `components/theme-provider.tsx` (next-themes wrapper), and `components.json` (shadcn CLI config). Pass `--force` to overwrite existing files.
+
+Then install components from the registry as needed:
+
+```bash
+npx @nyuchi/design-cli add button card data-table       # wraps shadcn CLI
+# or directly:
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
+```
+
+And install agent skills so AI assistants in the project know the doctrine:
+
+```bash
+npx @nyuchi/design-cli skills install                   # all skills, live from /api/v1/skills
+# or, equivalent, via the community skills CLI:
+npx skills add @nyuchi/design-agent-skills              # offline-friendly, ships .md files
+```
+
+Every new app inherits the canonical typography (Noto Sans / Noto Serif / JetBrains Mono), the Five African Minerals palette, the layered architecture, the pill-button identity, and the touch-target floor. The CLI is the single source of bootstrap truth.
+
+### 8.6 Distribution surface — shipped
+
+Three distribution surfaces, all live:
+
+```bash
+# 1. shadcn CLI — components from the registry
+npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<component>
+
+# 2. Nyuchi Design CLI — bootstrap + components + skills
+npx @nyuchi/design-cli init
+npx @nyuchi/design-cli add <component>
+npx @nyuchi/design-cli skills install
+npx @nyuchi/design-cli skills update
+
+# 3. Skills installer — markdown bundle for any AI assistant
+npx skills add @nyuchi/design-agent-skills
+
+# 4. Claude Code plugin marketplace (declared via .claude-plugin/plugin.json)
+/plugin marketplace add nyuchi/design-portal
+/plugin install nyuchi-design
+
+# 5. Direct HTTP — raw MDX for any consumer
+GET https://design.nyuchi.com/api/v1/skills           # list
+GET https://design.nyuchi.com/api/v1/skills/summary   # light list for version diff
+GET https://design.nyuchi.com/api/v1/skills/{name}    # full MDX body
+```
+
+Both npm packages live in this repo as workspace members under `packages/` and are published on every `v*` tag by `.github/workflows/release.yml` (uses `NPM_TOKEN`). Skills are source-of-truthed in the Supabase `skills` table; `pnpm skills:sync` regenerates `packages/design-agent-skills/skills/*.md` from the live DB before publish (CI verifies via `pnpm skills:verify`). The `@nyuchi/design-cli` `skills install` subcommand fetches live from the API on every run, so consumers always pull the latest doctrine without re-installing the npm package.
 
 ### 8.7 Vendored registry stack — path + naming drift
 
@@ -654,6 +683,9 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 | `GET /api/v1/changelog/{version}`          | Single release                                             | `changelog`                    |
 | `GET /api/v1/ai/instructions`              | List AI instruction sets                                   | `ai_instructions`              |
 | `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot)    | `ai_instructions`              |
+| `GET /api/v1/skills`                       | List published agent skills (lightweight, no body_mdx)     | `skills`                       |
+| `GET /api/v1/skills/summary`               | Same shape as `/skills`; reserved for the CLI update path  | `skills`                       |
+| `GET /api/v1/skills/{name}`                | Single skill with full `body_mdx`                          | `skills`                       |
 | `GET /api/v1/fundi`                        | Open self-healing issues                                   | `fundi_issues`                 |
 | `GET /api/v1/fundi/{id}`                   | Single fundi issue                                         | `fundi_issues`                 |
 | `GET /api/v1/fundi/stats`                  | Aggregate learning stats                                   | `fundi_issues`                 |
@@ -724,6 +756,8 @@ Configured in `.claude/settings.json`:
 | `get_database_status`       | Health/diagnostic info about the Supabase connection                                              |
 | `get_usage_stats`           | MCP/API usage metrics                                                                             |
 | `get_layer_summary`         | Component count, categories, and names for a given architecture layer (1–10)                      |
+| `list_skills`               | List every published agent skill (summary; no body_mdx). Reads the Supabase `skills` table.       |
+| `get_skill`                 | Fetch a single skill (full body_mdx) by name. Reads via `get_skill(name)` SQL helper.             |
 | `get_ai_instructions`       | Read system prompts from `ai_instructions` by target                                              |
 | `get_changelog`             | Recent releases from the `changelog` table                                                        |
 
@@ -1010,6 +1044,16 @@ When working on this codebase as an AI assistant:
     **The audit gate before merge.** Every PR runs through (1) `/security-review`, (2) a gap analysis against this CLAUDE.md, and (3) a sweep of open GitHub issues. Anything matching the bug definition above lands in the same PR — re-scope rather than defer. Anything that is genuinely feature/enhancement gets a tracking issue and a one-line note in the PR body explaining why it is not a bug.
 
     **No exceptions for "PR scope".** A PR titled "drop Nextra" still fixes a 22-link `nyuchitech → nyuchi` rename if that surfaces during the audit, because the linked URLs 404 in production. The doctrine of one-PR-many-commits (§14) exists precisely so we can re-scope without splitting work across PRs that ship serially over weeks.
+
+24. **Skills are MDX bodies authored once, served four ways.** The Supabase `skills` table is the SINGLE source of truth. From there, content flows to:
+    1. **`/api/v1/skills/{name}`** — the HTTP endpoint that any consumer can `curl` or fetch.
+    2. **MCP `get_skill(name)`** — the same content via the Model Context Protocol; AI assistants connected to `/mcp` can load skills without HTTP plumbing.
+    3. **`@nyuchi/design-agent-skills`** — a published npm-package snapshot of the table; offline-friendly, regenerated by `pnpm skills:sync` before each publish (CI verifies via `pnpm skills:verify`).
+    4. **`@nyuchi/design-cli skills install`** — the CLI subcommand that fetches live from the API and writes `.claude/skills/*.md` into a consumer project; tracks versions in `.nyuchi-design.json` for `update`.
+
+    All four paths converge on the same `skills.body_mdx` column. **Never duplicate skill content.** If you find yourself editing a `.md` file directly under `packages/design-agent-skills/skills/` or `.claude/skills/` (in any consumer repo), stop — the change won't survive the next sync. Edit the Supabase row, then run `pnpm skills:sync` to refresh the published snapshot.
+
+    The `packages/design-agent-skills/skills/` directory is added to `.prettierignore` so prettier never reformats the canonical content (escaped underscores, JSX reflows) and silently breaks the bit-identity contract `pnpm skills:verify` enforces.
 
 ### Open work to be aware of
 
