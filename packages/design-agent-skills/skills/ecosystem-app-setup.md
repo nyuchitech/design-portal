@@ -1,276 +1,173 @@
 ---
 name: ecosystem-app-setup
-description: Use when the user is bootstrapping a new bundu-ecosystem app (mukoko mini-app, nyuchi enterprise product, nhimbe events module, shamwari surface, or a sister brand) from scratch. Sets up Next.js + shadcn CLI + Tailwind 4 + next-themes against the Nyuchi Design Portal registry so the new app ships with the canonical tokens, typography, radius scale, and component API. Also use when the user says things like "create a new bundu app", "scaffold a mukoko app", "start a new nyuchi product".
+version: 1.0.0
+description: End-to-end setup for a new Bundu/Mukoko ecosystem app
+agents: claude-code, cursor, copilot
+requires_mcp: false
 ---
 
-# Ecosystem App Setup
+# Setting Up a New Nyuchi-Ecosystem App
 
-You are bootstrapping a new bundu ecosystem app that consumes the Nyuchi Design Portal registry at <https://design.nyuchi.com>. Consistency across the ecosystem is non-negotiable — follow every step.
+Follow this skill when a user wants to start a new app that is part of the Nyuchi ecosystem (mukoko, nyuchi, shamwari, bundu, nhimbe) or an app that consumes the Nyuchi Design System.
 
-## Step 1 — Create the Next.js project
+## Preferred path — one command
 
-```bash
-pnpm create next-app@latest <app-name> --typescript --tailwind --eslint --app --src-dir=false --import-alias="@/*"
-cd <app-name>
-```
-
-## Step 2 — Install shadcn CLI and init
+Once @nyuchi/design-cli ships, bootstrapping is a single command:
 
 ```bash
-pnpm dlx shadcn@latest init
+npx @nyuchi/design-cli init
 ```
 
-When prompted, choose:
+This scaffolds a Next.js 16 project (Turbopack, pnpm, Node 24) with:
 
-- Style: **New York**
-- Base color: **Neutral**
-- CSS variables: **Yes**
+- globals.css pre-populated with the five African minerals tokens
+- components.json pointing at https://design.nyuchi.com/api/v1/ui
+- lib/utils.ts with the cn() helper
+- app/layout.tsx wired with the nyuchi-theme-provider
+- .claude/skills/ populated with all published Nyuchi skills
+- package.json with the right scripts and dependencies
 
-This creates `components.json`. Update it:
+Until @nyuchi/design-cli ships, follow the manual steps below.
+
+## Manual bootstrap (legacy — use until CLI lands)
+
+### 1. Create the Next.js project
+
+```bash
+pnpm create next-app@latest my-app --turbopack --typescript --tailwind --app --no-src-dir
+cd my-app
+```
+
+### 2. Install Nyuchi-compatible dependencies
+
+```bash
+pnpm add class-variance-authority clsx tailwind-merge
+pnpm add -D @tailwindcss/typography
+```
+
+### 3. Scaffold globals.css
+
+Add the five African minerals tokens at the top of `app/globals.css`:
+
+```css
+@layer base {
+  :root {
+    /* Minerals — query brand_minerals for canonical values */
+    --color-cobalt: 0 176 255; /* DRC */
+    --color-tanzanite: 179 136 255; /* Tanzania */
+    --color-malachite: 100 255 218; /* Congo */
+    --color-gold: 255 215 64; /* Ghana/SA */
+    --color-terracotta: 212 165 116; /* Pan-African Sahel */
+
+    /* Semantic — query brand_semantic_colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --primary: var(--color-cobalt);
+    /* ... */
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+    /* ... */
+  }
+}
+```
+
+Note: these are seed values. Query the live brand_semantic_colors table for the canonical definitions — the DB is the source of truth.
+
+### 4. Set up components.json
 
 ```json
 {
   "$schema": "https://ui.shadcn.com/schema.json",
-  "style": "new-york",
-  "rsc": true,
-  "tsx": true,
+  "style": "default",
   "tailwind": {
-    "config": "",
+    "config": "tailwind.config.ts",
     "css": "app/globals.css",
-    "baseColor": "neutral",
-    "cssVariables": true,
-    "prefix": ""
+    "baseColor": "slate",
+    "cssVariables": true
   },
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
-    "ui": "@/components/ui",
-    "lib": "@/lib",
-    "hooks": "@/hooks"
+    "ui": "@/components/ui"
   },
-  "iconLibrary": "lucide"
+  "registries": {
+    "nyuchi": {
+      "url": "https://design.nyuchi.com/api/v1/ui"
+    }
+  }
 }
 ```
 
-## Step 3 — Copy the canonical theme tokens
-
-Replace `app/globals.css` with the Five African Minerals theme. The canonical source is `app/globals.css` in the design-portal repo. The critical blocks are:
-
-**Required CSS custom properties:**
-
-```css
-@import "tailwindcss";
-
-@custom-variant dark (&:is(.dark *));
-
-@theme inline {
-  /* Five African Minerals */
-  --color-cobalt: #0047ab;
-  --color-tanzanite: #b388ff;
-  --color-malachite: #64ffda;
-  --color-gold: #ffd740;
-  --color-terracotta: #d4a574;
-
-  /* Radius system — ecosystem numbers: 7, 12, 14, 17 */
-  --radius-sm: 7px;
-  --radius-md: 12px;
-  --radius-lg: 14px;
-  --radius-xl: 17px;
-  --radius-full: 9999px;
-
-  /* Fonts */
-  --font-sans: var(--font-noto-sans);
-  --font-serif: var(--font-noto-serif);
-  --font-mono: var(--font-jetbrains-mono);
-}
-
-:root {
-  --background: #faf9f5;
-  --foreground: #141413;
-  /* ... full token set from design-portal/app/globals.css */
-}
-
-.dark {
-  --background: #0a0a0a;
-  --foreground: #f5f5f4;
-  /* ... */
-}
-```
-
-Copy the complete `:root` and `.dark` blocks verbatim from the design-portal source.
-
-## Step 4 — Set up typography
+### 5. Add a component to verify
 
 ```bash
-pnpm add @next/font
+pnpm dlx shadcn@latest add https://design.nyuchi.com/api/v1/ui/nyuchi-theme-provider
+pnpm dlx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
 ```
+
+### 6. Wire the theme provider
 
 In `app/layout.tsx`:
 
 ```tsx
-import { Noto_Sans, Noto_Serif, JetBrains_Mono } from "next/font/google"
+import { NyuchiThemeProvider } from "@/components/nyuchi-theme-provider"
 
-const notoSans = Noto_Sans({
-  subsets: ["latin"],
-  variable: "--font-noto-sans",
-  display: "swap",
-})
-
-const notoSerif = Noto_Serif({
-  subsets: ["latin"],
-  variable: "--font-noto-serif",
-  display: "swap",
-})
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains-mono",
-  display: "swap",
-})
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${notoSans.variable} ${notoSerif.variable} ${jetbrainsMono.variable} font-sans`}
-      >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+      <body>
+        <NyuchiThemeProvider>{children}</NyuchiThemeProvider>
       </body>
     </html>
   )
 }
 ```
 
-## Step 5 — Set up next-themes
+### 7. Install the Nyuchi skills
 
 ```bash
-pnpm add next-themes
+npx skills add nyuchi/design-agent-skills
 ```
 
-Create `components/theme-provider.tsx`:
+This populates `./.claude/skills/` with `nyuchi-design-system.md`, `scaffold-component.md`, and `ecosystem-app-setup.md` — so any AI assistant working in this repo has the doctrine on hand.
 
-```tsx
-"use client"
-
-import { ThemeProvider as NextThemesProvider } from "next-themes"
-
-export function ThemeProvider({
-  children,
-  ...props
-}: React.ComponentProps<typeof NextThemesProvider>) {
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>
-}
-```
-
-## Step 6 — Install core components from the registry
+### 8. Verify everything works
 
 ```bash
-# Utilities (always install first)
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/utils
-
-# Core UI
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/button
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/card
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/input
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/badge
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/separator
-
-# Resilience (recommended for all production apps)
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/observability
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/circuit-breaker
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/retry
+pnpm dev
 ```
 
-Install additional components as needed from the live registry — browse `GET /api/v1/ui` for the full current index, or `GET /api/v1/stats` for totals. Never hardcode a count.
+Open http://localhost:3000 and confirm the theme toggle works, the button renders with the mineral-based styling, and Tailwind picks up the CSS variables.
 
-## Step 7 — Configure PostCSS for Tailwind CSS 4
+## Ubuntu philosophy alignment
 
-Ensure `postcss.config.mjs`:
+Nyuchi is built on Ubuntu — "I am because we are." When you architect a new app:
 
-```js
-export default {
-  plugins: {
-    "@tailwindcss/postcss": {},
-  },
-}
-```
+- Prefer open source over proprietary
+- Build for community, not extraction
+- Respect data sovereignty — African data stays on African infrastructure where possible
+- Accessibility is not an afterthought; it is the starting point
+- Every feature should contribute to collective wellbeing, not just individual efficiency
 
-And `package.json` dependencies include `tailwindcss@^4` and `@tailwindcss/postcss`.
+These aren't marketing claims. They're architectural constraints. If you find yourself designing something that only benefits a small subset of users at others' expense, question whether it belongs in the ecosystem.
 
-## Step 8 — Set up the layered architecture
+## What goes in the ecosystem and what doesn't
 
-```
-app/
-├── layout.tsx              # Root layout (fonts, ThemeProvider)
-├── page.tsx                # Landing page orchestrator
-├── globals.css             # Theme tokens (copied from design-portal)
-components/
-├── ui/                     # Installed from registry
-├── [feature]/              # Domain-specific composites
-├── theme-provider.tsx
-lib/
-├── utils.ts                # cn() helper (from registry)
-hooks/
-```
+Ecosystem apps:
 
-**Layered rule:** primitives → composites → orchestrators → error boundaries → server pages. Never import upward.
+- Mukoko — consumer super-app (social, commerce, payments, identity)
+- Nyuchi — enterprise platform (web services, developer tools, MCP)
+- Shamwari — community and friendship features
+- Bundu — the foundational layer (culture, heritage, wisdom)
+- Nhimbe — cooperative economic features
 
-### Key Rules for All Ecosystem Apps
+Not ecosystem apps:
 
-| Rule                  | Detail                                                                                                      |
-| --------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Install from registry | Never copy-paste component code — always `npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/<name>` |
-| Colors                | Always CSS custom properties — never hardcoded hex                                                          |
-| Buttons               | Always `rounded-full` — pill shape is brand identity                                                        |
-| Touch targets         | 56px default, 48px minimum                                                                                  |
-| Typography            | Noto Sans (body), Noto Serif (display), JetBrains Mono (code)                                               |
-| Wordmarks             | Always lowercase: `mukoko`, `nyuchi`, `shamwari`, `bundu`, `nhimbe`                                         |
-| Theme                 | `next-themes` with `attribute="class"`, `defaultTheme="system"`, `enableSystem`                             |
+- Any app that extracts value without giving back
+- Any app that requires surveillance for its business model
+- Any app that centralises what should be federated
 
-### Ubuntu Layer — Community-First from Day One
-
-Every bundu ecosystem app must embed Ubuntu principles from setup, not as an afterthought:
-
-**Step 9 — Install the accessibility and AI safety libraries**
-
-```bash
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/accessibility
-npx shadcn@latest add https://design.nyuchi.com/api/v1/ui/ai-safety
-```
-
-`lib/accessibility.ts` provides:
-
-- `apcaContrast(text, bg)` — compute APCA Lc contrast value
-- `MINERAL_CONTRAST_TABLE` — pre-computed Lc values for all minerals
-- `TOUCH_TARGETS` — `{ default: 56, minimum: 48, css: { default: "h-14", minimum: "h-12" } }`
-- `COMPONENT_CHECKLIST` — 15-point Ubuntu/APCA checklist
-
-`lib/ai-safety.ts` provides:
-
-- `fullSafetyCheck(input)` — combined injection + security + cultural scan
-- `validateCulturalContext(text)` — Ubuntu alignment, Western-centric assumption detection
-- `AICircuitBreaker` — circuit breaker for AI calls
-- `withAISafety(fn, fallback, timeoutMs)` — safe AI call wrapper
-- `UBUNTU` — Ubuntu philosophy constants for AI system prompts
-
-**Ubuntu runtime rules:**
-
-- Use `UBUNTU.aiFraming` in every Claude/AI system prompt
-- Run `validateCulturalContext()` on AI output before rendering
-- Use `withAISafety()` wrapper on every AI API call
-- Set `lang="sn"` / `lang="nd"` on multilingual content blocks
-- Never gate content behind English-only — internationalise from day one
-
-### Brand Assignment
-
-Every app has an assigned mineral accent. Use it for the app's primary brand colour:
-
-| App type                  | Brand    | Mineral              | CSS Variable         |
-| ------------------------- | -------- | -------------------- | -------------------- |
-| Consumer/super app        | mukoko   | Tanzanite `#B388FF`  | `--color-tanzanite`  |
-| Enterprise/infrastructure | nyuchi   | Gold `#FFD740`       | `--color-gold`       |
-| AI companion              | shamwari | Cobalt `#0047AB`     | `--color-cobalt`     |
-| Events/gatherings         | nhimbe   | Malachite `#64FFDA`  | `--color-malachite`  |
-| Ecosystem-level           | bundu    | Terracotta `#D4A574` | `--color-terracotta` |
+If the app you're building doesn't fit the ecosystem, that's fine — use the Nyuchi Design System as a consumer, but don't brand it as ecosystem.

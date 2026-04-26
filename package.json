@@ -18,6 +18,8 @@
     "build:packages": "pnpm --filter \"./packages/*\" build",
     "registry:sync": "tsx scripts/sync-registry.ts",
     "registry:verify": "tsx scripts/sync-registry.ts --check",
+    "skills:sync": "tsx scripts/sync-skills.ts",
+    "skills:verify": "tsx scripts/sync-skills.ts --check",
     "prepare": "husky",
     "audit:check": "pnpm audit --audit-level=moderate --ignore-registry-errors",
     "format": "prettier --write \"**/*.{ts,tsx,js,mjs,json,md,css,yaml,yml}\" --ignore-path .prettierignore",
