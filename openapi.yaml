@@ -326,6 +326,107 @@ paths:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
 
+  /architecture:
+    get:
+      summary: 3D Architecture snapshot
+      description: |
+        Full snapshot of the Nyuchi 3D Architecture model — every axis with its layers,
+        covenants, stakeholders, implementation rules, and live component counts. Wraps
+        the `get_architecture()` SQL helper. ISR cache: 1 hour.
+      operationId: getArchitectureSnapshot
+      tags: [Architecture]
+      responses:
+        "200":
+          description: "Snapshot reshaped as `{ data: axes[].layers[], meta }`."
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      axes_count: { type: integer }
+                      version: { type: string }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/axes:
+    get:
+      summary: Per-axis summary with live counts
+      description: |
+        One row per axis with `layer_count` and `component_count` joined live from
+        `architecture_frontend_layers` and `components`. Wraps `get_axes_summary()`.
+      operationId: getAxesSummary
+      tags: [Architecture]
+      responses:
+        "200":
+          description: 5 axes ordered by sort_order.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: { type: object }
+                  meta:
+                    type: object
+                    properties:
+                      count: { type: integer }
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
+  /architecture/layers/{n}:
+    get:
+      summary: Per-layer detail (covenant, rules, category breakdown)
+      description: |
+        Single-layer detail. Wraps `get_layer_detail(p_layer_number int)`.
+        Returns 400 for non-integer or out-of-range `n` (must be 1-10).
+      operationId: getLayerDetail
+      tags: [Architecture]
+      parameters:
+        - name: n
+          in: path
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+      responses:
+        "200":
+          description: Layer detail with covenant, rules, and category breakdown.
+          headers:
+            Cache-Control:
+              $ref: "#/components/headers/CachePublic"
+            Access-Control-Allow-Origin:
+              $ref: "#/components/headers/CorsWildcard"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data: { type: object }
+        "400":
+          description: Invalid layer number.
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "503":
+          $ref: "#/components/responses/ServiceUnavailable"
+
   /architecture/frontend/axes:
     get:
       summary: Frontend Axes (3D)
