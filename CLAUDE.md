@@ -236,17 +236,17 @@ design-portal/
 
 **Single source of truth: the Supabase `components` table** — the stable registry across 10 architecture layers (live count: `GET /api/v1/stats` → `stable`), with metadata, dependencies, source code, docs, and version history split across:
 
-| Table                 | Purpose                                                                                                                                                                                                                                                                                                                  |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `components`          | Name, type, description, deps, files, source_code, architecture_layer, category, status                                                                                                                                                                                                                                  |
-| `component_docs`      | Use cases, variants, a11y notes (per component)                                                                                                                                                                                                                                                                          |
-| `component_versions`  | Per-component version history                                                                                                                                                                                                                                                                                            |
-| `documentation_pages` | **HISTORICAL — content migrated to repo MDX in this PR.** All 10 published rows exported to `app/docs/*/page.mdx`. The table remains in Supabase as the historical source-of-record; the API endpoints + DB-driven renderers will be removed in a follow-up PR. Do not add new rows; author new docs as MDX. See §15.18. |
-| `changelog`           | Releases (currently 4.0.0 → 4.0.26)                                                                                                                                                                                                                                                                                      |
-| `ai_instructions`     | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                  |
-| `fundi_issues`        | Self-healing issue tracking                                                                                                                                                                                                                                                                                              |
-| `brand_*`             | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                         |
-| `architecture_*`      | Principles, data layer, pipeline, sovereignty assessments                                                                                                                                                                                                                                                                |
+| Table                 | Purpose                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `components`          | Name, type, description, deps, files, source_code, architecture_layer, category, status                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `component_docs`      | Use cases, variants, a11y notes (per component)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `component_versions`  | Per-component version history                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| `documentation_pages` | **HISTORICAL — content migrated to repo MDX, renderers + API removed.** All 10 published rows shipped as repo MDX under `/docs/*`, `/architecture/*`, `/brand`, and `/foundations/tokens`. The DB-driven renderers (`components/docs/db-doc-page.tsx`, `db-doc-index.tsx`) and the dynamic `[slug]` route are deleted; `/api/v1/docs/*` returns HTTP 410 with a `migrated_to` map; the `get_documentation_page` MCP tool is removed. The table remains in Supabase as the historical source-of-record. Do not add new rows; author new docs as MDX. See §15.18. |
+| `changelog`           | Releases (currently 4.0.0 → 4.0.26)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `ai_instructions`     | System prompts per target (mcp-server, claude, copilot)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `fundi_issues`        | Self-healing issue tracking                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| `brand_*`             | Minerals, semantic colors, typography, spacing, ecosystem brands                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| `architecture_*`      | Principles, data layer, pipeline, sovereignty assessments                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 
 API responses follow the shadcn registry schema at `https://ui.shadcn.com/schema/registry.json`.
 
@@ -632,34 +632,34 @@ All responses include schema.org JSON-LD metadata (`@context`, `@type`) where ap
 
 **Common headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *`
 
-| Endpoint                                   | Description                                             | Supabase source                |
-| ------------------------------------------ | ------------------------------------------------------- | ------------------------------ |
-| `GET /api/v1`                              | Discovery document — lists all resources                | —                              |
-| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem) | `brand_*` tables               |
-| `GET /api/v1/ui`                           | Component registry index                                | `components`                   |
-| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)  | `components`                   |
-| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)              | `component_docs`               |
-| `GET /api/v1/ui/{name}/versions`           | Component version history                               | `component_versions`           |
-| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision            | `architecture_principles`      |
-| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                 | `architecture_data_layer`      |
-| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)           | `architecture_pipeline`        |
-| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                      | `architecture_sovereignty`     |
-| `GET /api/v1/architecture/frontend/axes`   | 5 axes of the 3D frontend architecture                  | `architecture_frontend_axes`   |
-| `GET /api/v1/architecture/frontend/layers` | 10 layers of the 3D frontend architecture               | `architecture_frontend_layers` |
-| `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                        | `ubuntu_pillars`               |
-| `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                     | `ubuntu_principles`            |
-| `GET /api/v1/docs`                         | List documentation pages (DEPRECATED — see §15.18)      | `documentation_pages`          |
-| `GET /api/v1/docs/{slug}`                  | Single documentation page (DEPRECATED — see §15.18)     | `documentation_pages`          |
-| `GET /api/v1/changelog`                    | All releases                                            | `changelog`                    |
-| `GET /api/v1/changelog/{version}`          | Single release                                          | `changelog`                    |
-| `GET /api/v1/ai/instructions`              | List AI instruction sets                                | `ai_instructions`              |
-| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot) | `ai_instructions`              |
-| `GET /api/v1/fundi`                        | Open self-healing issues                                | `fundi_issues`                 |
-| `GET /api/v1/fundi/{id}`                   | Single fundi issue                                      | `fundi_issues`                 |
-| `GET /api/v1/fundi/stats`                  | Aggregate learning stats                                | `fundi_issues`                 |
-| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)   | multiple                       |
-| `GET /api/v1/stats`                        | Live counts (total stable, per layer, per category)     | `components`                   |
-| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)             | runtime checks                 |
+| Endpoint                                   | Description                                                | Supabase source                |
+| ------------------------------------------ | ---------------------------------------------------------- | ------------------------------ |
+| `GET /api/v1`                              | Discovery document — lists all resources                   | —                              |
+| `GET /api/v1/brand`                        | Brand system (minerals, typography, spacing, ecosystem)    | `brand_*` tables               |
+| `GET /api/v1/ui`                           | Component registry index                                   | `components`                   |
+| `GET /api/v1/ui/{name}`                    | Individual component (shadcn format, with source code)     | `components`                   |
+| `GET /api/v1/ui/{name}/docs`               | Component docs (use cases, variants, a11y)                 | `component_docs`               |
+| `GET /api/v1/ui/{name}/versions`           | Component version history                                  | `component_versions`           |
+| `GET /api/v1/ecosystem`                    | Architecture principles & framework decision               | `architecture_principles`      |
+| `GET /api/v1/data-layer`                   | Local-first + cloud layer specification                    | `architecture_data_layer`      |
+| `GET /api/v1/pipeline`                     | Open data pipeline (Redpanda → Flink → Doris)              | `architecture_pipeline`        |
+| `GET /api/v1/sovereignty`                  | Technology sovereignty assessments                         | `architecture_sovereignty`     |
+| `GET /api/v1/architecture/frontend/axes`   | 5 axes of the 3D frontend architecture                     | `architecture_frontend_axes`   |
+| `GET /api/v1/architecture/frontend/layers` | 10 layers of the 3D frontend architecture                  | `architecture_frontend_layers` |
+| `GET /api/v1/ubuntu/pillars`               | 5 Ubuntu Pillars                                           | `ubuntu_pillars`               |
+| `GET /api/v1/ubuntu/principles`            | 5 Ubuntu Principles                                        | `ubuntu_principles`            |
+| `GET /api/v1/docs`                         | **HTTP 410 Gone** — content moved to repo MDX (see §15.18) | —                              |
+| `GET /api/v1/docs/{slug}`                  | **HTTP 410 Gone** — content moved to repo MDX (see §15.18) | —                              |
+| `GET /api/v1/changelog`                    | All releases                                               | `changelog`                    |
+| `GET /api/v1/changelog/{version}`          | Single release                                             | `changelog`                    |
+| `GET /api/v1/ai/instructions`              | List AI instruction sets                                   | `ai_instructions`              |
+| `GET /api/v1/ai/instructions/{name}`       | Instruction set by target (mcp-server, claude, copilot)    | `ai_instructions`              |
+| `GET /api/v1/fundi`                        | Open self-healing issues                                   | `fundi_issues`                 |
+| `GET /api/v1/fundi/{id}`                   | Single fundi issue                                         | `fundi_issues`                 |
+| `GET /api/v1/fundi/stats`                  | Aggregate learning stats                                   | `fundi_issues`                 |
+| `GET /api/v1/search?q=`                    | Cross-resource search (components + docs + changelog)      | multiple                       |
+| `GET /api/v1/stats`                        | Live counts (total stable, per layer, per category)        | `components`                   |
+| `GET /api/v1/health`                       | Service health check (`no-cache, no-store`)                | runtime checks                 |
 
 **Common response headers:** `Cache-Control: public, max-age=3600, s-maxage=86400`, `Access-Control-Allow-Origin: *` (except `/health` which is `no-cache, no-store`).
 
@@ -726,7 +726,6 @@ Configured in `.claude/settings.json`:
 | `get_layer_summary`         | Component count, categories, and names for a given architecture layer (1–10)                      |
 | `get_ai_instructions`       | Read system prompts from `ai_instructions` by target                                              |
 | `get_changelog`             | Recent releases from the `changelog` table                                                        |
-| `get_documentation_page`    | Read a documentation page by slug from `documentation_pages` (DEPRECATED — see §15.18)            |
 
 ### Architecture
 
@@ -992,7 +991,7 @@ When working on this codebase as an AI assistant:
 15. **The mineral strip is always vertical** — used only as a left-edge accent (cards, sidebars, page borders); never horizontal.
 16. **Use the MCP server** — served at `/mcp` via `lib/mcp-server.ts`; all reads go through `lib/db/`.
 17. **Resilience patterns (circuit-breaker, retry, timeout, fallback-chain, ai-safety, chaos)** are registry items in Supabase, not files in this repo. Consumer apps install them via the shadcn CLI.
-18. **Long-form documentation lives in the repo as `.mdx` files** — _not_ in Supabase. The portal is a documentation site, not a blog. Guides (`/docs/*`) and architecture/foundations/brand pages (`/architecture`, `/foundations`, `/brand`, …) are authored as `.mdx` in `app/` and compiled via `@next/mdx`. The `documentation_pages` Supabase table and `components/docs/db-doc-page.tsx` / `db-changelog.tsx` renderers are **deprecated** and will be removed in a follow-up PR that migrates the remaining rows into repo `.mdx` files. Do not add new rows to `documentation_pages`; author new docs as MDX.
+18. **Long-form documentation lives in the repo as `.mdx` files** — _not_ in Supabase. The portal is a documentation site, not a blog. Guides (`/docs/*`) and architecture/foundations/brand pages (`/architecture`, `/foundations`, `/brand`, …) are authored as `.mdx` in `app/` and compiled via `@next/mdx`. The `documentation_pages` Supabase table is HISTORICAL — content was migrated to repo MDX, the DB-driven renderers (`components/docs/db-doc-page.tsx`, `db-doc-index.tsx`) and `app/docs/[slug]` dynamic route are deleted, `/api/v1/docs/*` returns HTTP 410, and the `get_documentation_page` MCP tool is gone. Do not add new rows to `documentation_pages`; author new docs as MDX. The `changelog` Supabase table is unaffected — it remains the source-of-truth for the release-bump workflow (§14) and is read by `components/docs/db-changelog.tsx`.
 19. **The playground (`components/playground/`) reads from the API**, not from local files. If you find a `registry.json` import there, refactor it to fetch `/api/v1/ui` (tracked in issue #26).
 20. **API is versioned under `/api/v1/`** — `openapi.yaml` is the contract; update it whenever a route changes.
 21. **Buttons are always pill-shaped (`rounded-full`)** across the entire ecosystem.
