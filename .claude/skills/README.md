@@ -25,7 +25,7 @@ Install via any of these paths.
 
 ```bash
 cd ~/src # wherever you keep repos
-git clone https://github.com/nyuchitech/design-portal.git
+git clone https://github.com/nyuchi/design-portal.git
 mkdir -p ~/.claude/skills
 ln -s "$PWD/design-portal/.claude/skills/nyuchi-design-system.md"   ~/.claude/skills/
 ln -s "$PWD/design-portal/.claude/skills/ecosystem-app-setup.md"    ~/.claude/skills/
@@ -39,9 +39,9 @@ Symlinking means `git pull` in the portal repo auto-updates the skills in every 
 ```bash
 # From the root of the consumer app (e.g. mukoko-weather):
 mkdir -p .claude/skills
-curl -fsSL -o .claude/skills/nyuchi-design-system.md   https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/nyuchi-design-system.md
-curl -fsSL -o .claude/skills/ecosystem-app-setup.md    https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/ecosystem-app-setup.md
-curl -fsSL -o .claude/skills/scaffold-component.md     https://raw.githubusercontent.com/nyuchitech/design-portal/main/.claude/skills/scaffold-component.md
+curl -fsSL -o .claude/skills/nyuchi-design-system.md   https://raw.githubusercontent.com/nyuchi/design-portal/main/.claude/skills/nyuchi-design-system.md
+curl -fsSL -o .claude/skills/ecosystem-app-setup.md    https://raw.githubusercontent.com/nyuchi/design-portal/main/.claude/skills/ecosystem-app-setup.md
+curl -fsSL -o .claude/skills/scaffold-component.md     https://raw.githubusercontent.com/nyuchi/design-portal/main/.claude/skills/scaffold-component.md
 ```
 
 Project-scoped skills ship with the repo — every contributor and every Claude Code session automatically gets the right skills.
@@ -53,7 +53,7 @@ For the richest experience, also wire up the live MCP server. Add to your Claude
 ```json
 {
   "mcpServers": {
-    "nyuchi-design-portal": {
+    "nyuchi-design": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
     }

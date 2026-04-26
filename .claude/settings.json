@@ -1,8 +1,16 @@
 {
   "mcpServers": {
-    "nyuchi-design-portal": {
+    "nyuchi-design": {
       "type": "url",
       "url": "https://design.nyuchi.com/mcp"
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=grjsboqkaywpwatvrzmy&features=docs,account,database,debugging,development,functions,branching,storage"
+    },
+    "stytch-mcp": {
+      "type": "http",
+      "url": "https://mcp.stytch.dev/mcp"
     }
   }
 }
